@@ -5,6 +5,7 @@ import AppBarChart from "@/components/AppBarChart";
 import AppPieChart from "@/components/AppPieChart";
 import CardList from "@/components/CardList";
 import TodoList from "@/components/TodoList";
+import { Textarea } from "@/components/ui/textarea";
 
 const Homepage = () => {
   return (
@@ -26,6 +27,9 @@ const Homepage = () => {
       </div>
       <div className="bg-primary-foreground p-4 rounded-lg">
         <CardList title="Popular Content" />
+      </div>
+      <div>
+        <Textarea placeholder="Type your message here." />
       </div>
     </div>
   );
