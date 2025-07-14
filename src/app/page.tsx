@@ -1,38 +1,14 @@
-"use client";
+import { LoginForm } from "@/components/LoginForm";
+import React from "react";
 
-import AppAreaChart from "@/components/AppAreaChart";
-import AppBarChart from "@/components/AppBarChart";
-import AppPieChart from "@/components/AppPieChart";
-import CardList from "@/components/CardList";
-import TodoList from "@/components/TodoList";
-import { Textarea } from "@/components/ui/textarea";
-
-const Homepage = () => {
+const LoginPage = () => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4">
-      <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2">
-        <AppBarChart />
-      </div>
-      <div className="bg-primary-foreground p-4 rounded-lg">
-        <CardList title="Latest Transactions" />
-      </div>
-      <div className="bg-primary-foreground p-4 rounded-lg">
-        <AppPieChart />
-      </div>
-      <div className="bg-primary-foreground p-4 rounded-lg">
-        <TodoList />
-      </div>
-      <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2">
-        <AppAreaChart />
-      </div>
-      <div className="bg-primary-foreground p-4 rounded-lg">
-        <CardList title="Popular Content" />
-      </div>
-      <div>
-        <Textarea placeholder="Type your message here." />
+    <div className="flex flex-1 min-h-screen items-center justify-center p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <LoginForm />
       </div>
     </div>
   );
 };
 
-export default Homepage;
+export default LoginPage;

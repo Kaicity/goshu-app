@@ -2,8 +2,8 @@
 
 import React from "react";
 
-function EmployeesPage() {
+const EmployeesPage = () => {
   return <div>{"HUHU"}</div>;
-}
+};
 
 export default EmployeesPage;
