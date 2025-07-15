@@ -1,23 +1,14 @@
 "use client";
 
-import {
-  BadgeCheck,
-  Bell,
-  CreditCard,
-  LogOut,
-  Moon,
-  Settings,
-  Sparkles,
-  Sun,
-  User,
-} from "lucide-react";
+import Cookies from "js-cookie";
+import { Bell, LogOut, Moon, Settings, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
+import { redirect } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -28,6 +19,13 @@ import { SidebarTrigger, useSidebar } from "./ui/sidebar";
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
   const { toggleSidebar } = useSidebar();
+
+  const handleLogout = () => {
+    Cookies.remove("authToken");
+    localStorage.removeItem("role");
+    redirect("/");
+  };
+
   return (
     <nav className="p-4 flex items-center justify-between sticky top-0 bg-background z-10">
       {/* LEFT */}
@@ -88,7 +86,7 @@ const Navbar = () => {
               <Settings className="h-[1.2rem] w-[1.2rem] mr-2" />
               Cài đặt
             </DropdownMenuItem>
-            <DropdownMenuItem variant="destructive">
+            <DropdownMenuItem variant="destructive" onClick={handleLogout}>
               <LogOut className="h-[1.2rem] w-[1.2rem] mr-2" />
               Đăng xuất
             </DropdownMenuItem>

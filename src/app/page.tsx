@@ -1,16 +1,8 @@
 "use client";
 
 import { login } from "@/api/users/userAuth";
-import { LoginForm } from "@/components/LoginForm";
-import {
-  loginFormSchema,
-  type loginFormData,
-} from "@/models/schemas/loginSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { startTransition, useActionState } from "react";
-import { useForm } from "react-hook-form";
-import Cookies from "js-cookie";
+import { SubmitButton } from "@/components/SummitButton";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -18,15 +10,30 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { SubmitButton } from "@/components/SummitButton";
-import { is } from "date-fns/locale";
-import { userInfo } from "os";
+import useAuth from "@/hooks/useAuth";
+import {
+  loginFormSchema,
+  type loginFormData,
+} from "@/models/schemas/loginSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Cookies from "js-cookie";
+import Image from "next/image";
+import { redirect, useRouter } from "next/navigation";
+import { startTransition, useActionState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 const LoginPage = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  // Nếu đang ở trang login và user đã đăng nhập thì route đến dashboard
+  useEffect(() => {
+    if (isAuthenticated) {
+      redirect("/dashboard");
+    }
+  }, [isAuthenticated]);
+
   const {
     register,
     handleSubmit,
@@ -36,14 +43,15 @@ const LoginPage = () => {
   });
   const router = useRouter();
 
+  // Action user login trong một chuỗi actions lưu cookies, chuyển page, login failed or success
   const [state, submitAction, isPending] = useActionState(
     async (prevState: any, formData: loginFormData) => {
       try {
-        const userData = await login(formData);
-        console.log("Login successful, token:", userData);
+        const res = await login(formData);
 
-        if (userData) {
-          Cookies.set("authToken", userData, {
+        // Lấy được object có access token rồi thì lưu vào cookies storage
+        if (res) {
+          Cookies.set("authToken", res.accesstoken, {
             expires: 1,
             path: "/",
             secure: true,
@@ -59,9 +67,8 @@ const LoginPage = () => {
     undefined
   );
 
+  // Sự kiện form lồng kép
   const onSubmit = (data: loginFormData) => {
-    console.log("Form submitted with data:", data);
-
     startTransition(() => {
       submitAction(data);
     });

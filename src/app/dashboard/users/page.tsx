@@ -1,7 +1,7 @@
-const UsersPage = () => {
-  return (
-    <div className=''>UsersPage</div>
-  )
-}
+import ProtectPage from "@/components/auth/ProtectPage";
 
-export default UsersPage
+const UsersPage = () => {
+  return <div className="">UsersPage</div>;
+};
+
+export default ProtectPage(UsersPage);

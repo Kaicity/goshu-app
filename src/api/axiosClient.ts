@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import qs from "qs";
 
 let isLoggingOut = false;
 
@@ -8,9 +9,14 @@ export const instance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+
+  paramsSerializer: (params) =>
+    qs.stringify(params, {
+      arrayFormat: "repeat",
+    }),
 });
 
-// Interceptor để gắn token vào header
+// Gắn token từ cookie
 instance.interceptors.request.use(
   (config) => {
     const token = Cookies.get("authToken");
@@ -19,19 +25,24 @@ instance.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Thêm interceptor xử lý các lỗi
 instance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (
+      response?.data?.data &&
+      response.status >= 200 &&
+      response.status < 300
+    ) {
+      return response.data;
+    }
+    throw response;
+  },
   (error) => {
     if (error.response?.status === 401 && !isLoggingOut) {
       isLoggingOut = true;
       alert("Phiên đăng nhập đã hết hạn, đăng xuất người dùng...");
-      console.warn("Phiên đăng nhập đã hết hạn, đăng xuất người dùng...");
       Cookies.remove("authToken");
       Cookies.remove("user");
       localStorage.removeItem("role");
