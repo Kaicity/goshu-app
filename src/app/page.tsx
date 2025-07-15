@@ -1,6 +1,7 @@
 "use client";
 
 import { login } from "@/api/users/userAuth";
+import { Particles } from "@/components/magicui/particles";
 import { SubmitButton } from "@/components/SummitButton";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +11,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useAuth from "@/hooks/useAuth";
@@ -19,12 +26,22 @@ import {
 } from "@/models/schemas/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Cookies from "js-cookie";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import { redirect, useRouter } from "next/navigation";
-import { startTransition, useActionState, useEffect } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const LoginPage = () => {
+  const { resolvedTheme } = useTheme();
+  const { setTheme } = useTheme();
+  const [color, setColor] = useState("#ffffff");
+
+  useEffect(() => {
+    setColor(resolvedTheme === "dark" ? "#ffffff" : "#000000");
+  }, [resolvedTheme]);
+
   const { isAuthenticated, isLoading } = useAuth();
 
   // Nếu đang ở trang login và user đã đăng nhập thì route đến dashboard
@@ -75,7 +92,38 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex flex-1 min-h-screen items-center justify-center p-6 md:p-10">
+    <div className="relative flex flex-1 min-h-screen w-full items-center justify-center p-6 md:p-10">
+      <div className="absolute top-0 right-0 p-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="icon">
+              <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="sr-only">Toggle theme</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setTheme("light")}>
+              Light
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme("dark")}>
+              Dark
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme("system")}>
+              System
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <Particles
+        className="absolute inset-0 z-0"
+        quantity={100}
+        ease={80}
+        color={color}
+        refresh
+      />
+
       <div className="w-full max-w-sm">
         <div className="flex flex-col gap-6">
           <Card>
@@ -134,17 +182,11 @@ const LoginPage = () => {
                     )}
                   </div>
                   <div className="flex flex-col gap-3">
-                    {/* <Button type="submit" className="w-full">
-                      Đăng nhập
-                    </Button> */}
                     <SubmitButton
                       text="Đăng nhập"
                       isPending={isPending}
                       className="w-full"
                     />
-                    <Button variant="outline" className="w-full">
-                      Đăng nhập với Google
-                    </Button>
                   </div>
                 </div>
               </form>
