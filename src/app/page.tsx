@@ -1,5 +1,5 @@
 "use client";
-import clsx from "clsx";
+import { getInputClass, getValidateBorder } from "@/utils/inputUtils";
 import { login } from "@/api/users/userAuth";
 import { Particles } from "@/components/magicui/particles";
 import { SubmitButton } from "@/components/SummitButton";
@@ -91,6 +91,8 @@ const LoginPage = () => {
     });
   };
 
+
+
   return (
     <div className="relative flex flex-1 min-h-screen w-full items-center justify-center p-6 md:p-10">
       <div className="absolute top-0 right-0 p-4">
@@ -153,11 +155,7 @@ const LoginPage = () => {
                       {...register("email")}
                       id="email"
                       placeholder="david@example.com"
-                      className={clsx(
-                        errors.email
-                          ? "focus-visible:border-red-500 border-red-500"
-                          : "border-neutral-50"
-                      )}
+                      className= {getValidateBorder(errors.email)}
                     />
                     {errors.email && (
                       <p className="text-red-500 text-sm">
@@ -179,11 +177,7 @@ const LoginPage = () => {
                       {...register("password")}
                       id="password"
                       type="password"
-                      className={clsx(
-                        errors.password
-                          ? "focus-visible:border-red-500 border-red-500"
-                          : "border-gray-300"
-                      )}
+                      className= {getValidateBorder(errors.password)}
                     />
                     {errors.password && (
                       <p className="text-red-500 text-sm">
