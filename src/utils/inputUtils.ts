@@ -1,6 +1,7 @@
-import clsx from "clsx";
+import { cn } from "@/lib/utils"
 
 const getValidateBorder = (error?: any) =>
-  clsx(error ? "border-red-500 focus-visible:border-red-500" : "border-gray-300");
+  cn(error ? "border-red-500 focus-visible:border-red-500" : "");
 
 export { getValidateBorder };
+
