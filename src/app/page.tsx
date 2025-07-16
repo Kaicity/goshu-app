@@ -1,5 +1,5 @@
 "use client";
-import { getInputClass, getValidateBorder } from "@/utils/inputUtils";
+import { getValidateBorder } from "@/utils/inputUtils";
 import { login } from "@/api/users/userAuth";
 import { Particles } from "@/components/magicui/particles";
 import { SubmitButton } from "@/components/SummitButton";
