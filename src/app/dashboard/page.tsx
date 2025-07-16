@@ -3,6 +3,7 @@
 import AppAreaChart from "@/components/AppAreaChart";
 import AppBarChart from "@/components/AppBarChart";
 import AppPieChart from "@/components/AppPieChart";
+import ProtectPage from "@/components/auth/ProtectPage";
 import CardList from "@/components/CardList";
 import TodoList from "@/components/TodoList";
 import { Textarea } from "@/components/ui/textarea";
@@ -35,4 +36,4 @@ const Homepage = () => {
   );
 };
 
-export default Homepage;
+export default ProtectPage(Homepage);
