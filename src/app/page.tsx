@@ -1,5 +1,5 @@
 "use client";
-import { getValidateBorder } from "@/utils/inputUtils";
+import { getValidateInput } from "@/utils/inputUtils";
 import { login } from "@/api/users/userAuth";
 import { Particles } from "@/components/magicui/particles";
 import { SubmitButton } from "@/components/SummitButton";
@@ -150,12 +150,12 @@ const LoginPage = () => {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="flex flex-col gap-6">
                   <div className="grid gap-3">
-                    <Label>Email</Label>
+                    <Label className={getValidateInput(errors.email, "text")}>Email</Label>
                     <Input
                       {...register("email")}
                       id="email"
                       placeholder="david@example.com"
-                      className= {getValidateBorder(errors.email)}
+                      className= {getValidateInput(errors.email, "border")}
                     />
                     {errors.email && (
                       <p className="text-red-500 text-sm">
@@ -165,7 +165,7 @@ const LoginPage = () => {
                   </div>
                   <div className="grid gap-3">
                     <div className="flex items-center">
-                      <Label>Password</Label>
+                      <Label className={getValidateInput(errors.password, "text")}>Password</Label>
                       <a
                         href="#"
                         className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
@@ -177,7 +177,7 @@ const LoginPage = () => {
                       {...register("password")}
                       id="password"
                       type="password"
-                      className= {getValidateBorder(errors.password)}
+                      className= {getValidateInput(errors.password, "border")}
                     />
                     {errors.password && (
                       <p className="text-red-500 text-sm">

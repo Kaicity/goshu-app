@@ -1,7 +1,8 @@
+"use client";
 import ProtectPage from "@/components/auth/ProtectPage";
 import { Payment, columns } from "./columns";
-import { DataTable } from "./data-table";
-
+import { DataTable } from "../data-table";
+import { useEffect, useState } from "react";
 const getData = async (): Promise<Payment[]> => {
   return [
     {
@@ -259,8 +260,23 @@ const getData = async (): Promise<Payment[]> => {
   ];
 };
 
-const PaymentsPage = async () => {
-  const data = await getData();
+const PaymentsPage =  () => {
+  const [data, setData] = useState<Payment[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPayments = async () => {
+      try {
+        const payments = await getData();
+        setData(payments);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPayments();
+  }, []);
+
   return (
     <div className="">
       <div className="mb-8 px-4 py-2 bg-secondary rounded-md">
