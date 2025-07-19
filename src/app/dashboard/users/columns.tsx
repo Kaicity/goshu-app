@@ -44,7 +44,7 @@ export const columns: ColumnDef<User>[] = [
       return (
         <div className="text-center">
           <Button
-            className=""
+            className="hover:bg-gray-200"
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >

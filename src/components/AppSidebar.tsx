@@ -73,7 +73,7 @@ const systemsManageItems = [
   },
   {
     title: "Người Dùng",
-    url: "/users",
+    url: "/dashboard/users",
     icon: Inbox,
   },
   {
