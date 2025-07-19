@@ -7,20 +7,21 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RotateCcwIcon, UsersRound } from "lucide-react";
+import { UserRole } from "@/enums/userRolesDto";
 const getData = async (): Promise<User[]> => {
   return [
     {
       id: "728ed521",
       email: "user1@example.com",
       password: "password1",
-      role_id: "role1",
+      role_id: UserRole.ADMIN,
       employee_id: "employee1",
     },
     {
       id: "728ed522",
       email: "user2@example.com",
       password: "password2",
-      role_id: "role2",
+      role_id: UserRole.EMPLOYEE,
       employee_id: "employee2",
     },
   ];

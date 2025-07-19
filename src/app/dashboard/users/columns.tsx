@@ -11,7 +11,7 @@ export type User = {
   id: string;
   email: string;
   password: string;
-  role_id: string;
+  role_id: string; // Chức vụ
   employee_id: string;
 };
 
@@ -59,15 +59,18 @@ export const columns: ColumnDef<User>[] = [
       return <div className="text-center">{user.email}</div>;
     },
   },
-
-  {
-    accessorKey: "password",
-    header: () => <div className="text-right pr-4">MẬT KHẨU</div>,
-    cell: ({ row }) => {
-      const user = row.original;
-      return <div className="text-right pr-4">{user.password}</div>;
-    },
+{
+  accessorKey: "role",
+  header: () => (<div className="text-center">CHỨC VỤ</div>),
+  cell: ({ row }) => {
+    const user = row.original;
+    return <div className="text-center">{user.role_id}</div>;
   },
+},
+{
+  accessorKey: "status",
+  header: () => (<div className="text-right">TRẠNG THÁI</div>),
+},
   {
     accessorKey: "actions",
     header: () => <div className="text-right pr-4">HÀNH ĐỘNG</div>,
