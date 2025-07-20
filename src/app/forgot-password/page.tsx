@@ -32,7 +32,7 @@ const ForgotPasswordPage = () => {
   } = useForm<forgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordFormSchema),
   });
-  const router = useRouter();
+  const navigate = useRouter();
 
   // Action user login trong một chuỗi actions lưu cookies, chuyển page, login failed or success
   const [state, submitAction, isPending] = useActionState(
@@ -48,8 +48,10 @@ const ForgotPasswordPage = () => {
             secretKey
           ).toString();
 
-          router.push(
-            `/change-password?token=${encodeURIComponent(encrypted)}`
+          navigate.push(
+            `/change-password?token=${encodeURIComponent(encrypted)}&account=${
+              formData.email
+            }`
           );
         }
       } catch (error: any) {

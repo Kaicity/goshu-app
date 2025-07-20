@@ -145,7 +145,7 @@ const LoginPage = () => {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="flex flex-col gap-6">
                   <div className="grid gap-3">
-                    <Label>Email</Label>
+                    <Label>Tên đăng nhập / email</Label>
                     <Input
                       {...register("email")}
                       id="email"
@@ -159,7 +159,7 @@ const LoginPage = () => {
                   </div>
                   <div className="grid gap-3">
                     <div className="flex items-center">
-                      <Label>Password</Label>
+                      <Label>Mật khẩu</Label>
                       <Link
                         href="/forgot-password"
                         className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
