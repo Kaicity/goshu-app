@@ -12,18 +12,12 @@ import {
   UserRole,
 } from "@/enums/userRolesEnum";
 import { STATUS_LABELS, STATUS_STYLES, Status } from "@/enums/statusEnum";
+import UserAccountDto from "@/models/dto/userAccountDto";
 
 //2. định nghia kiểu dữ liệu cho người dùng
-export type User = {
-  id: string;
-  email: string;
-  password: string;
-  role_id: string;
-  status: string;
-  employee_id: string;
-};
 
-export const columns: ColumnDef<User>[] = [
+
+export const columns: ColumnDef<UserAccountDto>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -71,7 +65,7 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "role",
     header: () => <div className="text-center">CHỨC VỤ</div>,
     cell: ({ row }) => {
-      const user = row.original.role_id as UserRole;
+      const user = row.original.role as UserRole;
       return (
         <div
           className={`min-w-[140px] mx-auto font-semibold rounded-4xl flex items-center justify-center gap-1 ${ROLE_STYLES[user]} w-max px-3 py-1 `}
@@ -101,7 +95,6 @@ export const columns: ColumnDef<User>[] = [
     header: () => <div className="text-right pr-4">HÀNH ĐỘNG</div>,
     cell: ({ row }) => {
       const resource = row.original;
-
       return (
         <div className="flex justify-end items-center gap-2 pr-4">
           <Button variant="ghost" size="sm" onClick={() => resource}>
