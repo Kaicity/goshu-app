@@ -1,17 +1,12 @@
 import LoginDto from "@/models/dto/loginDto";
-import { instance } from "../clientApi";
+import { instance } from "../axiosClient";
 
-export const login = async (login: LoginDto): Promise<string> => {
+export const login = async (login: LoginDto): Promise<any> => {
   try {
-    const response = await instance.post("/users/login", login);
-
-    if (response.data?.statusCode === 200) {
-      return response.data?.data?.accessToken;
-    } else {
-      throw new Error("Failed to request login account so not success");
-    }
+    const response = await instance.post("/auth/login", login);
+    return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage);
+    throw new Error(errorMessage || "System Errors");
   }
 };

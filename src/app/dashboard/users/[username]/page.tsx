@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import EditUser from "@/components/EditUser";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AppLineChart from "@/components/AppLineChart";
+import ProtectPage from "@/components/auth/ProtectPage";
 
 const SingleUserPage = () => {
   return (
@@ -183,4 +184,4 @@ const SingleUserPage = () => {
   );
 };
 
-export default SingleUserPage;
+export default ProtectPage(SingleUserPage);
