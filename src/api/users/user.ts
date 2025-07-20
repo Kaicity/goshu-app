@@ -1,9 +1,8 @@
-import LoginDto from "@/models/dto/loginDto";
 import { instance } from "../axiosClient";
 
-export const login = async (login: LoginDto): Promise<any> => {
+export const forgotPassword = async (email: string): Promise<any> => {
   try {
-    const response = await instance.post("/auth/login", login);
+    const response = await instance.post("/users/forgotPassword", { email });
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;

@@ -40,7 +40,7 @@ instance.interceptors.response.use(
     throw response;
   },
   (error) => {
-    if (error.response?.status === 401 && !isLoggingOut) {
+    if (error.response?.status === 403 && !isLoggingOut) {
       isLoggingOut = true;
       alert("Phiên đăng nhập đã hết hạn, đăng xuất người dùng...");
       Cookies.remove("authToken");
