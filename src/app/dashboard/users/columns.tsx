@@ -5,13 +5,21 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowUpDown, Divide, Edit, Trash } from "lucide-react";
+import {
+  ROLE_ICONS,
+  ROLE_LABELS,
+  ROLE_STYLES,
+  UserRole,
+} from "@/enums/userRolesEnum";
+import { STATUS_LABELS, STATUS_STYLES, Status } from "@/enums/statusEnum";
 
 //2. định nghia kiểu dữ liệu cho người dùng
 export type User = {
   id: string;
   email: string;
   password: string;
-  role_id: string; // Chức vụ
+  role_id: string;
+  status: string;
   employee_id: string;
 };
 
@@ -59,18 +67,35 @@ export const columns: ColumnDef<User>[] = [
       return <div className="text-center">{user.email}</div>;
     },
   },
-{
-  accessorKey: "role",
-  header: () => (<div className="text-center">CHỨC VỤ</div>),
-  cell: ({ row }) => {
-    const user = row.original;
-    return <div className="text-center">{user.role_id}</div>;
+  {
+    accessorKey: "role",
+    header: () => <div className="text-center">CHỨC VỤ</div>,
+    cell: ({ row }) => {
+      const user = row.original.role_id as UserRole;
+      return (
+        <div
+          className={`min-w-[140px] mx-auto font-semibold rounded-4xl flex items-center justify-center gap-1 ${ROLE_STYLES[user]} w-max px-3 py-1 `}
+        >
+          {ROLE_ICONS[user]}
+          {ROLE_LABELS[user]}
+        </div>
+      );
+    },
   },
-},
-{
-  accessorKey: "status",
-  header: () => (<div className="text-right">TRẠNG THÁI</div>),
-},
+  {
+    accessorKey: "status",
+    header: () => <div className="text-center">TRẠNG THÁI</div>,
+    cell: ({ row }) => {
+      const user = row.original.status as Status;
+      return (
+        <div
+          className={`min-w-[140px] mx-auto font-semibold rounded-4xl flex items-center justify-center gap-1 ${STATUS_STYLES[user]} w-max px-3 py-1 `}
+        >
+          {STATUS_LABELS[user]}
+        </div>
+      );
+    },
+  },
   {
     accessorKey: "actions",
     header: () => <div className="text-right pr-4">HÀNH ĐỘNG</div>,
