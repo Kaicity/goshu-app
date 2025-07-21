@@ -1,11 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
+import { ROLE_ICONS, ROLE_LABELS, UserRole } from "@/enums/userRolesEnum";
 
 interface AddUserDialogProps {
   open: boolean;
@@ -16,11 +30,7 @@ export function AddUserDialog({ open, setOpen }: AddUserDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-blue-500 text-white hover:bg-blue-600 ">Tạo người dùng</Button>
-      </DialogTrigger>
-
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="max-w-[400px] lg:max-w-[500px] [&>button]:hidden">
         <DialogHeader>
           <DialogTitle>Tạo người dùng</DialogTitle>
         </DialogHeader>
@@ -33,22 +43,22 @@ export function AddUserDialog({ open, setOpen }: AddUserDialogProps) {
                 <SelectValue placeholder="Chọn vai trò" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="admin">Quản trị</SelectItem>
-                <SelectItem value="user">Người dùng</SelectItem>
+                {Object.entries(ROLE_LABELS).map(([key, label]) => (
+                  <SelectItem key={key} value={key}>
+                    <div className={`flex items-center gap-2`}>
+                      {ROLE_ICONS[key as UserRole]}
+                      {label}
+                    </div>
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
 
           <div className="grid gap-2">
-            <Label>Họ tên</Label>
-            <Input placeholder="Nhập họ tên đầy đủ" />
+            <Label>Email</Label>
+            <Input placeholder="Nhập email" />
           </div>
-
-          <div className="grid gap-2">
-            <Label>Tên đăng nhập</Label>
-            <Input placeholder="Nhập tên đăng nhập" />
-          </div>
-
           <div className="grid gap-2">
             <Label>Mật khẩu</Label>
             <Input type="password" placeholder="#Adfe8f8jhz!@" />
@@ -56,7 +66,13 @@ export function AddUserDialog({ open, setOpen }: AddUserDialogProps) {
         </div>
 
         <DialogFooter>
-          <Button type="button" variant="outline">Đóng</Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setOpen(false)}
+          >
+            Đóng
+          </Button>
           <Button type="submit">Lưu thông tin</Button>
         </DialogFooter>
       </DialogContent>

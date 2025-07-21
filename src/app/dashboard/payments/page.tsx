@@ -1,7 +1,7 @@
 "use client";
 import ProtectPage from "@/components/auth/ProtectPage";
 import { Payment, columns } from "./columns";
-import { DataTable } from "../data-table";
+import { DataTable } from "../../../components/data-table";
 import { useEffect, useState } from "react";
 const getData = async (): Promise<Payment[]> => {
   return [
@@ -260,7 +260,7 @@ const getData = async (): Promise<Payment[]> => {
   ];
 };
 
-const PaymentsPage =  () => {
+const PaymentsPage = () => {
   const [data, setData] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(true);
 

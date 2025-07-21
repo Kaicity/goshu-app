@@ -2,7 +2,7 @@
 import ProtectPage from "@/components/auth/ProtectPage";
 
 import { columns } from "./columns";
-import { DataTable } from "../data-table";
+import { DataTable } from "../../../components/data-table";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AddUserDialog } from "@/components/AddUserDialog";
+import { AddUserDialog } from "@/app/dashboard/users/AddUserDialog";
 import { getUsers } from "@/api/users/userAuth";
 import { set } from "react-hook-form";
 import UserAccountDto from "@/models/dto/userAccountDto";
