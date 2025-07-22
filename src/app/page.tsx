@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import useAuth from "@/hooks/useAuth";
+import useLogged from "@/hooks/useLogged";
 import {
   loginFormSchema,
   type loginFormData,
@@ -29,27 +29,22 @@ import Cookies from "js-cookie";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import { redirect, useRouter } from "next/navigation";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { startTransition, useActionState, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const LoginPage = () => {
   const { resolvedTheme } = useTheme();
   const { setTheme } = useTheme();
   const [color, setColor] = useState("#ffffff");
 
+  useLogged();
+
   useEffect(() => {
     setColor(resolvedTheme === "dark" ? "#ffffff" : "#000000");
   }, [resolvedTheme]);
-
-  const { isAuthenticated, isLoading } = useAuth();
-
-  // Nếu đang ở trang login và user đã đăng nhập thì route đến dashboard
-  useEffect(() => {
-    if (isAuthenticated) {
-      redirect("/dashboard");
-    }
-  }, [isAuthenticated]);
 
   const {
     register,
@@ -78,7 +73,9 @@ const LoginPage = () => {
           router.push("/dashboard");
         }
       } catch (error: any) {
-        console.log("Login Error");
+        toast.error("Đăng nhập thất bại", {
+          description: error.message,
+        });
       }
     },
     undefined
@@ -150,7 +147,7 @@ const LoginPage = () => {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="flex flex-col gap-6">
                   <div className="grid gap-3">
-                    <Label className={getValidateInput(errors.email, "text")}>Email</Label>
+                    <Label className={getValidateInput(errors.email, "text")}>Tên đăng nhập / Email</Label>
                     <Input
                       {...register("email")}
                       id="email"
@@ -171,7 +168,7 @@ const LoginPage = () => {
                         className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                       >
                         Quên mật khẩu
-                      </a>
+                      </Link>
                     </div>
                     <Input
                       {...register("password")}

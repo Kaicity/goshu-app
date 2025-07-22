@@ -9,7 +9,7 @@ export const login = async (login: LoginDto): Promise<any> => {
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || "Đăng nhập thất bại");
+    throw new Error(errorMessage || "System Errors");
   }
 };
 

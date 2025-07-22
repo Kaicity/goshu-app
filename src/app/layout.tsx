@@ -4,6 +4,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 import React from "react";
 import "./globals.css";
+import { Toaster } from "sonner";
+import "../styles/nprogress.css";
+import RouteProgress from "@/components/route/RouteProgress";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +36,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex`}
       >
+        <RouteProgress />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -40,6 +44,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster richColors position="top-right" closeButton />
         </ThemeProvider>
       </body>
     </html>
