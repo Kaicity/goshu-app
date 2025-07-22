@@ -1,5 +1,5 @@
 "use client";
-
+import { getValidateInput } from "@/utils/inputUtils";
 import { login } from "@/api/users/userAuth";
 import { Particles } from "@/components/magicui/particles";
 import { SubmitButton } from "@/components/SummitButton";
@@ -88,6 +88,8 @@ const LoginPage = () => {
     });
   };
 
+
+
   return (
     <div className="relative flex flex-1 min-h-screen w-full items-center justify-center p-6 md:p-10">
       <div className="absolute top-0 right-0 p-4">
@@ -145,11 +147,12 @@ const LoginPage = () => {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="flex flex-col gap-6">
                   <div className="grid gap-3">
-                    <Label>Tên đăng nhập / email</Label>
+                    <Label className={getValidateInput(errors.email, "text")}>Tên đăng nhập / Email</Label>
                     <Input
                       {...register("email")}
                       id="email"
                       placeholder="david@example.com"
+                      className= {getValidateInput(errors.email, "border")}
                     />
                     {errors.email && (
                       <p className="text-red-500 text-sm">
@@ -159,9 +162,9 @@ const LoginPage = () => {
                   </div>
                   <div className="grid gap-3">
                     <div className="flex items-center">
-                      <Label>Mật khẩu</Label>
-                      <Link
-                        href="/forgot-password"
+                      <Label className={getValidateInput(errors.password, "text")}>Password</Label>
+                      <a
+                        href="#"
                         className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                       >
                         Quên mật khẩu
@@ -171,6 +174,7 @@ const LoginPage = () => {
                       {...register("password")}
                       id="password"
                       type="password"
+                      className= {getValidateInput(errors.password, "border")}
                     />
                     {errors.password && (
                       <p className="text-red-500 text-sm">
