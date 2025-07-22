@@ -23,3 +23,14 @@ export const getUsers = async (): Promise<UserAccountDto[]> => {
     throw new Error("Không thể lấy danh sách người dùng");
   }
 };
+
+export const createAccountUser = async (user: UserAccountDto): Promise<any> => {
+  try {
+  const response = await instance.post("/users/createAccount", user);
+  } catch(error: any) {
+    const errorMessage = error.response?.data?.message;
+    throw new Error(errorMessage || "Không thể tạo tài khoản người dùng");
+}
+};
+
+

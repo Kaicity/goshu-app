@@ -20,13 +20,41 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ROLE_ICONS, ROLE_LABELS, UserRole } from "@/enums/userRolesEnum";
+import { createAccountUser } from "@/api/users/userAuth";
+import {
+  createAccountSchema,
+  type createAccountFormData,
+} from "@/models/schemas/createAccountSchema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface AddUserDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
+  onCreated?: () => void;
 }
-export function AddUserDialog({ open, setOpen }: AddUserDialogProps) {
-  const [role, setRole] = useState("");
+export function AddUserDialog({
+  open,
+  setOpen,
+  onCreated,
+}: AddUserDialogProps) {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<createAccountFormData>({
+    resolver: zodResolver(createAccountSchema),
+  });
+  const onSubmit = async (user: createAccountFormData) => {
+    try {
+      await createAccountUser(user);
+      onCreated?.();
+      setOpen(false);
+    } catch (err) {
+      console.error("Tạo tài khoản thất bại:", err);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -38,7 +66,7 @@ export function AddUserDialog({ open, setOpen }: AddUserDialogProps) {
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label>Vai trò</Label>
-            <Select onValueChange={(value) => setRole(value)}>
+            <Select>
               <SelectTrigger>
                 <SelectValue placeholder="Chọn vai trò" />
               </SelectTrigger>

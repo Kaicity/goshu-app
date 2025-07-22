@@ -6,5 +6,5 @@ export default interface UserAccountDto {
   password: string;
   role: UserRole;
   status: Status;
-  employeeId: string;
+  // employeeId: string;
 }

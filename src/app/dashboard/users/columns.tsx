@@ -83,7 +83,7 @@ export const columns: ColumnDef<UserAccountDto>[] = [
       const user = row.original.status as Status;
       return (
         <div
-          className={`min-w-[140px] mx-auto font-semibold rounded-4xl flex items-center justify-center gap-1 ${STATUS_STYLES[user]} w-max px-3 py-1 `}
+          className={`min-w-[90px] mx-auto font-semibold rounded-4xl flex items-center justify-center gap-1 ${STATUS_STYLES[user]} w-max px-3 py-1 `}
         >
           {STATUS_LABELS[user]}
         </div>
@@ -92,11 +92,11 @@ export const columns: ColumnDef<UserAccountDto>[] = [
   },
   {
     accessorKey: "actions",
-    header: () => <div className="text-right pr-4">HÀNH ĐỘNG</div>,
+    header: () => <div className="text-center ">HÀNH ĐỘNG</div>,
     cell: ({ row }) => {
       const resource = row.original;
       return (
-        <div className="flex justify-end items-center gap-2 pr-4">
+        <div className="flex justify-center gap-2 ">
           <Button variant="ghost" size="sm" onClick={() => resource}>
             <Edit className="h-4 w-4" />
           </Button>
