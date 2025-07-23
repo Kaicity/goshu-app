@@ -4,7 +4,7 @@ import { UserRole } from "@/enums/userRolesEnum";
 export default interface UserAccountDto {
   email: string;
   password: string;
-  role: UserRole;
-  status: Status;
+  role: string;
+  status: string;
   // employeeId: string;
 }

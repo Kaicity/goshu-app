@@ -1,23 +1,23 @@
 "use client";
 import ProtectPage from "@/components/auth/ProtectPage";
 
-import { columns } from "./columns";
-import { DataTable } from "../../../components/data-table";
-import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
+import { AddUserDialog } from "@/app/dashboard/users/AddUserDialog";
 import { Button } from "@/components/ui/button";
-import { RotateCcwIcon, UsersRound, ListFilterPlus, Users } from "lucide-react";
-import { UserRole } from "@/enums/userRolesEnum";
-import { Status } from "@/enums/statusEnum";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AddUserDialog } from "@/app/dashboard/users/AddUserDialog";
-import { getUsers } from "@/api/users/userAuth";
-import { set } from "react-hook-form";
+import { Input } from "@/components/ui/input";
+import { Status } from "@/enums/statusEnum";
+import { UserRole } from "@/enums/userRolesEnum";
+import { ListFilterPlus, RotateCcwIcon, UsersRound } from "lucide-react";
+import { useEffect, useState } from "react";
+import { DataTable } from "../../../components/data-table";
+import { columns } from "./columns";
+
+import { getUsers } from "@/api/users/user";
 import UserAccountDto from "@/models/dto/userAccountDto";
 
 const UsersPage = () => {
@@ -38,7 +38,7 @@ const UsersPage = () => {
   };
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [open]);
 
   return (
     <div className="">
