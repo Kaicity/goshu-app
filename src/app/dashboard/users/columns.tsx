@@ -13,9 +13,22 @@ import {
 } from "@/enums/userRolesEnum";
 import { STATUS_LABELS, STATUS_STYLES, Status } from "@/enums/statusEnum";
 import UserAccountDto from "@/models/dto/userAccountDto";
+import { deleteAccountUser } from "@/api/users/user";
+import { toast } from "sonner";
+import { ca } from "date-fns/locale";
 
-//2. định nghia kiểu dữ liệu cho người dùng
-
+const handleDelete = async (resource: UserAccountDto) => {
+  try {
+    const res = await deleteAccountUser(resource.id || "");
+    if (!res) {
+      toast.success("Xoá tài khoản người dùng thành công");
+    }
+  } catch (error: any) {
+    toast.error("Xoá tài khoản người dùng thất bại", {
+      description: error.message,
+    });
+  }
+};
 
 export const columns: ColumnDef<UserAccountDto>[] = [
   {
@@ -103,7 +116,7 @@ export const columns: ColumnDef<UserAccountDto>[] = [
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => resource}
+            onClick={() => handleDelete(resource)}
             className="text-red-500"
           >
             <Trash className="h-4 w-4" />

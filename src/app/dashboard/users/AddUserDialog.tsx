@@ -36,11 +36,7 @@ interface AddUserDialogProps {
   setOpen: (open: boolean) => void;
   onCreated?: () => void;
 }
-export function AddUserDialog({
-  open,
-  setOpen,
-  onCreated,
-}: AddUserDialogProps) {
+export function AddUserDialog({ open, setOpen }: AddUserDialogProps) {
   const [roleSelected, setRoleSelected] = useState<string>("");
 
   const {
@@ -78,7 +74,6 @@ export function AddUserDialog({
 
   const onSubmit = async (data: createAccountFormData) => {
     console.log(data);
-
     startTransition(() => {
       submitAction(data);
     });

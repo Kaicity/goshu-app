@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const createAccountSchema = z.object({
+  // id: z.string(),
   email: z.string().email("Email không hợp lệ"),
   password: z
     .string()
