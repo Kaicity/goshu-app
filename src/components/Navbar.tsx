@@ -1,7 +1,16 @@
 "use client";
 
 import Cookies from "js-cookie";
-import { Bell, LogOut, Moon, Settings, Sun, User } from "lucide-react";
+import {
+  Bell,
+  CircleOff,
+  Eye,
+  LogOut,
+  Moon,
+  Settings,
+  Sun,
+  User,
+} from "lucide-react";
 import { useTheme } from "next-themes";
 import { redirect } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -75,7 +84,7 @@ const Navbar = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-80 max-h-96 overflow-auto p-2"
+              className="w-[400px] max-h-96 overflow-auto p-2"
             >
               <div className="flex items-center justify-between px-2 py-1">
                 <DropdownMenuLabel>Thông báo mới</DropdownMenuLabel>
@@ -84,39 +93,60 @@ const Navbar = () => {
                     variant="ghost"
                     size="sm"
                     className="text-xs text-blue-500 hover:underline"
-                    onClick={() => setNotifications([])}
+                    onClick={() => {
+                      setNotifications((prev) =>
+                        prev.map((n) => ({ ...n, read: true }))
+                      );
+                    }}
                   >
-                    Đã xem hết
+                    Xem tất cả
                   </Button>
                 )}
               </div>
               <DropdownMenuSeparator />
 
               {notifications.length === 0 ? (
-                <DropdownMenuItem disabled>Không có thông báo</DropdownMenuItem>
+                <DropdownMenuItem disabled>
+                  <div className="flex flex-col gap-2 items-center justify-center mx-auto">
+                    <span>Không có thông báo</span>
+                    <CircleOff />
+                  </div>
+                </DropdownMenuItem>
               ) : (
                 notifications
                   .slice()
                   .reverse()
-                  .map((notif) => (
+                  .map((notif, index) => (
                     <DropdownMenuItem
                       key={notif.id}
                       className="flex items-start space-x-2 hover:bg-accent cursor-pointer"
-                      onClick={() => {
-                        console.log("Xem thông báo", notif.id);
+                      onSelect={(event) => {
+                        event.preventDefault();
+                        const updated = notifications.map((n) =>
+                          n.id === notif.id ? { ...n, read: true } : n
+                        );
+                        setNotifications(updated);
                       }}
                     >
                       <div className="flex-shrink-0">
                         <Bell className="w-4 h-4 mt-1 text-blue-500" />
                       </div>
-                      <div className="text-sm">
+                      <div className="flex-1 text-sm">
                         <p className="font-medium text-foreground">
                           {notif.message}
                         </p>
-                        <p className="text-xs text-muted-foreground">
-                          {formatTimeAgo(notif.createdAt)}
-                        </p>
+                        <div className="flex items-center">
+                          <p className="text-xs text-muted-foreground">
+                            {formatTimeAgo(notif.createdAt)}
+                          </p>
+                        </div>
                       </div>
+                      {notif.read && (
+                        <div className="flex gap-2 text-xs items-center">
+                          <Eye />
+                          <span>Đã xem</span>
+                        </div>
+                      )}
                     </DropdownMenuItem>
                   ))
               )}
