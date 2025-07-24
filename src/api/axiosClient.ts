@@ -4,6 +4,8 @@ import qs from "qs";
 
 let isLoggingOut = false;
 
+const bc = new BroadcastChannel("auth");
+
 export const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
@@ -40,12 +42,11 @@ instance.interceptors.response.use(
     throw response;
   },
   (error) => {
-    if (error.response?.status === 403 && !isLoggingOut) {
+    if (error.response?.status === 401 && !isLoggingOut) {
       isLoggingOut = true;
-      alert("Phiên đăng nhập đã hết hạn, đăng xuất người dùng...");
+      alert("Phiên đăng nhập đã hết hạn");
       Cookies.remove("authToken");
       Cookies.remove("user");
-      localStorage.removeItem("role");
       window.location.href = "/";
     }
     return Promise.reject(error);

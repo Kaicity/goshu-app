@@ -1,12 +1,11 @@
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import RouteProgress from "@/components/route/RouteProgress";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { cookies } from "next/headers";
 import React from "react";
-import "./globals.css";
 import { Toaster } from "sonner";
 import "../styles/nprogress.css";
-import RouteProgress from "@/components/route/RouteProgress";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,9 +27,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -44,7 +40,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           {children}
-          <Toaster richColors position="top-right" closeButton />
+          <Toaster richColors position="bottom-center" closeButton />
         </ThemeProvider>
       </body>
     </html>

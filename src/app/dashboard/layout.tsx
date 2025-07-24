@@ -1,3 +1,4 @@
+import { AppBreadcrumb } from "@/components/AppBreadCrumb";
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -17,7 +18,10 @@ export default async function RootLayout({
         <AppSidebar />
         <main className="w-full">
           <Navbar />
-          <div className="px-4">{children}</div>
+          <div className="px-4">
+            <AppBreadcrumb />
+            {children}
+          </div>
         </main>
       </SidebarProvider>
     </>

@@ -8,6 +8,6 @@ export const login = async (login: LoginDto): Promise<any> => {
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || "System Errors");
+    throw new Error(errorMessage || "Mất kết nối đến hệ thống máy chủ");
   }
 };
