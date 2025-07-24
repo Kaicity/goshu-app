@@ -1,4 +1,5 @@
 "use client";
+
 import ProtectPage from "@/components/auth/ProtectPage";
 
 import { AddUserDialog } from "@/app/dashboard/users/AddUserDialog";
@@ -19,26 +20,28 @@ import { columns } from "./columns";
 
 import { getUsers } from "@/api/users/user";
 import UserAccountDto from "@/models/dto/userAccountDto";
+import { toast } from "sonner";
 
 const UsersPage = () => {
   const [users, setUsers] = useState<UserAccountDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const users = await getUsers();
-      console.log("🟡 [DEBUG] Fetched users:", users);
-      setUsers(users);
-    } catch (error) {
-      console.error("Lỗi khi lấy danh sách người dùng:", error);
+      const res = await getUsers();
+      setUsers(res);
+    } catch (error: any) {
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    fetchUsers();
-  }, [open]);
 
   return (
     <div className="">

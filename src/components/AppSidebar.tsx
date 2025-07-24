@@ -1,16 +1,24 @@
+"use client";
+
+import clsx from "clsx";
 import {
   Calendar,
-  ChevronDown,
+  ChevronRight,
   ChevronUp,
+  CoinsIcon,
   Home,
   Inbox,
-  Projector,
-  Search,
-  Settings,
+  MessageCircleIcon,
+  Presentation,
+  ShieldCheck,
+  TimerIcon,
+  User,
   User2,
+  Users2,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Collapsible,
   CollapsibleContent,
@@ -31,59 +39,21 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarSeparator,
 } from "./ui/sidebar";
-
-const humanManageitems = [
-  {
-    title: "Nhân Viên",
-    url: "/employees",
-    icon: Home,
-  },
-  {
-    title: "Chấm Công",
-    url: "/attendances",
-    icon: Inbox,
-  },
-  {
-    title: "Đơn Nghỉ Phép",
-    url: "/leave-requests",
-    icon: Calendar,
-  },
-  {
-    title: "Lương",
-    url: "/payrolls",
-    icon: Search,
-  },
-  {
-    title: "Đang Chờ Duyệt",
-    url: "/request-pending",
-    icon: Settings,
-  },
-];
-
-const systemsManageItems = [
-  {
-    title: "Phòng Ban",
-    url: "/department",
-    icon: Home,
-  },
-  {
-    title: "Người Dùng",
-    url: "/dashboard/users",
-    icon: Inbox,
-  },
-  {
-    title: "Phân Quyền",
-    url: "/roles",
-    icon: Calendar,
-  },
-];
+import {
+  humanManageitems,
+  systemsManageItems,
+} from "@/constants/nav-link/nav-link-items";
 
 const AppSidebar = () => {
+  const pathVariable = usePathname();
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="py-4">
@@ -104,25 +74,62 @@ const AppSidebar = () => {
       <SidebarSeparator />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Hệ thống</SidebarGroupLabel>
+          <SidebarGroupLabel>Quản Lý</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link href="/dashboard">
-                    <Projector />
-                    <span>Dashboard</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {humanManageitems.map((item) => {
+                return (
+                  <Collapsible
+                    key={item.title}
+                    asChild
+                    // defaultOpen={item.isActive}
+                    className="group/collapsible"
+                  >
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        {!item.children || item.children.length === 0 ? (
+                          <Link href={item.url}>
+                            <SidebarMenuButton tooltip={item.title}>
+                              {item.icon && <item.icon />}
+                              <span>{item.title}</span>
+                            </SidebarMenuButton>
+                          </Link>
+                        ) : (
+                          <SidebarMenuButton tooltip={item.title}>
+                            {item.icon && <item.icon />}
+                            <span>{item.title}</span>
+                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                          </SidebarMenuButton>
+                        )}
+                      </CollapsibleTrigger>
+                      {item.children && item.children.length > 0 && (
+                        <CollapsibleContent>
+                          <SidebarMenuSub>
+                            {item.children.map((subItem) => (
+                              <SidebarMenuSubItem key={subItem.url}>
+                                <SidebarMenuSubButton asChild>
+                                  <Link href={subItem.url}>
+                                    <span>{subItem.title}</span>
+                                  </Link>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            ))}
+                          </SidebarMenuSub>
+                        </CollapsibleContent>
+                      )}
+                    </SidebarMenuItem>
+                  </Collapsible>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
         <SidebarGroup>
-          <SidebarGroupLabel>Nhân sự</SidebarGroupLabel>
+          <SidebarGroupLabel>Người Dùng</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {humanManageitems.map((item) => (
+              {systemsManageItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <Link href={item.url}>
@@ -130,37 +137,11 @@ const AppSidebar = () => {
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
-                  {item.url === "/request-pending" && (
-                    <SidebarMenuBadge>19999</SidebarMenuBadge>
-                  )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
-        {/* COLLAPSABLE */}
-        <Collapsible defaultOpen className="group/collapsible">
-          <SidebarGroup>
-            <SidebarGroupLabel>Quản Lý</SidebarGroupLabel>
-            <CollapsibleContent>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {systemsManageItems.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild>
-                        <Link href={item.url}>
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </CollapsibleContent>
-          </SidebarGroup>
-        </Collapsible>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>

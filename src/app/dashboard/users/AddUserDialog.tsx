@@ -86,25 +86,26 @@ export function AddUserDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-[400px] lg:max-w-[500px] [&>button]:hidden">
-        <form onSubmit={handleSubmit(onSubmit)}>
+      <DialogContent className="max-w-md w-[500px] px-6 py-8">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <DialogHeader>
-            <DialogTitle>Tạo người dùng</DialogTitle>
+            <DialogTitle className="text-xl">Tạo người dùng</DialogTitle>
             <DialogDescription>
               Điền thông tin người dùng để tạo tài khoản
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
+
+          <div className="grid gap-4">
+            <div className="grid gap-2 space-y-2">
               <Label>Vai trò</Label>
-              <Select onValueChange={(role) => setRoleSelected(role)}>
+              <Select value={roleSelected} onValueChange={setRoleSelected}>
                 <SelectTrigger>
                   <SelectValue placeholder="Chọn vai trò" />
                 </SelectTrigger>
                 <SelectContent>
                   {Object.entries(ROLE_LABELS).map(([key, label]) => (
                     <SelectItem key={key} value={key}>
-                      <div className={`flex items-center gap-2`}>
+                      <div className="flex items-center gap-2">
                         {ROLE_ICONS[key as UserRole]}
                         {label}
                       </div>
@@ -114,20 +115,25 @@ export function AddUserDialog({
               </Select>
             </div>
 
-            <div className="grid gap-2">
+            <div className="grid gap-2 space-y-2">
               <Label>Email</Label>
-              <Input {...register("email")} placeholder="Nhập email" />
+              <Input
+                {...register("email")}
+                placeholder="Nhập email"
+                className="h-10"
+              />
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email.message}</p>
               )}
             </div>
 
-            <div className="grid gap-2">
+            <div className="grid gap-2 space-y-2">
               <Label>Mật khẩu</Label>
               <Input
                 {...register("password")}
                 type="password"
                 placeholder="#Adfe8f8jhz!@"
+                className="h-10"
               />
               {errors.password && (
                 <p className="text-red-500 text-sm">
@@ -137,7 +143,7 @@ export function AddUserDialog({
             </div>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="flex justify-end gap-2">
             <Button
               type="button"
               variant="outline"
