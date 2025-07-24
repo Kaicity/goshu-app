@@ -15,10 +15,14 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { SidebarTrigger, useSidebar } from "./ui/sidebar";
+import useNotification from "@/hooks/useNotification";
+import { formatTimeAgo } from "@/utils/formatTimeAgo";
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
   const { toggleSidebar } = useSidebar();
+
+  const { notifications, setNotifications, unreadCount } = useNotification();
 
   const handleLogout = () => {
     Cookies.remove("authToken");
@@ -58,12 +62,66 @@ const Navbar = () => {
         </DropdownMenu>
 
         <div className="relative">
-          <Button variant="outline">
-            <Bell />
-          </Button>
-          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-            3
-          </span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="relative">
+                <Bell />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                    {unreadCount}
+                  </span>
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-80 max-h-96 overflow-auto p-2"
+            >
+              <div className="flex items-center justify-between px-2 py-1">
+                <DropdownMenuLabel>Thông báo mới</DropdownMenuLabel>
+                {notifications.length > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-xs text-blue-500 hover:underline"
+                    onClick={() => setNotifications([])}
+                  >
+                    Đã xem hết
+                  </Button>
+                )}
+              </div>
+              <DropdownMenuSeparator />
+
+              {notifications.length === 0 ? (
+                <DropdownMenuItem disabled>Không có thông báo</DropdownMenuItem>
+              ) : (
+                notifications
+                  .slice()
+                  .reverse()
+                  .map((notif) => (
+                    <DropdownMenuItem
+                      key={notif.id}
+                      className="flex items-start space-x-2 hover:bg-accent cursor-pointer"
+                      onClick={() => {
+                        console.log("Xem thông báo", notif.id);
+                      }}
+                    >
+                      <div className="flex-shrink-0">
+                        <Bell className="w-4 h-4 mt-1 text-blue-500" />
+                      </div>
+                      <div className="text-sm">
+                        <p className="font-medium text-foreground">
+                          {notif.message}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {formatTimeAgo(notif.createdAt)}
+                        </p>
+                      </div>
+                    </DropdownMenuItem>
+                  ))
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {/* USER MENU */}
