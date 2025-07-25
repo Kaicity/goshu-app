@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 //1. gọi ColumnDef từ react-table của TanStack
 import { ColumnDef } from "@tanstack/react-table";
 
@@ -13,11 +13,13 @@ import {
 } from "@/enums/userRolesEnum";
 import { STATUS_LABELS, STATUS_STYLES, Status } from "@/enums/statusEnum";
 import UserAccountDto from "@/models/dto/userAccountDto";
+import { deleteAccountUser, getUsers } from "@/api/users/user";
+import { toast } from "sonner";
+import { ca } from "date-fns/locale";
 
-//2. định nghia kiểu dữ liệu cho người dùng
-
-
-export const columns: ColumnDef<UserAccountDto>[] = [
+export const columns = (
+  handleDelete: (user: UserAccountDto) => void
+): ColumnDef<UserAccountDto>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -103,7 +105,7 @@ export const columns: ColumnDef<UserAccountDto>[] = [
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => resource}
+            onClick={() => handleDelete(resource)}
             className="text-red-500"
           >
             <Trash className="h-4 w-4" />

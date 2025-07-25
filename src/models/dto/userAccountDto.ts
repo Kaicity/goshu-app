@@ -1,5 +1,5 @@
 export default interface UserAccountDto {
-  id: string;
+  id?: string;
   email: string;
   password: string;
   role: string;

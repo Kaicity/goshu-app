@@ -53,3 +53,17 @@ export const getUser = async (email: string): Promise<any> => {
     throw new Error(errorMessage || "Mất kết nối đến hệ thống máy chủ");
   }
 };
+
+export const deleteAccountUser = async (id: string): Promise<boolean> => {
+  try {
+    const response = await instance.delete(`/users/deleteAccount/${encodeURIComponent(id)}`);
+    if (response.data?.statusCode === 201) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message;
+    throw new Error(errorMessage);
+  }
+};
