@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 //1. gọi ColumnDef từ react-table của TanStack
 import { ColumnDef } from "@tanstack/react-table";
 
@@ -13,24 +13,13 @@ import {
 } from "@/enums/userRolesEnum";
 import { STATUS_LABELS, STATUS_STYLES, Status } from "@/enums/statusEnum";
 import UserAccountDto from "@/models/dto/userAccountDto";
-import { deleteAccountUser } from "@/api/users/user";
+import { deleteAccountUser, getUsers } from "@/api/users/user";
 import { toast } from "sonner";
 import { ca } from "date-fns/locale";
 
-const handleDelete = async (resource: UserAccountDto) => {
-  try {
-    const res = await deleteAccountUser(resource.id || "");
-    if (!res) {
-      toast.success("Xoá tài khoản người dùng thành công");
-    }
-  } catch (error: any) {
-    toast.error("Xoá tài khoản người dùng thất bại", {
-      description: error.message,
-    });
-  }
-};
-
-export const columns: ColumnDef<UserAccountDto>[] = [
+export const columns = (
+  handleDelete: (user: UserAccountDto) => void
+): ColumnDef<UserAccountDto>[] => [
   {
     id: "select",
     header: ({ table }) => (

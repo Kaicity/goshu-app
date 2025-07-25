@@ -17,8 +17,9 @@ import { useEffect, useState } from "react";
 import { DataTable } from "../../../components/data-table";
 import { columns } from "./columns";
 
-import { getUsers } from "@/api/users/user";
+import { deleteAccountUser, getUsers } from "@/api/users/user";
 import UserAccountDto from "@/models/dto/userAccountDto";
+import { toast } from "sonner";
 
 const UsersPage = () => {
   const [users, setUsers] = useState<UserAccountDto[]>([]);
@@ -36,6 +37,21 @@ const UsersPage = () => {
       setLoading(false);
     }
   };
+
+  const handleDelete = async (resource: UserAccountDto) => {
+    try {
+      const res = await deleteAccountUser(resource.id || "");
+      if (!res) {
+        toast.success("Xoá tài khoản người dùng thành công");
+        fetchUsers();
+      }
+    } catch (error: any) {
+      toast.error("Xoá tài khoản người dùng thất bại", {
+        description: error.message,
+      });
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
   }, [open]);
@@ -100,7 +116,7 @@ const UsersPage = () => {
 
         <AddUserDialog open={open} setOpen={setOpen} />
       </div>
-      <DataTable columns={columns} data={users} />
+      <DataTable columns={columns(handleDelete)} data={users} />
     </div>
   );
 };
