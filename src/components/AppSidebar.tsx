@@ -1,21 +1,10 @@
 "use client";
 
-import clsx from "clsx";
 import {
-  Calendar,
-  ChevronRight,
-  ChevronUp,
-  CoinsIcon,
-  Home,
-  Inbox,
-  MessageCircleIcon,
-  Presentation,
-  ShieldCheck,
-  TimerIcon,
-  User,
-  User2,
-  Users2,
-} from "lucide-react";
+  humanManageitems,
+  systemsManageItems,
+} from "@/constants/nav-link/nav-link-items";
+import { ChevronRight, ChevronUp, User2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -46,13 +35,10 @@ import {
   SidebarMenuSubItem,
   SidebarSeparator,
 } from "./ui/sidebar";
-import {
-  humanManageitems,
-  systemsManageItems,
-} from "@/constants/nav-link/nav-link-items";
+import { useApp } from "@/contexts/AppContext";
 
 const AppSidebar = () => {
-  const pathVariable = usePathname();
+  const { userAccount } = useApp();
 
   return (
     <Sidebar collapsible="icon">
@@ -88,12 +74,12 @@ const AppSidebar = () => {
                     <SidebarMenuItem>
                       <CollapsibleTrigger asChild>
                         {!item.children || item.children.length === 0 ? (
-                          <Link href={item.url}>
-                            <SidebarMenuButton tooltip={item.title}>
+                          <SidebarMenuButton tooltip={item.title} asChild>
+                            <Link href={item.url}>
                               {item.icon && <item.icon />}
                               <span>{item.title}</span>
-                            </SidebarMenuButton>
-                          </Link>
+                            </Link>
+                          </SidebarMenuButton>
                         ) : (
                           <SidebarMenuButton tooltip={item.title}>
                             {item.icon && <item.icon />}
@@ -149,7 +135,8 @@ const AppSidebar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> Thongular <ChevronUp className="ml-auto" />
+                  <User2 /> {userAccount?.email?.split("@")[0]}{" "}
+                  <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

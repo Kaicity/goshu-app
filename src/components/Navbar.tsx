@@ -1,5 +1,7 @@
 "use client";
 
+import useNotification from "@/hooks/useNotification";
+import { formatTimeAgo } from "@/utils/formatTimeAgo";
 import Cookies from "js-cookie";
 import {
   Bell,
@@ -13,6 +15,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
@@ -23,29 +26,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { SidebarTrigger, useSidebar } from "./ui/sidebar";
-import useNotification from "@/hooks/useNotification";
-import { formatTimeAgo } from "@/utils/formatTimeAgo";
+import { SidebarTrigger } from "./ui/sidebar";
+import { useApp } from "@/contexts/AppContext";
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
-  const { toggleSidebar } = useSidebar();
+
+  const { logout } = useApp();
 
   const { notifications, setNotifications, unreadCount } = useNotification();
+  const [readCount, setReadCount] = useState(unreadCount);
 
-  const handleLogout = () => {
-    Cookies.remove("authToken");
-    localStorage.removeItem("role");
-    redirect("/");
-  };
+  useEffect(() => {
+    setReadCount(notifications.filter((n) => !n.read).length);
+  }, [notifications]);
 
   return (
     <nav className="p-4 flex items-center justify-between sticky top-0 bg-background z-10">
       {/* LEFT */}
       <SidebarTrigger />
-      {/* <Button variant="outline" onClick={toggleSidebar}>
-        Custom Button
-      </Button> */}
       {/* RIGHT */}
       <div className="flex items-center gap-4">
         {/* THEME MENU */}
@@ -75,9 +74,9 @@ const Navbar = () => {
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="relative">
                 <Bell />
-                {unreadCount > 0 && (
+                {readCount > 0 && (
                   <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-                    {unreadCount}
+                    {notifications.filter((n) => !n.read).length}
                   </span>
                 )}
               </Button>
@@ -174,7 +173,7 @@ const Navbar = () => {
               <Settings className="h-[1.2rem] w-[1.2rem] mr-2" />
               Cài đặt
             </DropdownMenuItem>
-            <DropdownMenuItem variant="destructive" onClick={handleLogout}>
+            <DropdownMenuItem variant="destructive" onClick={logout}>
               <LogOut className="h-[1.2rem] w-[1.2rem] mr-2" />
               Đăng xuất
             </DropdownMenuItem>

@@ -1,5 +1,5 @@
 "use client";
-import { getValidateInput } from "@/utils/inputUtils";
+import { getUser } from "@/api/users/user";
 import { login } from "@/api/users/userAuth";
 import { Particles } from "@/components/magicui/particles";
 import { SubmitButton } from "@/components/SummitButton";
@@ -24,6 +24,7 @@ import {
   loginFormSchema,
   type loginFormData,
 } from "@/models/schemas/loginSchema";
+import { getValidateInput } from "@/utils/inputUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Cookies from "js-cookie";
 import { Moon, Sun } from "lucide-react";
@@ -69,6 +70,13 @@ const LoginPage = () => {
             secure: true,
             sameSite: "Strict",
           });
+
+          // Lấy đầy đủ thông tin user sau khi đăng nhập thành công
+          const user = await getUser(res.email);
+
+          if (user) {
+            localStorage.setItem("user", JSON.stringify(user));
+          }
 
           router.push("/dashboard");
         }

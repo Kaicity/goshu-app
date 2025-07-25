@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import useAuth from "./useAuth";
 
 const useLogged = () => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   // Nếu đang ở trang login và user đã đăng nhập thì route đến dashboard
   useEffect(() => {
