@@ -7,8 +7,19 @@ import ProtectPage from "@/components/auth/ProtectPage";
 import CardList from "@/components/CardList";
 import TodoList from "@/components/TodoList";
 import { Textarea } from "@/components/ui/textarea";
+import { useApp } from "@/contexts/AppContext";
+import { useEffect } from "react";
 
 const Homepage = () => {
+  const { setUserAccount } = useApp();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUserAccount(JSON.parse(storedUser));
+    }
+  }, []);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4">
       <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2">

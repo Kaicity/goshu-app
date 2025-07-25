@@ -6,6 +6,7 @@ import React from "react";
 import { Toaster } from "sonner";
 import "../styles/nprogress.css";
 import "./globals.css";
+import { AppProvider } from "@/contexts/AppContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,16 +33,18 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex`}
       >
-        <RouteProgress />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster richColors position="bottom-center" closeButton />
-        </ThemeProvider>
+        <AppProvider>
+          <RouteProgress />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster richColors position="bottom-center" closeButton />
+          </ThemeProvider>
+        </AppProvider>
       </body>
     </html>
   );

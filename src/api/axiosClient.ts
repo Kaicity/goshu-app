@@ -46,7 +46,7 @@ instance.interceptors.response.use(
       isLoggingOut = true;
       alert("Phiên đăng nhập đã hết hạn");
       Cookies.remove("authToken");
-      Cookies.remove("user");
+      localStorage.removeItem("user");
       window.location.href = "/";
     }
     return Promise.reject(error);

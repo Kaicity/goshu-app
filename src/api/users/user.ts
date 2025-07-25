@@ -41,3 +41,15 @@ export const createAccountUser = async (user: UserAccountDto): Promise<any> => {
     throw new Error(errorMessage || "Mất kết nối đến hệ thống máy chủ");
   }
 };
+
+export const getUser = async (email: string): Promise<any> => {
+  try {
+    const response = await instance.get("/users/getUser", {
+      params: { email },
+    });
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message;
+    throw new Error(errorMessage || "Mất kết nối đến hệ thống máy chủ");
+  }
+};
