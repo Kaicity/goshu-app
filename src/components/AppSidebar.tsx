@@ -36,9 +36,14 @@ import {
   SidebarSeparator,
 } from "./ui/sidebar";
 import { useApp } from "@/contexts/AppContext";
+import { cn } from "@/lib/utils";
 
 const AppSidebar = () => {
   const { userAccount } = useApp();
+
+  const path = usePathname();
+
+  console.log(path);
 
   return (
     <Sidebar collapsible="icon">
@@ -50,7 +55,7 @@ const AppSidebar = () => {
                 <Image src="/logo.svg" alt="logo" width={30} height={30} />
                 <div className="flex flex-col">
                   <span className="text-md font-medium">Goshu</span>
-                  <span className="text-xs text-gray-500">Admin System</span>
+                  <span className="text-xs text-gray-500">HR Admin System</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -68,13 +73,21 @@ const AppSidebar = () => {
                   <Collapsible
                     key={item.title}
                     asChild
-                    // defaultOpen={item.isActive}
+                    defaultOpen={true}
                     className="group/collapsible"
                   >
                     <SidebarMenuItem>
                       <CollapsibleTrigger asChild>
                         {!item.children || item.children.length === 0 ? (
-                          <SidebarMenuButton tooltip={item.title} asChild>
+                          <SidebarMenuButton
+                            tooltip={item.title}
+                            asChild
+                            className={cn(
+                              "bg-transparent h-10",
+                              item.url === path &&
+                                "bg-custom-cyan/30 font-medium hover:bg-custom-cyan/30"
+                            )}
+                          >
                             <Link href={item.url}>
                               {item.icon && <item.icon />}
                               <span>{item.title}</span>
@@ -93,7 +106,14 @@ const AppSidebar = () => {
                           <SidebarMenuSub>
                             {item.children.map((subItem) => (
                               <SidebarMenuSubItem key={subItem.url}>
-                                <SidebarMenuSubButton asChild>
+                                <SidebarMenuSubButton
+                                  asChild
+                                  className={cn(
+                                    "bg-transparent h-10",
+                                    subItem.url === path &&
+                                      "bg-custom-cyan/30 font-medium hover:bg-custom-cyan/30"
+                                  )}
+                                >
                                   <Link href={subItem.url}>
                                     <span>{subItem.title}</span>
                                   </Link>
@@ -117,7 +137,14 @@ const AppSidebar = () => {
             <SidebarMenu>
               {systemsManageItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton
+                    asChild
+                    className={cn(
+                      "bg-transparent h-10",
+                      item.url === path &&
+                        "bg-custom-cyan/30 font-medium hover:bg-custom-cyan/30"
+                    )}
+                  >
                     <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
@@ -135,7 +162,7 @@ const AppSidebar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> {userAccount?.email?.split("@")[0]}{" "}
+                  <User2 /> {userAccount?.email?.split("@")[0]}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
