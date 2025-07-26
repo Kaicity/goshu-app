@@ -5,6 +5,7 @@ import {
   Inbox,
   MessageCircleIcon,
   Presentation,
+  Settings2,
   ShieldCheck,
   TimerIcon,
   User,
@@ -80,7 +81,7 @@ const systemsManageItems = [
   {
     title: "Cài Đặt",
     url: "/dashboard/settings",
-    icon: ShieldCheck,
+    icon: Settings2,
   },
 ];
 
