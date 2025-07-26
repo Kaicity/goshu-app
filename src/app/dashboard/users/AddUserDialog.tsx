@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Status } from "@/enums/statusEnum";
 import { ROLE_ICONS, ROLE_LABELS, UserRole } from "@/enums/userRolesEnum";
+import UserAccountDto from "@/models/dto/userAccountDto";
 import {
   createAccountSchema,
   type createAccountFormData,
@@ -35,8 +36,9 @@ interface AddUserDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   onCreated?: () => void;
+  user?: UserAccountDto | null;
 }
-export function AddUserDialog({ open, setOpen }: AddUserDialogProps) {
+export function AddUserDialog({ open, setOpen, user }: AddUserDialogProps) {
   const [roleSelected, setRoleSelected] = useState<string>("");
 
   const {

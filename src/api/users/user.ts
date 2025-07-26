@@ -67,3 +67,13 @@ export const deleteAccountUser = async (id: string): Promise<boolean> => {
     throw new Error(errorMessage);
   }
 };
+
+export const updateAccountUser = async (user: UserAccountDto): Promise<any> => {
+  try {
+    const response = await instance.put("/users/updateAccount", user);
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message;
+    throw new Error(errorMessage || "Mất kết nối đến hệ thống máy chủ");
+  }
+};

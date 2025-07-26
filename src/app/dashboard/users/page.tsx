@@ -26,6 +26,7 @@ const UsersPage = () => {
   const [users, setUsers] = useState<UserAccountDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserAccountDto | null>(null);
 
   useEffect(() => {
     fetchUsers();
@@ -42,8 +43,6 @@ const UsersPage = () => {
       setLoading(false);
     }
   };
-<<<<<<< HEAD
-=======
 
   const handleDelete = async (resource: UserAccountDto) => {
     try {
@@ -59,10 +58,14 @@ const UsersPage = () => {
     }
   };
 
+  const handleEdit = (user: UserAccountDto) => {
+    setSelectedUser(user);
+    setOpen(true); // mở Dialog
+  };
+
   useEffect(() => {
     fetchUsers();
   }, [open]);
->>>>>>> users-account
 
   return (
     <div className="">

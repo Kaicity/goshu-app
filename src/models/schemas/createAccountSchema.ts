@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const createAccountSchema = z.object({
+  id: z.string(),
   email: z.string().email("Email không hợp lệ"),
   password: z
     .string()
@@ -11,6 +12,9 @@ export const createAccountSchema = z.object({
     ),
   role: z.string(),
   status: z.string(),
+  employeeId: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 export type createAccountFormData = z.infer<typeof createAccountSchema>;

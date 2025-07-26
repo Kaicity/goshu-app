@@ -19,6 +19,7 @@ import { ca } from "date-fns/locale";
 
 export const columns = (
   handleDelete: (user: UserAccountDto) => void
+  
 ): ColumnDef<UserAccountDto>[] => [
   {
     id: "select",
