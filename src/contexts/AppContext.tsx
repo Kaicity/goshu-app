@@ -28,25 +28,21 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     Cookies.get("authToken") || null
   );
 
-  const [userAccount, setUserAccount] = useState<UserAccountDto | null>(() => {
-    if (typeof window !== "undefined") {
-      const userStorage = localStorage.getItem("user");
-      try {
-        return userStorage ? (JSON.parse(userStorage) as UserAccountDto) : null;
-      } catch (error) {
-        console.error("Invalid JSON in localStorage user:", userStorage);
-        localStorage.removeItem("user");
-        return null;
-      }
-    }
-    return null;
-  });
+  const [userAccount, setUserAccount] = useState<UserAccountDto | null>(null);
 
   useEffect(() => {
-    if (userAccount) {
-      localStorage.setItem("user", JSON.stringify(userAccount));
+    const userStorage = localStorage.getItem("user");
+    try {
+      const parsedUser = userStorage
+        ? (JSON.parse(userStorage) as UserAccountDto)
+        : null;
+      setUserAccount(parsedUser);
+    } catch (error) {
+      console.error("Invalid JSON in localStorage user:", userStorage);
+      localStorage.removeItem("user");
+      setUserAccount(null);
     }
-  }, [userAccount]);
+  }, []);
 
   const logout = () => {
     Cookies.remove("authToken");

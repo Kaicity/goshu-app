@@ -40,9 +40,6 @@ const Homepage = () => {
       <div className="bg-primary-foreground p-4 rounded-lg">
         <CardList title="Popular Content" />
       </div>
-      <div>
-        <Textarea placeholder="Type your message here." />
-      </div>
     </div>
   );
 };
