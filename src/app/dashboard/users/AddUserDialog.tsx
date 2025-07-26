@@ -1,6 +1,6 @@
 "use client";
 
-import { createAccountUser } from "@/api/users/user";
+import { createAccountUser, getUser } from "@/api/users/user";
 import { SubmitButton } from "@/components/SummitButton";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,11 +35,19 @@ import { toast } from "sonner";
 interface AddUserDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  onCreated?: () => void;
-  user?: UserAccountDto | null;
+  mode: "create" | "update";
+  setMode?: (mode: "create" | "update") => void;
+  email?: string | null;
 }
-export function AddUserDialog({ open, setOpen, user }: AddUserDialogProps) {
+export function AddUserDialog({
+  open,
+  setOpen,
+  mode,
+  setMode,
+  email,
+}: AddUserDialogProps) {
   const [roleSelected, setRoleSelected] = useState<string>("");
+  const [user, setUser] = useState<UserAccountDto | null>(null);
 
   const {
     register,
@@ -50,12 +58,53 @@ export function AddUserDialog({ open, setOpen, user }: AddUserDialogProps) {
     resolver: zodResolver(createAccountSchema),
   });
 
+  // Nếu mode là update thì gán giá trị cho form
+  useEffect(() => {
+    if (mode === "create") {
+      reset();
+      setRoleSelected("");
+    }
+    if (mode === "update" && email) {
+      setRoleSelected("");
+      reset({
+        email: user?.email,
+        role: user?.role,
+        status: user?.status,
+      });
+      setRoleSelected(user?.role || "");
+    }
+  }, [mode, email, reset]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await handleGetUser(email as string);
+      if (res) {
+        setUser(res);
+      }
+    };
+    fetchUser();
+  }, [email]);
+
   //reset hàm để gán giá trị
   useEffect(() => {
     if (roleSelected) {
       reset({ role: roleSelected, status: Status.ACTIVE });
     }
   }, [roleSelected]);
+
+  const handleGetUser = async (
+    email: string
+  ): Promise<UserAccountDto | null> => {
+    try {
+      const user = await getUser(email);
+      return user;
+    } catch (error: any) {
+      toast.error("Lấy thông tin người dùng thất bại", {
+        description: error.message,
+      });
+    }
+    return null;
+  };
 
   const [state, submitAction, isPending] = useActionState(
     async (prevState: any, formData: createAccountFormData) => {
@@ -64,6 +113,8 @@ export function AddUserDialog({ open, setOpen, user }: AddUserDialogProps) {
         if (res) {
           toast.success("Tạo tài khoản người dùng thành công");
           setOpen(false);
+          reset();
+          setRoleSelected("");
         }
       } catch (error: any) {
         toast.error("Tạo tài khoản thất bại", {
@@ -144,7 +195,10 @@ export function AddUserDialog({ open, setOpen, user }: AddUserDialogProps) {
             <Button
               type="button"
               variant="outline"
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setOpen(false);
+                reset();
+              }}
             >
               Đóng
             </Button>

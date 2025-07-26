@@ -4,7 +4,7 @@ export default interface UserAccountDto {
   password: string;
   role: string;
   status: string;
-  employeeId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  employeeId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

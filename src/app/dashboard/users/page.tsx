@@ -26,7 +26,8 @@ const UsersPage = () => {
   const [users, setUsers] = useState<UserAccountDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<UserAccountDto | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+  const [mode, setMode] = useState<"create" | "update">("create");
 
   useEffect(() => {
     fetchUsers();
@@ -58,14 +59,11 @@ const UsersPage = () => {
     }
   };
 
-  const handleEdit = (user: UserAccountDto) => {
-    setSelectedUser(user);
+  const handleEdit = (email: string) => {
+    setEmail(email);
     setOpen(true); // mở Dialog
+    setMode("update"); // chuyển sang chế độ cập nhật
   };
-
-  useEffect(() => {
-    fetchUsers();
-  }, [open]);
 
   return (
     <div className="">
@@ -119,15 +117,25 @@ const UsersPage = () => {
         </Button>
         <Button
           className="w-full md:w-[100px] ml-auto"
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            setOpen(true);
+            setMode("create");
+          }}
         >
           <UsersRound className="w-4 h-4 mr-2" />
           Tạo
         </Button>
 
-        <AddUserDialog open={open} setOpen={setOpen} />
+        <AddUserDialog
+          open={open}
+          setOpen={setOpen}
+          mode={mode}
+          setMode={setMode}
+          email={email}
+          
+        />
       </div>
-      <DataTable columns={columns(handleDelete)} data={users} />
+      <DataTable columns={columns(handleDelete, handleEdit)} data={users} />
     </div>
   );
 };

@@ -1,25 +1,21 @@
-import React, { useEffect } from "react";
 //1. gọi ColumnDef từ react-table của TanStack
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowUpDown, Divide, Edit, Trash } from "lucide-react";
+import { STATUS_LABELS, STATUS_STYLES, Status } from "@/enums/statusEnum";
 import {
   ROLE_ICONS,
   ROLE_LABELS,
   ROLE_STYLES,
   UserRole,
 } from "@/enums/userRolesEnum";
-import { STATUS_LABELS, STATUS_STYLES, Status } from "@/enums/statusEnum";
 import UserAccountDto from "@/models/dto/userAccountDto";
-import { deleteAccountUser, getUsers } from "@/api/users/user";
-import { toast } from "sonner";
-import { ca } from "date-fns/locale";
+import { ArrowUpDown, Edit, Trash } from "lucide-react";
 
 export const columns = (
-  handleDelete: (user: UserAccountDto) => void
-  
+  handleDelete: (user: UserAccountDto) => void,
+  handleUpdate: (email: string) => void
 ): ColumnDef<UserAccountDto>[] => [
   {
     id: "select",
@@ -100,7 +96,11 @@ export const columns = (
       const resource = row.original;
       return (
         <div className="flex justify-center gap-2 ">
-          <Button variant="ghost" size="sm" onClick={() => resource}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => handleUpdate(resource.email)}
+          >
             <Edit className="h-4 w-4" />
           </Button>
           <Button
