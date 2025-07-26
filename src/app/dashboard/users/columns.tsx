@@ -1,23 +1,22 @@
-import React from "react";
 //1. gọi ColumnDef từ react-table của TanStack
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowUpDown, Divide, Edit, Trash } from "lucide-react";
+import { STATUS_LABELS, STATUS_STYLES, Status } from "@/enums/statusEnum";
 import {
   ROLE_ICONS,
   ROLE_LABELS,
   ROLE_STYLES,
   UserRole,
 } from "@/enums/userRolesEnum";
-import { STATUS_LABELS, STATUS_STYLES, Status } from "@/enums/statusEnum";
 import UserAccountDto from "@/models/dto/userAccountDto";
+import { ArrowUpDown, Edit, Trash } from "lucide-react";
 
-//2. định nghia kiểu dữ liệu cho người dùng
-
-
-export const columns: ColumnDef<UserAccountDto>[] = [
+export const columns = (
+  handleDelete: (user: UserAccountDto) => void,
+  handleUpdate: (email: string) => void
+): ColumnDef<UserAccountDto>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -97,13 +96,17 @@ export const columns: ColumnDef<UserAccountDto>[] = [
       const resource = row.original;
       return (
         <div className="flex justify-center gap-2 ">
-          <Button variant="ghost" size="sm" onClick={() => resource}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => handleUpdate(resource.email)}
+          >
             <Edit className="h-4 w-4" />
           </Button>
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => resource}
+            onClick={() => handleDelete(resource)}
             className="text-red-500"
           >
             <Trash className="h-4 w-4" />
