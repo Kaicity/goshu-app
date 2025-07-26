@@ -1,6 +1,10 @@
 "use client";
 
-import { createAccountUser, getUser } from "@/api/users/user";
+import {
+  createAccountUser,
+  getUser,
+  updateAccountUser,
+} from "@/api/users/user";
 import { SubmitButton } from "@/components/SummitButton";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,19 +39,17 @@ import { toast } from "sonner";
 interface AddUserDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  mode: "create" | "update";
-  setMode?: (mode: "create" | "update") => void;
-  email?: string | null;
+  user?: UserAccountDto | null;
+  reloadData: () => void;
 }
+
 export function AddUserDialog({
   open,
   setOpen,
-  mode,
-  setMode,
-  email,
+  user,
+  reloadData: loadData,
 }: AddUserDialogProps) {
-  const [roleSelected, setRoleSelected] = useState<string>("");
-  const [user, setUser] = useState<UserAccountDto | null>(null);
+  const [roleSelected, setRoleSelected] = useState<string>(UserRole.ADMIN);
 
   const {
     register,
@@ -58,68 +60,58 @@ export function AddUserDialog({
     resolver: zodResolver(createAccountSchema),
   });
 
-  // Nếu mode là update thì gán giá trị cho form
   useEffect(() => {
-    if (mode === "create") {
-      reset();
-      setRoleSelected("");
-    }
-    if (mode === "update" && email) {
-      setRoleSelected("");
+    if (user) {
       reset({
-        email: user?.email,
-        role: user?.role,
-        status: user?.status,
+        email: user.email,
+        password: "",
+        role: user.role,
       });
-      setRoleSelected(user?.role || "");
+      setRoleSelected(user.role);
+    } else {
+      initialFormData();
     }
-  }, [mode, email, reset]);
+  }, [user]);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const res = await handleGetUser(email as string);
-      if (res) {
-        setUser(res);
-      }
-    };
-    fetchUser();
-  }, [email]);
-
-  //reset hàm để gán giá trị
-  useEffect(() => {
-    if (roleSelected) {
-      reset({ role: roleSelected, status: Status.ACTIVE });
-    }
-  }, [roleSelected]);
-
-  const handleGetUser = async (
-    email: string
-  ): Promise<UserAccountDto | null> => {
-    try {
-      const user = await getUser(email);
-      return user;
-    } catch (error: any) {
-      toast.error("Lấy thông tin người dùng thất bại", {
-        description: error.message,
-      });
-    }
-    return null;
+  const initialFormData = () => {
+    reset({
+      email: "",
+      password: "",
+      role: UserRole.ADMIN,
+    });
+    setRoleSelected(UserRole.ADMIN);
   };
 
   const [state, submitAction, isPending] = useActionState(
     async (prevState: any, formData: createAccountFormData) => {
-      try {
-        const res = await createAccountUser(formData);
-        if (res) {
-          toast.success("Tạo tài khoản người dùng thành công");
-          setOpen(false);
-          reset();
-          setRoleSelected("");
+      if (user) {
+        try {
+          const res = await updateAccountUser(user.id as string, formData);
+          if (res) {
+            toast.success("Cập nhật tài khoản người dùng thành công");
+            setOpen(false);
+            initialFormData();
+            loadData();
+          }
+        } catch (error: any) {
+          toast.error("Cập nhật tài khoản thất bại", {
+            description: error.message,
+          });
         }
-      } catch (error: any) {
-        toast.error("Tạo tài khoản thất bại", {
-          description: error.message,
-        });
+      } else {
+        try {
+          const res = await createAccountUser(formData);
+          if (res) {
+            toast.success("Tạo tài khoản người dùng thành công");
+            setOpen(false);
+            initialFormData();
+            loadData();
+          }
+        } catch (error: any) {
+          toast.error("Tạo tài khoản thất bại", {
+            description: error.message,
+          });
+        }
       }
     },
     undefined
@@ -137,9 +129,13 @@ export function AddUserDialog({
       <DialogContent className="max-w-md w-[500px] px-6 py-8">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <DialogHeader>
-            <DialogTitle className="text-xl">Tạo người dùng</DialogTitle>
+            <DialogTitle className="text-xl">
+              {user ? "Cập nhật người dùng" : "Tạo người dùng"}
+            </DialogTitle>
             <DialogDescription>
-              Điền thông tin người dùng để tạo tài khoản
+              {user
+                ? "Cập nhật thông tin người dùng"
+                : "Điền thông tin người dùng để tạo tài khoản"}
             </DialogDescription>
           </DialogHeader>
 
@@ -161,6 +157,9 @@ export function AddUserDialog({
                   ))}
                 </SelectContent>
               </Select>
+              {errors.role && (
+                <p className="text-red-500 text-sm">{errors.role.message}</p>
+              )}
             </div>
 
             <div className="grid gap-2 space-y-2">
@@ -168,6 +167,7 @@ export function AddUserDialog({
               <Input
                 {...register("email")}
                 placeholder="Nhập email"
+                autoComplete="new-email"
                 className="h-10"
               />
               {errors.email && (
@@ -181,6 +181,7 @@ export function AddUserDialog({
                 {...register("password")}
                 type="password"
                 placeholder="#Adfe8f8jhz!@"
+                autoComplete="new-password"
                 className="h-10"
               />
               {errors.password && (
@@ -197,7 +198,7 @@ export function AddUserDialog({
               variant="outline"
               onClick={() => {
                 setOpen(false);
-                reset();
+                initialFormData();
               }}
             >
               Đóng

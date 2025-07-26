@@ -3,7 +3,7 @@ export default interface UserAccountDto {
   email: string;
   password: string;
   role: string;
-  status: string;
+  status?: string;
   employeeId?: string;
   createdAt?: Date;
   updatedAt?: Date;

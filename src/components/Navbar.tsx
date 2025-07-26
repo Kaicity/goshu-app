@@ -1,8 +1,8 @@
 "use client";
 
+import { useApp } from "@/contexts/AppContext";
 import useNotification from "@/hooks/useNotification";
 import { formatTimeAgo } from "@/utils/formatTimeAgo";
-import Cookies from "js-cookie";
 import {
   Bell,
   CircleOff,
@@ -14,7 +14,6 @@ import {
   User,
 } from "lucide-react";
 import { useTheme } from "next-themes";
-import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
@@ -27,7 +26,6 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { SidebarTrigger } from "./ui/sidebar";
-import { useApp } from "@/contexts/AppContext";
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();

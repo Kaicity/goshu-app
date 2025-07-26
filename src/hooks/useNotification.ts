@@ -8,7 +8,10 @@ export default function useNotification() {
   const [notifications, setNotifications] = useState<NotificationDto[]>([]);
 
   useEffect(() => {
-    const socket: Socket = io(SOCKET_URL);
+    const socket: Socket = io(SOCKET_URL, {
+      transports: ["websocket", "polling"],
+      withCredentials: false,
+    });
 
     socket.on("connect", () => {
       console.log("Connected to WebSocket");

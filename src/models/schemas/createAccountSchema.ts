@@ -9,8 +9,8 @@ export const createAccountSchema = z.object({
       /^[A-Z][a-zA-Z0-9]*$/,
       "Mật khẩu phải bắt đầu bằng chữ hoa và không chứa ký tự đặc biệt"
     ),
-  role: z.string(),
-  status: z.string(),
+  role: z.string({ message: "Vui lòng chọn vai trò" }),
+  status: z.string().optional(),
 });
 
 export type createAccountFormData = z.infer<typeof createAccountSchema>;

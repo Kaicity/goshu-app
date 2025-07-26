@@ -56,7 +56,9 @@ export const getUser = async (email: string): Promise<any> => {
 
 export const deleteAccountUser = async (id: string): Promise<boolean> => {
   try {
-    const response = await instance.delete(`/users/deleteAccount/${encodeURIComponent(id)}`);
+    const response = await instance.delete(
+      `/users/deleteAccount/${encodeURIComponent(id)}`
+    );
     if (response.data?.statusCode === 201) {
       return true;
     } else {
@@ -68,9 +70,12 @@ export const deleteAccountUser = async (id: string): Promise<boolean> => {
   }
 };
 
-export const updateAccountUser = async (user: UserAccountDto): Promise<any> => {
+export const updateAccountUser = async (
+  id: string,
+  user: UserAccountDto
+): Promise<any> => {
   try {
-    const response = await instance.put("/users/updateAccount", user);
+    const response = await instance.put(`/users/updateAccount/${id}`, user);
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;

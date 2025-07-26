@@ -15,7 +15,7 @@ import { ArrowUpDown, Edit, Trash } from "lucide-react";
 
 export const columns = (
   handleDelete: (user: UserAccountDto) => void,
-  handleUpdate: (email: string) => void
+  handleUpdate: (user: UserAccountDto) => void
 ): ColumnDef<UserAccountDto>[] => [
   {
     id: "select",
@@ -99,7 +99,7 @@ export const columns = (
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => handleUpdate(resource.email)}
+            onClick={() => handleUpdate(resource)}
           >
             <Edit className="h-4 w-4" />
           </Button>
