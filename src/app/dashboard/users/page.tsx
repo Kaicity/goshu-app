@@ -17,10 +17,16 @@ import { ListFilterPlus, RotateCcwIcon, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DataTable } from "../../../components/data-table";
 import { columns } from "./columns";
-
+import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
 import { deleteAccountUser, getUsers } from "@/api/users/user";
 import UserAccountDto from "@/models/dto/userAccountDto";
 import { toast } from "sonner";
+
+// Tạo mảng options từ enum
+const roleOptions = Object.entries(UserRole).map(([key, value]) => ({
+  label: value,
+  value: value,
+}));
 
 const UsersPage = () => {
   const [users, setUsers] = useState<UserAccountDto[]>([]);

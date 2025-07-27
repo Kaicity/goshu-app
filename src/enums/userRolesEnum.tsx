@@ -14,7 +14,7 @@ export const ROLE_LABELS: Record<UserRole, string> = {
 };
 
 export const ROLE_STYLES: Record<UserRole, string> = {
-  [UserRole.ADMIN]: 'bg-yellow-500 text-white ',
+  [UserRole.ADMIN]: 'bg-yellow-500 text-white dark:bg-yellow-400',
   [UserRole.HR]: 'bg-cyan-500 text-white',
   [UserRole.EMPLOYEE]: 'bg-blue-500 text-white',
 };

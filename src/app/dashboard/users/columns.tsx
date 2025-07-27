@@ -67,7 +67,7 @@ export const columns = (
       const user = row.original.role as UserRole;
       return (
         <div
-          className={`min-w-[140px] mx-auto font-semibold rounded-4xl flex items-center justify-center gap-1 ${ROLE_STYLES[user]} w-max px-3 py-1 `}
+          className={`min-w-[130px] mx-auto font-semibold rounded-md flex items-center justify-center gap-1 ${ROLE_STYLES[user]} w-max px-3 py-1 `}
         >
           {ROLE_ICONS[user]}
           {ROLE_LABELS[user]}
