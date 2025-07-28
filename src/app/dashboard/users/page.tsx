@@ -2,52 +2,65 @@
 
 import ProtectPage from "@/components/auth/ProtectPage";
 
+import { deleteAccountUser, getUsers } from "@/api/users/user";
 import { AddUserDialog } from "@/app/dashboard/users/AddUserDialog";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Status } from "@/enums/statusEnum";
-import { UserRole } from "@/enums/userRolesEnum";
-import { ListFilterPlus, RotateCcwIcon, UsersRound } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Status, STATUS_LABELS } from "@/enums/statusEnum";
+import { ROLE_LABELS, UserRole } from "@/enums/userRolesEnum";
+import UserAccountDto from "@/models/dto/userAccountDto";
+import { RotateCcwIcon, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { DataTable } from "../../../components/data-table";
 import { columns } from "./columns";
-import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
-import { deleteAccountUser, getUsers } from "@/api/users/user";
-import UserAccountDto from "@/models/dto/userAccountDto";
-import { toast } from "sonner";
-import {
-  getCoreRowModel,
-  getFilteredRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-
 const UsersPage = () => {
   const [users, setUsers] = useState<UserAccountDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<UserAccountDto | null>(null);
-
-  const statusOptions = Object.entries(Status).map(([key, value]) => ({
+  const statusOptions = Object.entries(Status).map(([value]) => ({
     label: value,
     value,
   }));
 
-  const roleOptions = Object.entries(UserRole).map(([key, value]) => ({
+  const roleOptions = Object.entries(UserRole).map(([value]) => ({
     label: value,
     value,
   }));
+
+  // Pagination
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [limit, setLimit] = useState(10);
+
+  // Parameters for the table
+  const [search, setSearch] = useState<string>("");
+  const [roleSelected, setRoleSelected] = useState<string>("");
+  const [statusSelected, setStatusSelected] = useState<string>("");
+
+  useEffect(() => {
+    fetchUsers();
+  }, [page, limit, search, roleSelected, statusSelected]);
 
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const res = await getUsers();
-      setUsers(res);
+      const res = await getUsers(page, limit, {
+        search,
+        role: roleSelected,
+        status: statusSelected,
+      });
+      setUsers(res.userAccounts);
+      setTotal(res.pagination.total);
+      setLimit(res.pagination.limit);
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -75,16 +88,13 @@ const UsersPage = () => {
       setOpen(true);
     }
   };
-  const table = useReactTable({
-    data: users,
-    columns: columns(handleDelete, handleUpdate),
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-  });
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  const resetFilters = () => {
+    setSearch("");
+    setRoleSelected("");
+    setStatusSelected("");
+    setPage(1);
+  };
 
   return (
     <div className="">
@@ -96,22 +106,52 @@ const UsersPage = () => {
       {/* Search & Filters */}
       <div className="flex flex-wrap items-center gap-1 mb-6 *:mt-2">
         <Input
-          placeholder="Tìm kiếm theo tên..."
+          placeholder="Tìm kiếm theo email..."
           className="max-w-sm sm:w-full"
-        />
-        <DataTableFacetedFilter
-          title="Trạng Thái"
-          options={statusOptions}
-          column={table.getColumn("status")}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
 
+        {/* <DataTableFacetedFilter
+          title="Trạng Thái"
+          options={statusOptions}
+          value={statusOptions}
+          onChange={setStatus}
+        />
         <DataTableFacetedFilter
           title="Chức Vụ"
           options={roleOptions}
-          column={table.getColumn("role")}
-        />
+          value={role}
+          onChange={setRole}
+        /> */}
 
-        <Button variant="outline">
+        <Select value={roleSelected} onValueChange={setRoleSelected}>
+          <SelectTrigger className="w-full sm:w-[200px]">
+            <SelectValue placeholder="Chọn chức vụ" />
+            <SelectContent>
+              {Object.entries(UserRole).map(([key, value]) => (
+                <SelectItem key={key} value={value}>
+                  {ROLE_LABELS[value]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </SelectTrigger>
+        </Select>
+
+        <Select value={statusSelected} onValueChange={setStatusSelected}>
+          <SelectTrigger className="w-full sm:w-[200px]">
+            <SelectValue placeholder="Chọn trạng thái" />
+            <SelectContent>
+              {Object.entries(Status).map(([key, value]) => (
+                <SelectItem key={key} value={value}>
+                  {STATUS_LABELS[value]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </SelectTrigger>
+        </Select>
+
+        <Button variant="outline" onClick={resetFilters}>
           <RotateCcwIcon className="w-6 h-6" />
         </Button>
         <Button
@@ -124,7 +164,6 @@ const UsersPage = () => {
           <UsersRound className="w-4 h-4 mr-2" />
           Tạo
         </Button>
-
         <AddUserDialog
           open={open}
           setOpen={setOpen}
@@ -133,9 +172,15 @@ const UsersPage = () => {
         />
       </div>
       <DataTable
-        table={table}
         columns={columns(handleDelete, handleUpdate)}
         data={users}
+        total={total}
+        page={page}
+        limit={limit}
+        onPaginationChange={(nextPage, nextLimit) => {
+          setPage(nextPage);
+          setLimit(nextLimit);
+        }}
       />
     </div>
   );
