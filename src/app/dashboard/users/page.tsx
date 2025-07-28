@@ -21,12 +21,11 @@ import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
 import { deleteAccountUser, getUsers } from "@/api/users/user";
 import UserAccountDto from "@/models/dto/userAccountDto";
 import { toast } from "sonner";
-
-// Tạo mảng options từ enum
-const roleOptions = Object.entries(UserRole).map(([key, value]) => ({
-  label: value,
-  value: value,
-}));
+import {
+  getCoreRowModel,
+  getFilteredRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 
 const UsersPage = () => {
   const [users, setUsers] = useState<UserAccountDto[]>([]);
@@ -34,9 +33,15 @@ const UsersPage = () => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<UserAccountDto | null>(null);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  const statusOptions = Object.entries(Status).map(([key, value]) => ({
+    label: value,
+    value,
+  }));
+
+  const roleOptions = Object.entries(UserRole).map(([key, value]) => ({
+    label: value,
+    value,
+  }));
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -70,6 +75,16 @@ const UsersPage = () => {
       setOpen(true);
     }
   };
+  const table = useReactTable({
+    data: users,
+    columns: columns(handleDelete, handleUpdate),
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  });
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   return (
     <div className="">
@@ -84,40 +99,18 @@ const UsersPage = () => {
           placeholder="Tìm kiếm theo tên..."
           className="max-w-sm sm:w-full"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              <ListFilterPlus className="w-6 h-6" /> Trạng Thái
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="ml-3">
-            {Object.entries(Status).map(([key, value]) => (
-              <DropdownMenuItem
-                key={key}
-                onClick={() => console.log("Lọc trạng thái:", value)}
-              >
-                {value}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              <ListFilterPlus className="w-6 h-6" /> Chức Vụ
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="ml-6">
-            {Object.entries(UserRole).map(([key, value]) => (
-              <DropdownMenuItem
-                key={key}
-                onClick={() => console.log("Lọc chức vụ:", value)}
-              >
-                {value}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <DataTableFacetedFilter
+          title="Trạng Thái"
+          options={statusOptions}
+          column={table.getColumn("status")}
+        />
+
+        <DataTableFacetedFilter
+          title="Chức Vụ"
+          options={roleOptions}
+          column={table.getColumn("role")}
+        />
+
         <Button variant="outline">
           <RotateCcwIcon className="w-6 h-6" />
         </Button>
@@ -139,7 +132,11 @@ const UsersPage = () => {
           reloadData={fetchUsers}
         />
       </div>
-      <DataTable columns={columns(handleDelete, handleUpdate)} data={users} />
+      <DataTable
+        table={table}
+        columns={columns(handleDelete, handleUpdate)}
+        data={users}
+      />
     </div>
   );
 };

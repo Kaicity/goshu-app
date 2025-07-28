@@ -78,6 +78,7 @@ export const columns = (
   {
     accessorKey: "status",
     header: () => <div className="text-center">TRẠNG THÁI</div>,
+    enableColumnFilter: true, 
     cell: ({ row }) => {
       const user = row.original.status as Status;
       return (
@@ -92,6 +93,7 @@ export const columns = (
   {
     accessorKey: "actions",
     header: () => <div className="text-center ">HÀNH ĐỘNG</div>,
+    enableColumnFilter: true, 
     cell: ({ row }) => {
       const resource = row.original;
       return (
