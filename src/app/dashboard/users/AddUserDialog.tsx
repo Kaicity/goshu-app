@@ -113,7 +113,6 @@ export function AddUserDialog({
             user.id as string,
             dataWithOutPassword
           );
-          toast.success("Cập nhật tài khoản người dùng thành công");
           if (res) {
             toast.success("Cập nhật tài khoản người dùng thành công");
             setOpen(false);
