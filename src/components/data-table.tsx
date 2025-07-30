@@ -2,6 +2,7 @@
 
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
@@ -10,6 +11,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import { DataTablePagination } from "@/components/TablePagination";
 import {
   Table,
   TableBody,
@@ -18,39 +20,66 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DataTablePagination } from "@/components/TablePagination";
 import { useState } from "react";
+import { on } from "events";
+import { log } from "console";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  page: number;
+  limit: number;
+  total: number;
+  onPaginationChange?: (page: number, limit: number) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  page,
+  limit,
+  total,
+  onPaginationChange,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState({});
 
+  const totalpages = Math.ceil(total / limit);
+
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
-    onRowSelectionChange: setRowSelection,
+    manualPagination: true,
+    pageCount: totalpages,
     state: {
+      pagination: {
+        pageIndex: page - 1,
+        pageSize: limit,
+      },
       sorting,
       rowSelection,
     },
+    onPaginationChange: (updater) => {
+      const next =
+        typeof updater === "function"
+          ? updater({
+              pageIndex: page - 1,
+              pageSize: limit,
+            })
+          : updater;
+
+      onPaginationChange?.(next.pageIndex + 1, next.pageSize);
+    },
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+    onRowSelectionChange: setRowSelection,
   });
 
-  // console.log(table);
   return (
-    <div className="rounded-md border">
+    <div className="rounded-md border p-4">
       <Table>
+
         <TableHeader className="bg-secondary">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -92,24 +121,6 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      {/* <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
-      </div> */}
       <DataTablePagination table={table} />
     </div>
   );

@@ -11,7 +11,13 @@ import {
   UserRole,
 } from "@/enums/userRolesEnum";
 import UserAccountDto from "@/models/dto/userAccountDto";
-import { ArrowUpDown, Edit, Trash } from "lucide-react";
+import { ArrowUpDown, Edit, MoreHorizontal, Trash } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const columns = (
   handleDelete: (user: UserAccountDto) => void,
@@ -67,19 +73,24 @@ export const columns = (
       const user = row.original.role as UserRole;
       return (
         <div
-          className={`min-w-[140px] mx-auto font-semibold rounded-4xl flex items-center justify-center gap-1 ${ROLE_STYLES[user]} w-max px-3 py-1 `}
+          className={`min-w-[130px] mx-auto font-semibold rounded-md flex items-center justify-center gap-1 ${ROLE_STYLES[user]} w-max px-3 py-1 `}
         >
           {ROLE_ICONS[user]}
           {ROLE_LABELS[user]}
         </div>
       );
     },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     accessorKey: "status",
     header: () => <div className="text-center">TRẠNG THÁI</div>,
+    enableColumnFilter: true,
     cell: ({ row }) => {
       const user = row.original.status as Status;
+
       return (
         <div
           className={`min-w-[90px] mx-auto font-semibold rounded-4xl flex items-center justify-center gap-1 ${STATUS_STYLES[user]} w-max px-3 py-1 `}
@@ -88,29 +99,38 @@ export const columns = (
         </div>
       );
     },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     accessorKey: "actions",
     header: () => <div className="text-center ">HÀNH ĐỘNG</div>,
+    enableColumnFilter: true,
     cell: ({ row }) => {
       const resource = row.original;
       return (
-        <div className="flex justify-center gap-2 ">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => handleUpdate(resource)}
-          >
-            <Edit className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => handleDelete(resource)}
-            className="text-red-500"
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
+        <div className="flex justify-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => handleUpdate(resource)}>
+                <Edit className="w-4 h-4 mr-2" />
+                Chỉnh sửa
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleDelete(resource)}
+                className="text-red-500 focus:text-red-500"
+              >
+                <Trash className="w-4 h-4 mr-2" />
+                Xoá
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       );
     },

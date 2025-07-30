@@ -1,6 +1,9 @@
 import type LoginDto from "@/models/dto/loginDto";
 import { instance } from "../axiosClient";
-import UserAccountDto from "@/models/dto/userAccountDto";
+import UserAccountDto, {
+  UserAccountFilterDto,
+  UserAccountPaginationDto,
+} from "@/models/dto/userAccountDto";
 
 export const forgotPassword = async (email: string): Promise<any> => {
   try {
@@ -22,10 +25,30 @@ export const changePassword = async (account: LoginDto): Promise<any> => {
   }
 };
 
-export const getUsers = async (): Promise<UserAccountDto[]> => {
+export const getUsers = async (
+  page: number,
+  limit: number,
+  filters: UserAccountFilterDto
+): Promise<UserAccountPaginationDto> => {
   try {
-    const response = await instance.get("/users/getAll");
-    return response.data;
+    const response: any = await instance.get("/users/getAll", {
+      params: {
+        page,
+        limit,
+        search: filters.search,
+        status: filters.status,
+        role: filters.role,
+      },
+    });
+
+    return {
+      userAccounts: response.data,
+      pagination: {
+        page: response.pagination.currentPage,
+        limit: response.pagination.limit,
+        total: response.pagination.totalItems,
+      },
+    };
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
     throw Error(errorMessage || "Mất kết nối đến hệ thống máy chủ");
