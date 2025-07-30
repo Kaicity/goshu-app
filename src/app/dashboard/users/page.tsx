@@ -17,10 +17,11 @@ import { Status, STATUS_LABELS } from "@/enums/statusEnum";
 import { ROLE_LABELS, UserRole } from "@/enums/userRolesEnum";
 import UserAccountDto from "@/models/dto/userAccountDto";
 import { RotateCcwIcon, UsersRound } from "lucide-react";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { DataTable } from "../../../components/data-table";
 import { columns } from "./columns";
+import { log } from "console";
 const UsersPage = () => {
   const [users, setUsers] = useState<UserAccountDto[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,7 +38,7 @@ const UsersPage = () => {
   }));
 
   // Pagination
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1); //gán giá trị hiện tại page=1, setPage là hàm để cập nhật giá trị page
   const [total, setTotal] = useState(0);
   const [limit, setLimit] = useState(10);
 
@@ -50,6 +51,7 @@ const UsersPage = () => {
     fetchUsers();
   }, [page, limit, search, roleSelected, statusSelected]);
 
+  
   const fetchUsers = async () => {
     setLoading(true);
     try {
@@ -58,6 +60,8 @@ const UsersPage = () => {
         role: roleSelected,
         status: statusSelected,
       });
+      // console.log(res); // dùng cho biến
+      
       setUsers(res.userAccounts);
       setTotal(res.pagination.total);
       setLimit(res.pagination.limit);
@@ -108,22 +112,9 @@ const UsersPage = () => {
         <Input
           placeholder="Tìm kiếm theo email..."
           className="max-w-sm sm:w-full"
-          value={search}
+          value={search} //value hiện tại 1 chiều. Khi giá trị mặc định bằng rỗng 
           onChange={(e) => setSearch(e.target.value)}
         />
-
-        {/* <DataTableFacetedFilter
-          title="Trạng Thái"
-          options={statusOptions}
-          value={statusOptions}
-          onChange={setStatus}
-        />
-        <DataTableFacetedFilter
-          title="Chức Vụ"
-          options={roleOptions}
-          value={role}
-          onChange={setRole}
-        /> */}
 
         <Select value={roleSelected} onValueChange={setRoleSelected}>
           <SelectTrigger className="w-full sm:w-[200px]">

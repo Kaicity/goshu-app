@@ -7,6 +7,7 @@ export const login = async (login: LoginDto): Promise<any> => {
     const response = await instance.post("/auth/login", login);
     return response.data;
   } catch (error: any) {
+    console.log("🟡 [DEBUG] Login error:", error);
     const errorMessage = error.response?.data?.message;
     throw new Error(errorMessage || "Mất kết nối đến hệ thống máy chủ");
   }

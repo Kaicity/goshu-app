@@ -3,7 +3,7 @@ import { PaginationDto } from "./pagination";
 export default interface UserAccountDto {
   id?: string;
   email: string;
-  password: string;
+  password?: string;
   role: string;
   status?: string;
   employeeId?: string;

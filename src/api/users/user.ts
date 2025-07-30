@@ -70,6 +70,7 @@ export const getUser = async (email: string): Promise<any> => {
     const response = await instance.get("/users/getUser", {
       params: { email },
     });
+    console.log(response);
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
@@ -99,6 +100,21 @@ export const updateAccountUser = async (
 ): Promise<any> => {
   try {
     const response = await instance.put(`/users/updateAccount/${id}`, user);
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message;
+    throw new Error(errorMessage || "Mất kết nối đến hệ thống máy chủ");
+  }
+};
+
+export const changePasswordUser = async (
+  email: string,
+  password: string
+): Promise<any> => {
+  try {
+    const response = await instance.put("/users/changePassword/",{
+      email, password
+    });
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
