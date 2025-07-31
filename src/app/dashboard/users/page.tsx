@@ -34,7 +34,6 @@ const UsersPage = () => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<UserAccountDto | null>(null);
 
-
   const [page, setPage] = useState<number>(
     searchParams.get("page") ? Number(searchParams.get("page")) : 1
   );
@@ -62,7 +61,7 @@ const UsersPage = () => {
         status: statusSelected,
       });
       // console.log(res); // dùng cho biến
-      
+
       setUsers(res.userAccounts);
       setTotal(res.pagination.total);
       setLimit(res.pagination.limit);
@@ -127,8 +126,11 @@ const UsersPage = () => {
         <Input
           placeholder="Tìm kiếm theo email..."
           className="max-w-sm sm:w-full"
-          value={search} //value hiện tại 1 chiều. Khi giá trị mặc định bằng rỗng 
-          onChange={(e) => setSearch(e.target.value)}
+          value={search} //value hiện tại 1 chiều. Khi giá trị mặc định bằng rỗng
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
         />
 
         <Select value={roleSelected} onValueChange={setRoleSelected}>
