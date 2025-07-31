@@ -27,15 +27,6 @@ const UsersPage = () => {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<UserAccountDto | null>(null);
-  const statusOptions = Object.entries(Status).map(([value]) => ({
-    label: value,
-    value,
-  }));
-
-  const roleOptions = Object.entries(UserRole).map(([value]) => ({
-    label: value,
-    value,
-  }));
 
   // Pagination
   const [page, setPage] = useState(1); //gán giá trị hiện tại page=1, setPage là hàm để cập nhật giá trị page
@@ -51,7 +42,6 @@ const UsersPage = () => {
     fetchUsers();
   }, [page, limit, search, roleSelected, statusSelected]);
 
-  
   const fetchUsers = async () => {
     setLoading(true);
     try {
