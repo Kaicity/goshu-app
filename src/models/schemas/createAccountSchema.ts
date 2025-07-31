@@ -13,4 +13,11 @@ export const createAccountSchema = z.object({
   status: z.string().optional(),
 });
 
+export const updateAccountSchema = z.object({
+  email: z.string().email({ message: "Email không hợp lệ" }),
+  password: z.string().optional().or(z.literal("")), // Cho phép chuỗi rỗng hoặc undefined
+  role: z.string(),
+});
+
 export type createAccountFormData = z.infer<typeof createAccountSchema>;
+export type updateAccountFormData = z.infer<typeof updateAccountSchema>;

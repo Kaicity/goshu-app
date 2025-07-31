@@ -16,12 +16,14 @@ import {
 import { Status, STATUS_LABELS } from "@/enums/statusEnum";
 import { ROLE_LABELS, UserRole } from "@/enums/userRolesEnum";
 import { RotateCcwIcon, UsersRound } from "lucide-react";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { DataTable } from "../../../components/data-table";
 import { columns } from "./columns";
+
 import type { UserAccountDto } from "@/models/dto/userAccountDto";
 import { useRouter, useSearchParams } from "next/navigation";
+
 const UsersPage = () => {
   const searchParams = useSearchParams();
 
@@ -32,7 +34,7 @@ const UsersPage = () => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<UserAccountDto | null>(null);
 
-  // Pagination
+
   const [page, setPage] = useState<number>(
     searchParams.get("page") ? Number(searchParams.get("page")) : 1
   );
@@ -59,6 +61,8 @@ const UsersPage = () => {
         role: roleSelected,
         status: statusSelected,
       });
+      // console.log(res); // dùng cho biến
+      
       setUsers(res.userAccounts);
       setTotal(res.pagination.total);
       setLimit(res.pagination.limit);
@@ -123,7 +127,7 @@ const UsersPage = () => {
         <Input
           placeholder="Tìm kiếm theo email..."
           className="max-w-sm sm:w-full"
-          value={search}
+          value={search} //value hiện tại 1 chiều. Khi giá trị mặc định bằng rỗng 
           onChange={(e) => setSearch(e.target.value)}
         />
 

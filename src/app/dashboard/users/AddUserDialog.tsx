@@ -23,13 +23,16 @@ import { ROLE_ICONS, ROLE_LABELS, UserRole } from "@/enums/userRolesEnum";
 import type { UserAccountDto } from "@/models/dto/userAccountDto";
 import {
   createAccountSchema,
+  updateAccountSchema,
   type createAccountFormData,
+  type updateAccountFormData,
 } from "@/models/schemas/createAccountSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { startTransition, useActionState, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { changePassword } from "@/api/users/user";
 
 interface AddUserDialogProps {
   open: boolean;
@@ -45,14 +48,16 @@ export function AddUserDialog({
   reloadData: loadData,
 }: AddUserDialogProps) {
   const [roleSelected, setRoleSelected] = useState<string>(UserRole.ADMIN);
+  const isEdit = !!user; // Kiểm tra nếu có user thì là chỉnh sửa, ngược lại là tạo mới
+  const formSchema = isEdit ? updateAccountSchema : createAccountSchema;
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<createAccountFormData>({
-    resolver: zodResolver(createAccountSchema),
+  } = useForm<createAccountFormData | updateAccountFormData>({
+    resolver: zodResolver(formSchema),
   });
 
   useEffect(() => {
@@ -68,6 +73,15 @@ export function AddUserDialog({
     }
   }, [user]);
 
+  useEffect(() => {
+    if (roleSelected) {
+      reset((prev) => ({
+        ...prev, // lay gia tri thay doi truoc do
+        role: roleSelected,
+      }));
+    }
+  }, [roleSelected]);
+
   const initialFormData = () => {
     reset({
       email: "",
@@ -78,10 +92,23 @@ export function AddUserDialog({
   };
 
   const [state, submitAction, isPending] = useActionState(
-    async (prevState: any, formData: createAccountFormData) => {
+    async (prevState: any, formData: isEditFormData) => {
       if (user) {
         try {
-          const res = await updateAccountUser(user.id as string, formData);
+          if (formData.password && formData.password !== "") {
+            //gọi Api ChangePassword API nếu có mật khẩu mới
+            const resPassword = await changePassword({
+              email: user.email,
+              password: formData.password,
+            });
+          }
+
+          //cập nhật thông tin mà không change password
+          const { password, ...dataWithOutPassword } = formData;
+          const res = await updateAccountUser(
+            user.id as string,
+            dataWithOutPassword
+          );
           if (res) {
             toast.success("Cập nhật tài khoản người dùng thành công");
             setOpen(false);
@@ -112,7 +139,10 @@ export function AddUserDialog({
     undefined
   );
 
-  const onSubmit = async (data: createAccountFormData) => {
+  //xử lý form submit cho update và create
+  type isEditFormData = createAccountFormData | updateAccountFormData;
+
+  const onSubmit = async (data: isEditFormData) => {
     console.log(data);
     startTransition(() => {
       submitAction(data);
