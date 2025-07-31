@@ -10,7 +10,6 @@ import {
   ROLE_STYLES,
   UserRole,
 } from "@/enums/userRolesEnum";
-import UserAccountDto from "@/models/dto/userAccountDto";
 import { ArrowUpDown, Edit, MoreHorizontal, Trash } from "lucide-react";
 import {
   DropdownMenu,
@@ -18,6 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type { UserAccountDto } from "@/models/dto/userAccountDto";
 
 export const columns = (
   handleDelete: (user: UserAccountDto) => void,

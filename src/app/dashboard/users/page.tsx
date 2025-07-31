@@ -15,31 +15,31 @@ import {
 } from "@/components/ui/select";
 import { Status, STATUS_LABELS } from "@/enums/statusEnum";
 import { ROLE_LABELS, UserRole } from "@/enums/userRolesEnum";
-import UserAccountDto from "@/models/dto/userAccountDto";
 import { RotateCcwIcon, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { DataTable } from "../../../components/data-table";
 import { columns } from "./columns";
+import type { UserAccountDto } from "@/models/dto/userAccountDto";
+import { useRouter, useSearchParams } from "next/navigation";
 const UsersPage = () => {
+  const searchParams = useSearchParams();
+
+  const router = useRouter();
+
   const [users, setUsers] = useState<UserAccountDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<UserAccountDto | null>(null);
-  const statusOptions = Object.entries(Status).map(([value]) => ({
-    label: value,
-    value,
-  }));
-
-  const roleOptions = Object.entries(UserRole).map(([value]) => ({
-    label: value,
-    value,
-  }));
 
   // Pagination
-  const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState<number>(
+    searchParams.get("page") ? Number(searchParams.get("page")) : 1
+  );
+  const [total, setTotal] = useState<number>(0);
+  const [limit, setLimit] = useState<number>(
+    searchParams.get("limit") ? Number(searchParams.get("limit")) : 10
+  );
 
   // Parameters for the table
   const [search, setSearch] = useState<string>("");
@@ -47,6 +47,7 @@ const UsersPage = () => {
   const [statusSelected, setStatusSelected] = useState<string>("");
 
   useEffect(() => {
+    updateSearchParams();
     fetchUsers();
   }, [page, limit, search, roleSelected, statusSelected]);
 
@@ -94,6 +95,20 @@ const UsersPage = () => {
     setRoleSelected("");
     setStatusSelected("");
     setPage(1);
+    setLimit(10);
+    router.push("/dashboard/users");
+  };
+
+  const updateSearchParams = () => {
+    const params = new URLSearchParams();
+
+    if (page) params.set("page", String(page));
+    if (limit) params.set("limit", String(limit));
+    if (search) params.set("search", search);
+    if (roleSelected) params.set("role", roleSelected);
+    if (statusSelected) params.set("status", statusSelected);
+
+    router.push(`/dashboard/users?${params.toString()}`);
   };
 
   return (
@@ -111,19 +126,6 @@ const UsersPage = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-
-        {/* <DataTableFacetedFilter
-          title="Trạng Thái"
-          options={statusOptions}
-          value={statusOptions}
-          onChange={setStatus}
-        />
-        <DataTableFacetedFilter
-          title="Chức Vụ"
-          options={roleOptions}
-          value={role}
-          onChange={setRole}
-        /> */}
 
         <Select value={roleSelected} onValueChange={setRoleSelected}>
           <SelectTrigger className="w-full sm:w-[200px]">
