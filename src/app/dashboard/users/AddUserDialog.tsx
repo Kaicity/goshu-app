@@ -33,6 +33,7 @@ import { startTransition, useActionState, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { changePassword } from "@/api/users/user";
+import { STATUS_LABELS } from "@/enums/statusEnum";
 
 interface AddUserDialogProps {
   open: boolean;
@@ -48,6 +49,7 @@ export function AddUserDialog({
   reloadData: loadData,
 }: AddUserDialogProps) {
   const [roleSelected, setRoleSelected] = useState<string>(UserRole.ADMIN);
+  const [statusSelected, setStatusSelected] = useState<string>("");
   const isEdit = !!user; // Kiểm tra nếu có user thì là chỉnh sửa, ngược lại là tạo mới
   const formSchema = isEdit ? updateAccountSchema : createAccountSchema;
 
@@ -66,27 +68,31 @@ export function AddUserDialog({
         email: user.email,
         password: "",
         role: user.role,
+        status: user.status,
       });
       setRoleSelected(user.role);
+      setStatusSelected(user.status ?? "");
     } else {
       initialFormData();
     }
   }, [user]);
 
   useEffect(() => {
-    if (roleSelected) {
+    if (roleSelected || statusSelected) {
       reset((prev) => ({
         ...prev, // lay gia tri thay doi truoc do
         role: roleSelected,
+        status: statusSelected,
       }));
     }
-  }, [roleSelected]);
+  }, [roleSelected, statusSelected]);
 
   const initialFormData = () => {
     reset({
       email: "",
       password: "",
       role: UserRole.ADMIN,
+      status: "",
     });
     setRoleSelected(UserRole.ADMIN);
   };
@@ -105,6 +111,8 @@ export function AddUserDialog({
 
           //cập nhật thông tin mà không change password
           const { password, ...dataWithOutPassword } = formData;
+          // console.log("Form data gửi đi:", formData);
+
           const res = await updateAccountUser(
             user.id as string,
             dataWithOutPassword
@@ -163,9 +171,9 @@ export function AddUserDialog({
                 : "Điền thông tin người dùng để tạo tài khoản"}
             </DialogDescription>
           </DialogHeader>
-
-          <div className="grid gap-4">
-            <div className="grid gap-2 space-y-2">
+          {/* Role select */}
+          <div className="flex gap-4">
+            <div className="flex flex-col space-y-2 w-1/2">
               <Label>Vai trò</Label>
               <Select value={roleSelected} onValueChange={setRoleSelected}>
                 <SelectTrigger>
@@ -182,39 +190,59 @@ export function AddUserDialog({
                   ))}
                 </SelectContent>
               </Select>
-              {errors.role && (
-                <p className="text-red-500 text-sm">{errors.role.message}</p>
-              )}
             </div>
+            {/* Status select */}
+            {user && (
+              <div className="flex flex-col space-y-2 w-1/2 items-end">
+                <Label className="text-right pr-12">Trạng Thái</Label>
 
-            <div className="grid gap-2 space-y-2">
-              <Label>Email</Label>
-              <Input
-                {...register("email")}
-                placeholder="Nhập email"
-                autoComplete="new-email"
-                className="h-10"
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email.message}</p>
-              )}
-            </div>
+                <Select
+                  value={statusSelected}
+                  onValueChange={setStatusSelected}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Chọn trạng thái" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(STATUS_LABELS).map(([key, label]) => (
+                      <SelectItem key={key} value={key}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            {errors.role && (
+              <p className="text-red-500 text-sm">{errors.role.message}</p>
+            )}
+          </div>
 
-            <div className="grid gap-2 space-y-2">
-              <Label>Mật khẩu</Label>
-              <Input
-                {...register("password")}
-                type="password"
-                placeholder="#Adfe8f8jhz!@"
-                autoComplete="new-password"
-                className="h-10"
-              />
-              {errors.password && (
-                <p className="text-red-500 text-sm">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
+          <div className="grid gap-2 space-y-2">
+            <Label>Email</Label>
+            <Input
+              {...register("email")}
+              placeholder="Nhập email"
+              autoComplete="new-email"
+              className="h-10"
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
+          </div>
+
+          <div className="grid gap-2 space-y-2">
+            <Label>Mật khẩu</Label>
+            <Input
+              {...register("password")}
+              type="password"
+              placeholder="#Adfe8f8jhz!@"
+              autoComplete="new-password"
+              className="h-10"
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
           </div>
 
           <DialogFooter className="flex justify-end gap-2">
@@ -228,7 +256,10 @@ export function AddUserDialog({
             >
               Đóng
             </Button>
-            <SubmitButton text="Lưu" isPending={isPending} />
+            <SubmitButton
+              text={user ? "Cập nhật" : "Tạo"}
+              isPending={isPending}
+            />
           </DialogFooter>
         </form>
       </DialogContent>

@@ -1,6 +1,7 @@
 import type LoginDto from "@/models/dto/loginDto";
 import { instance } from "../axiosClient";
-import UserAccountDto, {
+import {
+  UserAccountDto,
   UserAccountFilterDto,
   UserAccountPaginationDto,
 } from "@/models/dto/userAccountDto";
@@ -112,8 +113,9 @@ export const changePasswordUser = async (
   password: string
 ): Promise<any> => {
   try {
-    const response = await instance.put("/users/changePassword/",{
-      email, password
+    const response = await instance.put("/users/changePassword/", {
+      email,
+      password,
     });
     return response.data;
   } catch (error: any) {
