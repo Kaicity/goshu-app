@@ -43,8 +43,6 @@ const AppSidebar = () => {
 
   const path = usePathname();
 
-  console.log(path);
-
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="py-4">

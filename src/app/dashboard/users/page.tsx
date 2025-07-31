@@ -15,23 +15,33 @@ import {
 } from "@/components/ui/select";
 import { Status, STATUS_LABELS } from "@/enums/statusEnum";
 import { ROLE_LABELS, UserRole } from "@/enums/userRolesEnum";
-import UserAccountDto from "@/models/dto/userAccountDto";
 import { RotateCcwIcon, UsersRound } from "lucide-react";
 import { use, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { DataTable } from "../../../components/data-table";
 import { columns } from "./columns";
-import { log } from "console";
+
+import type { UserAccountDto } from "@/models/dto/userAccountDto";
+import { useRouter, useSearchParams } from "next/navigation";
+
 const UsersPage = () => {
+  const searchParams = useSearchParams();
+
+  const router = useRouter();
+
   const [users, setUsers] = useState<UserAccountDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<UserAccountDto | null>(null);
 
-  // Pagination
-  const [page, setPage] = useState(1); //gán giá trị hiện tại page=1, setPage là hàm để cập nhật giá trị page
-  const [total, setTotal] = useState(0);
-  const [limit, setLimit] = useState(10);
+
+  const [page, setPage] = useState<number>(
+    searchParams.get("page") ? Number(searchParams.get("page")) : 1
+  );
+  const [total, setTotal] = useState<number>(0);
+  const [limit, setLimit] = useState<number>(
+    searchParams.get("limit") ? Number(searchParams.get("limit")) : 10
+  );
 
   // Parameters for the table
   const [search, setSearch] = useState<string>("");
@@ -39,6 +49,7 @@ const UsersPage = () => {
   const [statusSelected, setStatusSelected] = useState<string>("");
 
   useEffect(() => {
+    updateSearchParams();
     fetchUsers();
   }, [page, limit, search, roleSelected, statusSelected]);
 
@@ -88,6 +99,20 @@ const UsersPage = () => {
     setRoleSelected("");
     setStatusSelected("");
     setPage(1);
+    setLimit(10);
+    router.push("/dashboard/users");
+  };
+
+  const updateSearchParams = () => {
+    const params = new URLSearchParams();
+
+    if (page) params.set("page", String(page));
+    if (limit) params.set("limit", String(limit));
+    if (search) params.set("search", search);
+    if (roleSelected) params.set("role", roleSelected);
+    if (statusSelected) params.set("status", statusSelected);
+
+    router.push(`/dashboard/users?${params.toString()}`);
   };
 
   return (

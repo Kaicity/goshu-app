@@ -1,6 +1,6 @@
-import { PaginationDto } from "./pagination";
+import PaginationDto from "./pagination";
 
-export default interface UserAccountDto {
+interface UserAccountDto {
   id?: string;
   email: string;
   password?: string;
@@ -11,13 +11,20 @@ export default interface UserAccountDto {
   updatedAt?: Date;
 }
 
-export interface UserAccountPaginationDto {
+interface UserAccountPaginationDto {
   userAccounts: UserAccountDto[];
   pagination: PaginationDto;
 }
 
-export interface UserAccountFilterDto {
+interface UserAccountFilterDto {
   role?: string;
   status?: string;
   search?: string;
 }
+
+export type {
+  UserAccountDto,
+  UserAccountPaginationDto,
+  UserAccountFilterDto,
+  PaginationDto,
+};

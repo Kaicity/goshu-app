@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  createAccountUser,
-  getUser,
-  updateAccountUser,
-} from "@/api/users/user";
+import { createAccountUser, updateAccountUser } from "@/api/users/user";
 import { SubmitButton } from "@/components/SummitButton";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ROLE_ICONS, ROLE_LABELS, UserRole } from "@/enums/userRolesEnum";
-import UserAccountDto from "@/models/dto/userAccountDto";
+import type { UserAccountDto } from "@/models/dto/userAccountDto";
 import {
   createAccountSchema,
   updateAccountSchema,
