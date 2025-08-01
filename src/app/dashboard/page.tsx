@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import AppAreaChart from "@/components/AppAreaChart";
-import AppBarChart from "@/components/AppBarChart";
-import AppPieChart from "@/components/AppPieChart";
-import ProtectPage from "@/components/auth/ProtectPage";
-import CardList from "@/components/CardList";
-import TodoList from "@/components/TodoList";
-import { Textarea } from "@/components/ui/textarea";
-import { useApp } from "@/contexts/AppContext";
-import { useEffect } from "react";
+import AppAreaChart from '@/components/AppAreaChart';
+import AppBarChart from '@/components/AppBarChart';
+import AppPieChart from '@/components/AppPieChart';
+import ProtectPage from '@/components/auth/ProtectPage';
+import CardList from '@/components/CardList';
+import TodoList from '@/components/TodoList';
+import { Textarea } from '@/components/ui/textarea';
+import { useApp } from '@/contexts/AppContext';
+import { useEffect } from 'react';
 
 const Homepage = () => {
   const { setUserAccount } = useApp();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUserAccount(JSON.parse(storedUser));
     }

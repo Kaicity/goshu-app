@@ -1,15 +1,9 @@
-"use client";
+'use client';
 
-import type UserAccountDto from "@/models/dto/userAccountDto";
-import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-} from "react";
-import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
+import type { UserAccountDto } from '@/models/dto/userAccountDto';
 
 interface Props {
   userAccount: UserAccountDto | null;
@@ -24,32 +18,28 @@ const AppContext = createContext<Props | undefined>(undefined);
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
-  const [authToken, setAuthToken] = useState<string | null>(
-    Cookies.get("authToken") || null
-  );
+  const [authToken, setAuthToken] = useState<string | null>(Cookies.get('authToken') || null);
 
   const [userAccount, setUserAccount] = useState<UserAccountDto | null>(null);
 
   useEffect(() => {
-    const userStorage = localStorage.getItem("user");
+    const userStorage = localStorage.getItem('user');
     try {
-      const parsedUser = userStorage
-        ? (JSON.parse(userStorage) as UserAccountDto)
-        : null;
+      const parsedUser = userStorage ? (JSON.parse(userStorage) as UserAccountDto) : null;
       setUserAccount(parsedUser);
     } catch (error) {
-      console.error("Invalid JSON in localStorage user:", userStorage);
-      localStorage.removeItem("user");
+      console.error('Invalid JSON in localStorage user:', userStorage);
+      localStorage.removeItem('user');
       setUserAccount(null);
     }
   }, []);
 
   const logout = () => {
-    Cookies.remove("authToken");
+    Cookies.remove('authToken');
     setAuthToken(null);
-    localStorage.removeItem("user");
+    localStorage.removeItem('user');
     setUserAccount(null);
-    router.push("/");
+    router.push('/');
   };
 
   return (
@@ -71,7 +61,7 @@ export const useApp = () => {
   const context = useContext(AppContext);
 
   if (!context) {
-    throw new Error("App must be used within a AppProvider");
+    throw new Error('App must be used within a AppProvider');
   }
   return context;
 };

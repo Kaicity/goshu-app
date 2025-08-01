@@ -1,59 +1,44 @@
 //1. gọi ColumnDef từ react-table của TanStack
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from '@tanstack/react-table';
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { STATUS_LABELS, STATUS_STYLES, Status } from "@/enums/statusEnum";
-import {
-  ROLE_ICONS,
-  ROLE_LABELS,
-  ROLE_STYLES,
-  UserRole,
-} from "@/enums/userRolesEnum";
-import { ArrowUpDown, Edit, MoreHorizontal, Trash } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import type { UserAccountDto } from "@/models/dto/userAccountDto";
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { STATUS_LABELS, STATUS_STYLES, Status } from '@/enums/statusEnum';
+import { ROLE_ICONS, ROLE_LABELS, ROLE_STYLES, UserRole } from '@/enums/userRolesEnum';
+import { ArrowUpDown, Edit, MoreHorizontal, Trash } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import type { UserAccountDto } from '@/models/dto/userAccountDto';
+import { format } from 'date-fns';
 
 export const columns = (
   handleDelete: (user: UserAccountDto) => void,
-  handleUpdate: (user: UserAccountDto) => void
+  handleUpdate: (user: UserAccountDto) => void,
 ): ColumnDef<UserAccountDto>[] => [
   {
-    id: "select",
+    id: 'select',
     header: ({ table }) => (
       <div className="flex justify-center">
         <Checkbox
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
+          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
         />
       </div>
     ),
     cell: ({ row }) => (
       <div className="flex justify-center">
-        <Checkbox
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          checked={row.getIsSelected()}
-        />
+        <Checkbox onCheckedChange={(value) => row.toggleSelected(!!value)} checked={row.getIsSelected()} />
       </div>
     ),
   },
   {
-    accessorKey: "email",
+    accessorKey: 'email',
     header: ({ column }) => {
       return (
         <div className="text-center">
           <Button
             className="hover:bg-gray-200"
             variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
             EMAIL
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -67,7 +52,7 @@ export const columns = (
     },
   },
   {
-    accessorKey: "role",
+    accessorKey: 'role',
     header: () => <div className="text-center">CHỨC VỤ</div>,
     cell: ({ row }) => {
       const user = row.original.role as UserRole;
@@ -85,7 +70,7 @@ export const columns = (
     },
   },
   {
-    accessorKey: "status",
+    accessorKey: 'status',
     header: () => <div className="text-center">TRẠNG THÁI</div>,
     enableColumnFilter: true,
     cell: ({ row }) => {
@@ -104,7 +89,15 @@ export const columns = (
     },
   },
   {
-    accessorKey: "actions",
+    accessorKey: 'updatedAt',
+    header: () => <div className="text-center">CẬP NHẬT LÚC</div>,
+    cell: ({ row }) => {
+      const updatedAt = row.original.updatedAt;
+      return <div className="text-center">{updatedAt ? format(new Date(updatedAt), 'dd/MM/yyyy HH:mm') : ''}</div>;
+    },
+  },
+  {
+    accessorKey: 'actions',
     header: () => <div className="text-center ">HÀNH ĐỘNG</div>,
     enableColumnFilter: true,
     cell: ({ row }) => {
@@ -122,10 +115,7 @@ export const columns = (
                 <Edit className="w-4 h-4 mr-2" />
                 Chỉnh sửa
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleDelete(resource)}
-                className="text-red-500 focus:text-red-500"
-              >
+              <DropdownMenuItem onClick={() => handleDelete(resource)} className="text-red-500 focus:text-red-500">
                 <Trash className="w-4 h-4 mr-2" />
                 Xoá
               </DropdownMenuItem>

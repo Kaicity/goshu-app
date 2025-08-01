@@ -1,28 +1,22 @@
-"use client";
+'use client';
 
-import ProtectPage from "@/components/auth/ProtectPage";
+import ProtectPage from '@/components/auth/ProtectPage';
 
-import { deleteAccountUser, getUsers } from "@/api/users/user";
-import { AddUserDialog } from "@/app/dashboard/users/AddUserDialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Status, STATUS_LABELS } from "@/enums/statusEnum";
-import { ROLE_LABELS, UserRole } from "@/enums/userRolesEnum";
-import { RotateCcwIcon, UsersRound } from "lucide-react";
-import { use, useEffect, useState } from "react";
-import { toast } from "sonner";
-import { DataTable } from "../../../components/data-table";
-import { columns } from "./columns";
+import { deleteAccountUser, getUsers } from '@/api/users/user';
+import { AddUserDialog } from '@/app/dashboard/users/AddUserDialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Status, STATUS_LABELS } from '@/enums/statusEnum';
+import { ROLE_LABELS, UserRole } from '@/enums/userRolesEnum';
+import { ListFilterPlus, RotateCcwIcon, UsersRound } from 'lucide-react';
+import { use, useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { DataTable } from '../../../components/data-table';
+import { columns } from './columns';
 
-import type { UserAccountDto } from "@/models/dto/userAccountDto";
-import { useRouter, useSearchParams } from "next/navigation";
+import type { UserAccountDto } from '@/models/dto/userAccountDto';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const UsersPage = () => {
   const searchParams = useSearchParams();
@@ -34,18 +28,14 @@ const UsersPage = () => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<UserAccountDto | null>(null);
 
-  const [page, setPage] = useState<number>(
-    searchParams.get("page") ? Number(searchParams.get("page")) : 1
-  );
+  const [page, setPage] = useState<number>(searchParams.get('page') ? Number(searchParams.get('page')) : 1);
   const [total, setTotal] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(
-    searchParams.get("limit") ? Number(searchParams.get("limit")) : 10
-  );
+  const [limit, setLimit] = useState<number>(searchParams.get('limit') ? Number(searchParams.get('limit')) : 10);
 
   // Parameters for the table
-  const [search, setSearch] = useState<string>("");
-  const [roleSelected, setRoleSelected] = useState<string>("");
-  const [statusSelected, setStatusSelected] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
+  const [roleSelected, setRoleSelected] = useState<string>('');
+  const [statusSelected, setStatusSelected] = useState<string>('');
 
   useEffect(() => {
     updateSearchParams();
@@ -74,13 +64,13 @@ const UsersPage = () => {
 
   const handleDelete = async (resource: UserAccountDto) => {
     try {
-      const res = await deleteAccountUser(resource.id || "");
+      const res = await deleteAccountUser(resource.id || '');
       if (!res) {
-        toast.success("Xoá tài khoản người dùng thành công");
+        toast.success('Xoá tài khoản người dùng thành công');
         fetchUsers();
       }
     } catch (error: any) {
-      toast.error("Xoá tài khoản người dùng thất bại", {
+      toast.error('Xoá tài khoản người dùng thất bại', {
         description: error.message,
       });
     }
@@ -94,22 +84,22 @@ const UsersPage = () => {
   };
 
   const resetFilters = () => {
-    setSearch("");
-    setRoleSelected("");
-    setStatusSelected("");
+    setSearch('');
+    setRoleSelected('');
+    setStatusSelected('');
     setPage(1);
     setLimit(10);
-    router.push("/dashboard/users");
+    router.push('/dashboard/users');
   };
 
   const updateSearchParams = () => {
     const params = new URLSearchParams();
 
-    if (page) params.set("page", String(page));
-    if (limit) params.set("limit", String(limit));
-    if (search) params.set("search", search);
-    if (roleSelected) params.set("role", roleSelected);
-    if (statusSelected) params.set("status", statusSelected);
+    if (page) params.set('page', String(page));
+    if (limit) params.set('limit', String(limit));
+    if (search) params.set('search', search);
+    if (roleSelected) params.set('role', roleSelected);
+    if (statusSelected) params.set('status', statusSelected);
 
     router.push(`/dashboard/users?${params.toString()}`);
   };
@@ -117,9 +107,7 @@ const UsersPage = () => {
   return (
     <div className="">
       <div className="mb-5 py-2 rounded-md">
-        <h1 className="font-semibold drop-shadow-md text-2xl">
-          QUẢN LÝ NGƯỜI DÙNG
-        </h1>
+        <h1 className="font-semibold drop-shadow-md text-2xl">QUẢN LÝ NGƯỜI DÙNG</h1>
       </div>
       {/* Search & Filters */}
       <div className="flex flex-wrap items-center gap-1 mb-6 *:mt-2">
@@ -135,7 +123,8 @@ const UsersPage = () => {
 
         <Select value={roleSelected} onValueChange={setRoleSelected}>
           <SelectTrigger className="w-full sm:w-[200px]">
-            <SelectValue placeholder="Chọn chức vụ"/>
+            <ListFilterPlus />
+            <SelectValue placeholder="Chọn chức vụ" />
             <SelectContent>
               {Object.entries(UserRole).map(([key, value]) => (
                 <SelectItem key={key} value={value}>
@@ -148,6 +137,7 @@ const UsersPage = () => {
 
         <Select value={statusSelected} onValueChange={setStatusSelected}>
           <SelectTrigger className="w-full sm:w-[200px]">
+            <ListFilterPlus />
             <SelectValue placeholder="Chọn trạng thái" />
             <SelectContent>
               {Object.entries(Status).map(([key, value]) => (
@@ -172,12 +162,7 @@ const UsersPage = () => {
           <UsersRound className="w-4 h-4 mr-2" />
           Tạo
         </Button>
-        <AddUserDialog
-          open={open}
-          setOpen={setOpen}
-          user={user ? user : null}
-          reloadData={fetchUsers}
-        />
+        <AddUserDialog open={open} setOpen={setOpen} user={user ? user : null} reloadData={fetchUsers} />
       </div>
       <DataTable
         columns={columns(handleDelete, handleUpdate)}
