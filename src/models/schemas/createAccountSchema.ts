@@ -17,6 +17,7 @@ export const updateAccountSchema = z.object({
   email: z.string().email({ message: "Email không hợp lệ" }),
   password: z.string().optional().or(z.literal("")), // Cho phép chuỗi rỗng hoặc undefined
   role: z.string(),
+  status: z.string().optional(),
 });
 
 export type createAccountFormData = z.infer<typeof createAccountSchema>;
