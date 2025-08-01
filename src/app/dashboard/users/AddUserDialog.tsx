@@ -224,6 +224,7 @@ export function AddUserDialog({
               placeholder="Nhập email"
               autoComplete="new-email"
               className="h-10"
+              readOnly={!!user}
             />
             {errors.email && (
               <p className="text-red-500 text-sm">{errors.email.message}</p>
