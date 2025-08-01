@@ -135,7 +135,7 @@ const UsersPage = () => {
 
         <Select value={roleSelected} onValueChange={setRoleSelected}>
           <SelectTrigger className="w-full sm:w-[200px]">
-            <SelectValue placeholder="Chọn chức vụ" />
+            <SelectValue placeholder="Chọn chức vụ"/>
             <SelectContent>
               {Object.entries(UserRole).map(([key, value]) => (
                 <SelectItem key={key} value={value}>

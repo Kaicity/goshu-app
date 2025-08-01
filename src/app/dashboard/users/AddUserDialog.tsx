@@ -173,10 +173,10 @@ export function AddUserDialog({
           </DialogHeader>
           {/* Role select */}
           <div className="flex gap-4">
-            <div className="flex flex-col space-y-2 w-1/2">
+            <div className="flex flex-col space-y-2 w-full ">
               <Label>Vai trò</Label>
               <Select value={roleSelected} onValueChange={setRoleSelected}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Chọn vai trò" />
                 </SelectTrigger>
                 <SelectContent>
@@ -193,14 +193,13 @@ export function AddUserDialog({
             </div>
             {/* Status select */}
             {user && (
-              <div className="flex flex-col space-y-2 w-1/2 items-end">
+              <div className="flex flex-col space-y-2 w-full ">
                 <Label className="text-right pr-12">Trạng Thái</Label>
-
                 <Select
                   value={statusSelected}
                   onValueChange={setStatusSelected}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Chọn trạng thái" />
                   </SelectTrigger>
                   <SelectContent>
