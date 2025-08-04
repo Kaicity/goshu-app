@@ -35,6 +35,9 @@ export function AddUserDialog({ open, setOpen, user, reloadData: loadData }: Add
   const isEdit = !!user; // Kiểm tra nếu có user thì là chỉnh sửa, ngược lại là tạo mới
   const formSchema = isEdit ? updateAccountSchema : createAccountSchema;
 
+  //xử lý form submit cho update và create
+  type isEditFormData = createAccountFormData | updateAccountFormData;
+
   const {
     register,
     handleSubmit,
@@ -111,9 +114,6 @@ export function AddUserDialog({ open, setOpen, user, reloadData: loadData }: Add
       }
     }
   }, undefined);
-
-  //xử lý form submit cho update và create
-  type isEditFormData = createAccountFormData | updateAccountFormData;
 
   const onSubmit = async (data: isEditFormData) => {
     console.log(data);
