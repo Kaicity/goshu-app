@@ -1,8 +1,8 @@
-import { AppBreadcrumb } from "@/components/AppBreadCrumb";
-import AppSidebar from "@/components/AppSidebar";
-import Navbar from "@/components/Navbar";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { cookies } from "next/headers";
+import { AppBreadcrumb } from '@/components/AppBreadCrumb';
+import AppSidebar from '@/components/AppSidebar';
+import Navbar from '@/components/Navbar';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { cookies } from 'next/headers';
 
 export default async function RootLayout({
   children,
@@ -10,7 +10,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+  const defaultOpen = cookieStore.get('sidebar_state')?.value === 'true';
 
   return (
     <>

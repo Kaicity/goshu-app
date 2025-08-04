@@ -1,6 +1,6 @@
-import type { NotificationDto } from "@/models/dto/notificationDto";
-import { useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
+import type { NotificationDto } from '@/models/dto/notificationDto';
+import { useEffect, useState } from 'react';
+import { io, Socket } from 'socket.io-client';
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -9,15 +9,15 @@ export default function useNotification() {
 
   useEffect(() => {
     const socket: Socket = io(SOCKET_URL, {
-      transports: ["websocket", "polling"],
+      transports: ['websocket', 'polling'],
       withCredentials: false,
     });
 
-    socket.on("connect", () => {
-      console.log("Connected to WebSocket");
+    socket.on('connect', () => {
+      console.log('Connected to WebSocket');
     });
 
-    socket.on("user:added", (user: { email: string }) => {
+    socket.on('user:added', (user: { email: string }) => {
       setNotifications((prev) => [
         ...prev,
         {

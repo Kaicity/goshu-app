@@ -1,9 +1,8 @@
-
 // hooks/useAuth.js
 
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -12,7 +11,7 @@ const useAuth = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const token = Cookies.get("authToken");
+      const token = Cookies.get('authToken');
       try {
         if (token) {
           setIsAuthenticated(true);

@@ -5,10 +5,7 @@ type MenuItem = {
   children?: MenuItem[];
 };
 
-export function findBreadcrumbPath(
-  items: MenuItem[],
-  pathname: string
-): MenuItem[] {
+export function findBreadcrumbPath(items: MenuItem[], pathname: string): MenuItem[] {
   const stack: MenuItem[] = [];
 
   const dfs = (nodes: MenuItem[], path: string[]): boolean => {

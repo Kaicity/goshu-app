@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
-import ProtectPage from "@/components/auth/ProtectPage";
-import React from "react";
+import ProtectPage from '@/components/auth/ProtectPage';
+import { UserRole } from '@/enums/userRolesEnum';
+import React from 'react';
 
 const EmployeesPage = () => {
-  return <div>{"HUHU"}</div>;
+  return <div>{'EMPOYEE DEV TIẾP ĐI EM ơIIIIII !'}</div>;
 };
 
-export default ProtectPage(EmployeesPage);
+export default ProtectPage(EmployeesPage, { allowedRoles: [UserRole.ADMIN, UserRole.HR] });
