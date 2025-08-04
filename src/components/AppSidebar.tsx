@@ -1,24 +1,12 @@
-"use client";
+'use client';
 
-import {
-  humanManageitems,
-  systemsManageItems,
-} from "@/constants/nav-link/nav-link-items";
-import { ChevronRight, ChevronUp, User2 } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "./ui/collapsible";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+import { humanManageitems, systemsManageItems } from '@/constants/nav-link/nav-link-items';
+import { ChevronRight, ChevronUp, User2 } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import {
   Sidebar,
   SidebarContent,
@@ -34,9 +22,10 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarSeparator,
-} from "./ui/sidebar";
-import { useApp } from "@/contexts/AppContext";
-import { cn } from "@/lib/utils";
+} from './ui/sidebar';
+import { useApp } from '@/contexts/AppContext';
+import { cn } from '@/lib/utils';
+import { UserRole } from '@/enums/userRolesEnum';
 
 const AppSidebar = () => {
   const { userAccount } = useApp();
@@ -66,65 +55,62 @@ const AppSidebar = () => {
           <SidebarGroupLabel>Quản Lý</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {humanManageitems.map((item) => {
-                return (
-                  <Collapsible
-                    key={item.title}
-                    asChild
-                    defaultOpen={true}
-                    className="group/collapsible"
-                  >
-                    <SidebarMenuItem>
-                      <CollapsibleTrigger asChild>
-                        {!item.children || item.children.length === 0 ? (
-                          <SidebarMenuButton
-                            tooltip={item.title}
-                            asChild
-                            className={cn(
-                              "bg-transparent h-10",
-                              item.url === path &&
-                                "bg-custom-cyan/30 font-medium hover:bg-custom-cyan/30"
-                            )}
-                          >
-                            <Link href={item.url}>
+              {humanManageitems
+                .filter((item) => item.roles.includes(userAccount?.role as UserRole))
+                .map((item) => {
+                  const children = item.children?.filter((child) => child.roles.includes(userAccount?.role as UserRole));
+
+                  return (
+                    <Collapsible key={item.title} asChild defaultOpen={true} className="group/collapsible">
+                      <SidebarMenuItem>
+                        <CollapsibleTrigger asChild>
+                          {!children || children.length === 0 ? (
+                            <SidebarMenuButton
+                              tooltip={item.title}
+                              asChild
+                              className={cn(
+                                'bg-transparent h-10',
+                                item.url === path && 'bg-custom-cyan/30 font-medium hover:bg-custom-cyan/30',
+                              )}
+                            >
+                              <Link href={item.url}>
+                                {item.icon && <item.icon />}
+                                <span>{item.title}</span>
+                              </Link>
+                            </SidebarMenuButton>
+                          ) : (
+                            <SidebarMenuButton tooltip={item.title}>
                               {item.icon && <item.icon />}
                               <span>{item.title}</span>
-                            </Link>
-                          </SidebarMenuButton>
-                        ) : (
-                          <SidebarMenuButton tooltip={item.title}>
-                            {item.icon && <item.icon />}
-                            <span>{item.title}</span>
-                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                          </SidebarMenuButton>
+                              <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                            </SidebarMenuButton>
+                          )}
+                        </CollapsibleTrigger>
+                        {children && children.length > 0 && (
+                          <CollapsibleContent>
+                            <SidebarMenuSub>
+                              {children.map((subItem) => (
+                                <SidebarMenuSubItem key={subItem.url}>
+                                  <SidebarMenuSubButton
+                                    asChild
+                                    className={cn(
+                                      'bg-transparent h-10',
+                                      subItem.url === path && 'bg-custom-cyan/30 font-medium hover:bg-custom-cyan/30',
+                                    )}
+                                  >
+                                    <Link href={subItem.url}>
+                                      <span>{subItem.title}</span>
+                                    </Link>
+                                  </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                              ))}
+                            </SidebarMenuSub>
+                          </CollapsibleContent>
                         )}
-                      </CollapsibleTrigger>
-                      {item.children && item.children.length > 0 && (
-                        <CollapsibleContent>
-                          <SidebarMenuSub>
-                            {item.children.map((subItem) => (
-                              <SidebarMenuSubItem key={subItem.url}>
-                                <SidebarMenuSubButton
-                                  asChild
-                                  className={cn(
-                                    "bg-transparent h-10",
-                                    subItem.url === path &&
-                                      "bg-custom-cyan/30 font-medium hover:bg-custom-cyan/30"
-                                  )}
-                                >
-                                  <Link href={subItem.url}>
-                                    <span>{subItem.title}</span>
-                                  </Link>
-                                </SidebarMenuSubButton>
-                              </SidebarMenuSubItem>
-                            ))}
-                          </SidebarMenuSub>
-                        </CollapsibleContent>
-                      )}
-                    </SidebarMenuItem>
-                  </Collapsible>
-                );
-              })}
+                      </SidebarMenuItem>
+                    </Collapsible>
+                  );
+                })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -133,23 +119,24 @@ const AppSidebar = () => {
           <SidebarGroupLabel>Người Dùng</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {systemsManageItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    className={cn(
-                      "bg-transparent h-10",
-                      item.url === path &&
-                        "bg-custom-cyan/30 font-medium hover:bg-custom-cyan/30"
-                    )}
-                  >
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {systemsManageItems
+                .filter((item) => item.roles?.includes(userAccount?.role as UserRole))
+                .map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      className={cn(
+                        'bg-transparent h-10',
+                        item.url === path && 'bg-custom-cyan/30 font-medium hover:bg-custom-cyan/30',
+                      )}
+                    >
+                      <Link href={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -160,7 +147,7 @@ const AppSidebar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> {userAccount?.email?.split("@")[0]}
+                  <User2 /> {userAccount?.email?.split('@')[0]}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>

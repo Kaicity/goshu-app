@@ -179,4 +179,4 @@ const UsersPage = () => {
   );
 };
 
-export default ProtectPage(UsersPage);
+export default ProtectPage(UsersPage, { allowedRoles: [UserRole.ADMIN] }); // cho phép only admin
