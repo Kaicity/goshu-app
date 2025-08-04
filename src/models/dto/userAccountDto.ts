@@ -17,8 +17,8 @@ interface UserAccountPaginationDto {
 }
 
 interface UserAccountFilterDto {
-  role?: string;
-  status?: string;
+  role?: string[];
+  status?: string[];
   search?: string;
 }
 

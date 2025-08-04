@@ -6,17 +6,17 @@ import { deleteAccountUser, getUsers } from '@/api/users/user';
 import { AddUserDialog } from '@/app/dashboard/users/AddUserDialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Status, STATUS_LABELS } from '@/enums/statusEnum';
 import { ROLE_LABELS, UserRole } from '@/enums/userRolesEnum';
-import { ListFilterPlus, RotateCcwIcon, UsersRound } from 'lucide-react';
-import { use, useEffect, useState } from 'react';
+import { RotateCcwIcon, UsersRound } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { DataTable } from '../../../components/data-table';
 import { columns } from './columns';
 
 import type { UserAccountDto } from '@/models/dto/userAccountDto';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { MultiSelect } from '@/components/multi-select';
 
 const UsersPage = () => {
   const searchParams = useSearchParams();
@@ -34,8 +34,8 @@ const UsersPage = () => {
 
   // Parameters for the table
   const [search, setSearch] = useState<string>('');
-  const [roleSelected, setRoleSelected] = useState<string>('');
-  const [statusSelected, setStatusSelected] = useState<string>('');
+  const [roleSelected, setRoleSelected] = useState<string[]>([]);
+  const [statusSelected, setStatusSelected] = useState<string[]>([]);
 
   useEffect(() => {
     updateSearchParams();
@@ -44,6 +44,7 @@ const UsersPage = () => {
 
   const fetchUsers = async () => {
     setLoading(true);
+    console.log(roleSelected.join(','));
     try {
       const res = await getUsers(page, limit, {
         search,
@@ -85,22 +86,21 @@ const UsersPage = () => {
 
   const resetFilters = () => {
     setSearch('');
-    setRoleSelected('');
-    setStatusSelected('');
+    setRoleSelected([]);
+    setStatusSelected([]);
     setPage(1);
     setLimit(10);
+
     router.push('/dashboard/users');
   };
 
   const updateSearchParams = () => {
     const params = new URLSearchParams();
-
     if (page) params.set('page', String(page));
     if (limit) params.set('limit', String(limit));
     if (search) params.set('search', search);
-    if (roleSelected) params.set('role', roleSelected);
-    if (statusSelected) params.set('status', statusSelected);
-
+    if (roleSelected) params.set('role', roleSelected.join(','));
+    if (statusSelected) params.set('status', statusSelected.join(','));
     router.push(`/dashboard/users?${params.toString()}`);
   };
 
@@ -110,7 +110,7 @@ const UsersPage = () => {
         <h1 className="font-semibold drop-shadow-md text-2xl">QUẢN LÝ NGƯỜI DÙNG</h1>
       </div>
       {/* Search & Filters */}
-      <div className="flex flex-wrap items-center gap-1 mb-6 *:mt-2">
+      <div className="flex flex-wrap items-center gap-2 mb-6 *:mt-2">
         <Input
           placeholder="Tìm kiếm theo email..."
           className="max-w-sm sm:w-full"
@@ -120,35 +120,32 @@ const UsersPage = () => {
             setPage(1);
           }}
         />
-
-        <Select value={roleSelected} onValueChange={setRoleSelected}>
-          <SelectTrigger className="w-full sm:w-[200px]">
-            <ListFilterPlus />
-            <SelectValue placeholder="Chọn chức vụ" />
-            <SelectContent>
-              {Object.entries(UserRole).map(([key, value]) => (
-                <SelectItem key={key} value={value}>
-                  {ROLE_LABELS[value]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </SelectTrigger>
-        </Select>
-
-        <Select value={statusSelected} onValueChange={setStatusSelected}>
-          <SelectTrigger className="w-full sm:w-[200px]">
-            <ListFilterPlus />
-            <SelectValue placeholder="Chọn trạng thái" />
-            <SelectContent>
-              {Object.entries(Status).map(([key, value]) => (
-                <SelectItem key={key} value={value}>
-                  {STATUS_LABELS[value]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </SelectTrigger>
-        </Select>
-
+        <MultiSelect
+          options={Object.entries(UserRole).map(([__, value]) => ({
+            label: ROLE_LABELS[value],
+            value: value,
+          }))}
+          value={roleSelected}
+          onValueChange={(values) => {
+            setRoleSelected(values);
+            setPage(1);
+          }}
+          placeholder="Chọn vai trò"
+          className="relative sm:w-[200px] w-full justify-start"
+        />
+        <MultiSelect
+          options={Object.entries(Status).map(([__, value]) => ({
+            label: STATUS_LABELS[value],
+            value,
+          }))}
+          value={statusSelected}
+          onValueChange={(values) => {
+            setStatusSelected(values);
+            setPage(1);
+          }}
+          placeholder="Chọn trạng thái"
+          className="relative sm:w-[220px] w-full justify-start"
+        />
         <Button variant="outline" onClick={resetFilters}>
           <RotateCcwIcon className="w-6 h-6" />
         </Button>
