@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Status, STATUS_LABELS } from '@/enums/statusEnum';
 import { ROLE_ICONS, ROLE_LABELS, UserRole } from '@/enums/userRolesEnum';
+import { cn } from '@/lib/utils';
 import type { UserAccountDto } from '@/models/dto/userAccountDto';
 import {
   createAccountSchema,
@@ -202,7 +203,7 @@ export function AddUserDialog({ open, setOpen, user, reloadData: loadData }: Add
             >
               Đóng
             </Button>
-            <SubmitButton text={user ? 'Cập nhật' : 'Tạo'} isPending={isPending} />
+            <SubmitButton text={user ? 'Cập nhật' : 'Tạo'} isPending={isPending} className={cn("w-auto")} />
           </DialogFooter>
         </form>
       </DialogContent>

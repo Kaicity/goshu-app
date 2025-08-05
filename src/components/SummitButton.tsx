@@ -32,7 +32,7 @@ export function SubmitButton({
     <Button
       disabled={isPending}
       variant={variant}
-      className={cn("w-auto md:w-[80px]", className)}
+      className={cn("w-fit", className)}
     >
       {isPending ? (
         <>
