@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 
 const Homepage = () => {
   const { setUserAccount } = useApp();
+  
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');

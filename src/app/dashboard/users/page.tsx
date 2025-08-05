@@ -33,9 +33,9 @@ const UsersPage = () => {
   const [limit, setLimit] = useState<number>(searchParams.get('limit') ? Number(searchParams.get('limit')) : 10);
 
   // Parameters for the table
-  const [search, setSearch] = useState<string>('');
-  const [roleSelected, setRoleSelected] = useState<string[]>([]);
-  const [statusSelected, setStatusSelected] = useState<string[]>([]);
+  const [search, setSearch] = useState<string>(searchParams.get('search') || '');
+  const [roleSelected, setRoleSelected] = useState<string[]>((searchParams.get('role') ?? '').split(',').filter(Boolean));
+  const [statusSelected, setStatusSelected] = useState<string[]>((searchParams.get('status') ?? '').split(',').filter(Boolean));
 
   useEffect(() => {
     updateSearchParams();
