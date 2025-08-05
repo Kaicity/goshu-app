@@ -171,6 +171,7 @@ const UsersPage = () => {
           setPage(nextPage);
           setLimit(nextLimit);
         }}
+        loading={loading}
       />
     </div>
   );
