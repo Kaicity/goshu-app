@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   ColumnDef,
@@ -9,18 +9,11 @@ import {
   getSortedRowModel,
   SortingState,
   useReactTable,
-} from "@tanstack/react-table";
-
-import { DataTablePagination } from "@/components/TablePagination";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { useState } from "react";
+} from '@tanstack/react-table';
+import { Spinner } from '@/components/ui/spinner';
+import { DataTablePagination } from '@/components/TablePagination';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useState } from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -29,6 +22,7 @@ interface DataTableProps<TData, TValue> {
   limit: number;
   total: number;
   onPaginationChange?: (page: number, limit: number) => void;
+  loading?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -37,6 +31,7 @@ export function DataTable<TData, TValue>({
   page,
   limit,
   total,
+  loading,
   onPaginationChange,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -59,7 +54,7 @@ export function DataTable<TData, TValue>({
     },
     onPaginationChange: (updater) => {
       const next =
-        typeof updater === "function"
+        typeof updater === 'function'
           ? updater({
               pageIndex: page - 1,
               pageSize: limit,
@@ -77,19 +72,13 @@ export function DataTable<TData, TValue>({
   return (
     <div className="rounded-md border p-4">
       <Table>
-
         <TableHeader className="bg-secondary">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 );
               })}
@@ -97,16 +86,17 @@ export function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {loading ? (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                <Spinner /> Loading
+              </TableCell>
+            </TableRow>
+          ) : table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
+              <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
+                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}
               </TableRow>
             ))
