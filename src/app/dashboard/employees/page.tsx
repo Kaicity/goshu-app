@@ -29,6 +29,7 @@ const EmployeesPage = () => {
     setLoading(true);
     try {
       const res = await getEmployees(page, limit);
+      console.log(res);
       setEmployees(res.employees);
       setTotal(res.pagination.total);
       setLimit(res.pagination.limit);

@@ -1,5 +1,6 @@
 import { Status } from '@/enums/statusEnum';
 import { PaginationDto } from './userAccountDto';
+import { Type } from '@/enums/typeEnum';
 
 interface EmployeeDto {
   id: string;
@@ -15,7 +16,7 @@ interface EmployeeDto {
   birthday?: Date; //
   gender?: string; //
   designation?: string; //
-  type?: string; //
+  type?: Type; //
   joinDate?: Date; //
   workingDate?: Date; //
   avatarUrl?: string; //

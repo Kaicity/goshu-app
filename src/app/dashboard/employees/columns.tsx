@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Type, TYPE_LABELS } from '@/enums/typeEnum';
 import { EmployeeDto } from '@/models/dto/employeeDto';
 import { ColumnDef } from '@tanstack/react-table';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
@@ -37,6 +38,14 @@ export const columns: ColumnDef<EmployeeDto>[] = [
   {
     accessorKey: 'designation',
     header: 'CHỨC VỤ',
+  },
+  {
+    accessorKey: 'type',
+    header: 'LOẠI NHÂN VIÊN',
+    cell: ({ row }) => {
+      const employee = row.original.type as Type;
+      return <div>{TYPE_LABELS[employee]}</div>;
+    }
   },
   {
     accessorKey: 'departmentId',
