@@ -6,7 +6,6 @@ import AppPieChart from '@/components/AppPieChart';
 import ProtectPage from '@/components/auth/ProtectPage';
 import CardList from '@/components/CardList';
 import TodoList from '@/components/TodoList';
-import { Textarea } from '@/components/ui/textarea';
 import { useApp } from '@/contexts/AppContext';
 import { useEffect } from 'react';
 

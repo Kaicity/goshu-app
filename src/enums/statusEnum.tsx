@@ -1,5 +1,3 @@
-import type { ReactNode } from "react";
-
 export enum Status {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",

@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,98 +9,69 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
+import { EmployeeDto } from '@/models/dto/employeeDto';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { Edit, MoreHorizontal, Trash } from 'lucide-react';
 
-export type Payment = {
-  id: string;
-  amount: number;
-  username: string;
-  email: string;
-  status: 'pending' | 'processing' | 'success' | 'failed';
-};
-
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<EmployeeDto>[] = [
   {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-      />
-    ),
-    cell: ({ row }) => <Checkbox onCheckedChange={(value) => row.toggleSelected(!!value)} checked={row.getIsSelected()} />,
+    accessorKey: 'fullname',
+    header: 'HỌ VÀ TÊN',
   },
   {
-    accessorKey: 'username',
-    header: 'User',
+    accessorKey: 'employeeCode',
+    header: 'MÃ NHÂN VIÊN',
   },
   {
     accessorKey: 'email',
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: 'EMAIL',
   },
   {
-    accessorKey: 'status',
-    header: 'Status',
+    accessorKey: 'phone',
+    header: 'SỐ ĐIỆN THOẠI',
+  },
+  {
+    accessorKey: 'birthday',
+    header: 'NGÀY SINH',
+  },
+  {
+    accessorKey: 'designation',
+    header: 'CHỨC VỤ',
+  },
+  {
+    accessorKey: 'departmentId',
+    header: 'PHÒNG BAN',
+  },
+  {
+    accessorKey: 'updatedAt',
+    header: 'NGÀY CẬP NHẬT',
+  },
+  {
+    accessorKey: 'actions',
+    header: () => <div className="text-center ">HÀNH ĐỘNG</div>,
+    enableColumnFilter: true,
     cell: ({ row }) => {
-      const status = row.getValue('status');
-
+      const resource = row.original;
       return (
-        <div
-          className={cn(
-            `p-1 rounded-md w-max text-xs`,
-            status === 'pending' && 'bg-yellow-500/40',
-            status === 'success' && 'bg-green-500/40',
-            status === 'failed' && 'bg-red-500/40',
-          )}
-        >
-          {status as string}
+        <div className="flex justify-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => (resource)}>
+                <Edit className="w-4 h-4 mr-2" />
+                Chỉnh sửa
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => (resource)} className="text-red-500 focus:text-red-500">
+                <Trash className="w-4 h-4 mr-2" />
+                Xoá
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-      );
-    },
-  },
-  {
-    accessorKey: 'amount',
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('amount'));
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Copy employee ID</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View employee</DropdownMenuItem>
-            <DropdownMenuItem>View employee details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       );
     },
   },

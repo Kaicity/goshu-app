@@ -93,7 +93,7 @@ export function AddUserDialog({ open, setOpen, user, reloadData: loadData }: Add
           setOpen(false);
           initialFormData();
           loadData();
-        }
+        } 
       } catch (error: any) {
         toast.error('Cập nhật tài khoản thất bại', {
           description: error.message,
