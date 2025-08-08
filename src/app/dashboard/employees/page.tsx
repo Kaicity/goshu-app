@@ -2,10 +2,54 @@
 
 import ProtectPage from '@/components/auth/ProtectPage';
 import { UserRole } from '@/enums/userRolesEnum';
-import React from 'react';
+import { Input } from '@/components/ui/input';
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { RotateCcwIcon, UsersRound } from 'lucide-react';
+import { DataTable } from '@/components/data-table';
+import { columns } from './columns';
+import { useRouter } from 'next/navigation';
 
 const EmployeesPage = () => {
-  return <div>{'EMPOYEE DEV TIẾP ĐI EM ơIIIIII !'}</div>;
-};
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [total, setTotal] = useState(0);
 
+  const handlePaginationChange = (newPage: number, newLimit: number) => {
+    setPage(newPage);
+    setLimit(newLimit);
+  };
+
+  const router = useRouter();
+  const handleAddEmployee = () => {
+    router.push('/dashboard/employees/add-employee');
+  };
+
+  return (
+    <div className="">
+      <div className="mb-5 py-2 rounded-md">
+        <h1 className="font-semibold drop-shadow-md text-2xl">NHÂN VIÊN</h1>
+      </div>
+      <div className="flex flex-wrap items-center gap-1 mb-6 *:mt-2">
+        <Input placeholder="Tìm kiếm theo email..." className="max-w-sm sm:w-full" />
+        <Button variant="outline">
+          <RotateCcwIcon className="w-6 h-6" />
+        </Button>
+        <Button className="w-full md:w-[100px] ml-auto" onClick={handleAddEmployee}>
+          <UsersRound className="w-4 h-4 mr-2" />
+          Tạo
+        </Button>
+      </div>
+      <DataTable
+        columns={columns}
+        data={[]}
+        page={page}
+        limit={limit}
+        total={total}
+        onPaginationChange={handlePaginationChange}
+      />
+    </div>
+  );
+};
+ 
 export default ProtectPage(EmployeesPage, { allowedRoles: [UserRole.ADMIN, UserRole.HR] });

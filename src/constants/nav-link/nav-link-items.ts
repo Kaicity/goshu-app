@@ -41,8 +41,17 @@ const humanManageitems = [
         title: 'Danh mục nhân viên',
         url: '/dashboard/employees',
         icon: Inbox,
+        children: [
+          {
+            title: 'Thêm nhân viên',
+            url: '/dashboard/employees/add-employee',
+            icon: Inbox,
+            roles: [UserRole.ADMIN, UserRole.HR],
+          },
+        ],
         roles: [UserRole.ADMIN, UserRole.HR],
       },
+
       {
         title: 'Chấm công',
         url: '/dashboard/attendances',

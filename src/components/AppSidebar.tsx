@@ -58,8 +58,8 @@ const AppSidebar = () => {
               {humanManageitems
                 .filter((item) => item.roles.includes(userAccount?.role as UserRole))
                 .map((item) => {
-                  const children = item.children?.filter((child) => child.roles.includes(userAccount?.role as UserRole));
-
+                  const children = item.children
+                  ?.filter((child) => child.roles.includes(userAccount?.role as UserRole));
                   return (
                     <Collapsible key={item.title} asChild defaultOpen={true} className="group/collapsible">
                       <SidebarMenuItem>

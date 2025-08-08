@@ -13,6 +13,7 @@ export function findBreadcrumbPath(items: MenuItem[], pathname: string): MenuIte
       stack.push(node);
       if (node.url === pathname) return true;
       if (node.children && dfs(node.children, path)) return true;
+  
       stack.pop();
     }
     return false;

@@ -51,7 +51,6 @@ const UsersPage = () => {
         role: roleSelected,
         status: statusSelected,
       });
-      // console.log(res); // dùng cho biến
 
       setUsers(res.userAccounts);
       setTotal(res.pagination.total);
