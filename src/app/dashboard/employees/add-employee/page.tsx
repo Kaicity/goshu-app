@@ -1,3 +1,5 @@
+'use client';
+
 import { DatePicker } from '@/components/date-picker';
 import { HeaderTitle } from '@/components/HeaderTitle';
 import { Input } from '@/components/ui/input';
@@ -5,11 +7,21 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GENDER_LABELS } from '@/enums/genderEnum';
+import { UploadDropzone } from '@/lib/uploadthing';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function UpdateEmployeePage() {
+  const [currentProfileImage, setCurrentProfileImage] = useState<string>('');
+
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+
+  console.log(currentProfileImage);
+
   return (
     <>
       <HeaderTitle text="Cập Nhật Thông Tin" subText="Quản lý thông tin cơ bản của nhân viên" />
+
       <div className="p-4 bg-card border rounded-lg shadow-sm">
         <Tabs defaultValue="personal-info" className="w-full mr-auto">
           <TabsList className="mb-6 flex w-full justify-start overflow-x-auto scrollbar-hide border-b border-border">
@@ -40,48 +52,72 @@ export default function UpdateEmployeePage() {
 
           <TabsContent value="personal-info" className="p-2 w-full">
             <h3 className="text-lg font-medium mb-5">Thông tin cá nhân</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
-              <div className="flex flex-col gap-2">
-                <Label>Họ và tên</Label>
-                <Input placeholder="Nhập họ và tên" />
+
+            <div className="flex flex-col md:flex-row gap-7">
+              {/* Cột ảnh */}
+              <div className="flex flex-col gap-2 md:w-1/3">
+                <Label>Hình ảnh nhân viên</Label>
+                <UploadDropzone
+                  onUploadBegin={() => setIsUploading(true)}
+                  onClientUploadComplete={(res) => {
+                    const url = res[0].ufsUrl;
+
+                    setCurrentProfileImage(url);
+                    setIsUploading(false);
+                    toast.success('Hình ảnh của bạn đã được upload');
+                  }}
+                  onUploadError={(error) => {
+                    toast.error(error.message);
+                  }}
+                  endpoint="singleImageUploader"
+                />
               </div>
-              <div className="flex flex-col gap-2">
-                <Label>Tên</Label>
-                <Input placeholder="Nhập tên" />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label>Email</Label>
-                <Input placeholder="Nhập email" />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label>Địa chỉ</Label>
-                <Input placeholder="Nhập địa chỉ" />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label>Điện thoại</Label>
-                <Input placeholder="Nhập điện thoại" />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label>Giới tính</Label>
-                <Select>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Chọn giới tính" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(GENDER_LABELS).map(([key, label]) => (
-                      <SelectItem key={key} value={key}>
-                        <div className="flex items-center gap-2">{label}</div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label>Ngày sinh</Label>
-                <DatePicker />
+
+              {/* Cột thông tin */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-7 md:w-2/3">
+                <div className="flex flex-col gap-2">
+                  <Label>Họ và tên</Label>
+                  <Input placeholder="Nhập họ và tên" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label>Tên</Label>
+                  <Input placeholder="Nhập tên" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label>Email</Label>
+                  <Input placeholder="Nhập email" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label>Địa chỉ</Label>
+                  <Input placeholder="Nhập địa chỉ" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label>Điện thoại</Label>
+                  <Input placeholder="Nhập điện thoại" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label>Giới tính</Label>
+                  <Select>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Chọn giới tính" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(GENDER_LABELS).map(([key, label]) => (
+                        <SelectItem key={key} value={key}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label>Ngày sinh</Label>
+                  <DatePicker />
+                </div>
               </div>
             </div>
           </TabsContent>
+
           <TabsContent value="professional-information" className="p-0">
             <h3 className="text-lg font-medium">Thông tin nâng cao</h3>
             <p className="text-muted-foreground mt-2 text-sm">Quản lý thông tin chuyên môn của bạn.</p>

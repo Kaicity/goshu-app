@@ -1,6 +1,6 @@
 interface Props {
   text: string;
-  subText?: string;
+  subText: string;
 }
 
 export function HeaderTitle(props: Props) {

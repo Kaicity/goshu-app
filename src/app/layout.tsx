@@ -7,6 +7,9 @@ import { Toaster } from 'sonner';
 import '../styles/nprogress.css';
 import './globals.css';
 import { AppProvider } from '@/contexts/AppContext';
+import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
+import { extractRouterConfig } from 'uploadthing/server';
+import { ourFileRouter } from '@/api/uploadthing/core';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -32,6 +35,15 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex`}>
         <AppProvider>
+          <NextSSRPlugin
+            /**
+             * The `extractRouterConfig` will extract **only** the route configs
+             * from the router to prevent additional information from being
+             * leaked to the client. The data passed to the client is the same
+             * as if you were to fetch `/api/uploadthing` directly.
+             */
+            routerConfig={extractRouterConfig(ourFileRouter)}
+          />
           <RouteProgress />
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
             {children}
