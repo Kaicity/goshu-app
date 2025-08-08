@@ -17,6 +17,7 @@ import { columns } from './columns';
 import type { UserAccountDto } from '@/models/dto/userAccountDto';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MultiSelect } from '@/components/multi-select';
+import { HeaderTitle } from '@/components/HeaderTitle';
 
 const UsersPage = () => {
   const searchParams = useSearchParams();
@@ -104,10 +105,8 @@ const UsersPage = () => {
   };
 
   return (
-    <div className="">
-      <div className="mb-5 py-2 rounded-md">
-        <h1 className="font-semibold drop-shadow-md text-2xl">QUẢN LÝ NGƯỜI DÙNG</h1>
-      </div>
+    <>
+      <HeaderTitle text="Người Dùng" subText="Quản lý tài khoản truy cập hệ thống" />
       {/* Search & Filters */}
       <div className="flex flex-wrap items-center gap-2 mb-6 *:mt-2">
         <Input
@@ -172,8 +171,8 @@ const UsersPage = () => {
         }}
         loading={loading}
       />
-    </div>
+    </>
   );
 };
 
-export default ProtectPage(UsersPage, { allowedRoles: [UserRole.ADMIN] }); // cho phép only admin
+export default ProtectPage(UsersPage, { allowedRoles: [UserRole.ADMIN, UserRole.HR] }); // cho phép only admin

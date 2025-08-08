@@ -108,7 +108,7 @@ const systemsManageItems = [
     title: 'Tài Khoản Người Dùng',
     url: '/dashboard/users',
     icon: User,
-    roles: [UserRole.ADMIN],
+    roles: [UserRole.ADMIN, UserRole.HR],
   },
   {
     title: 'Thông tin Nhân Viên',

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { CheckIcon, XCircle, ChevronDown, XIcon, WandSparkles } from 'lucide-react';
+import { CheckIcon, XCircle, ChevronDown, XIcon, WandSparkles, ListFilter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
@@ -128,6 +128,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
               className,
             )}
           >
+            <ListFilter className="text-primary" />
             {selectedValues.length > 0 ? (
               <div className="flex justify-between items-center w-full">
                 <div className="flex flex-wrap items-center">
@@ -191,7 +192,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
           <Command>
             <CommandInput placeholder="Search..." onKeyDown={handleInputKeyDown} />
             <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandEmpty>Không tìm thấy !</CommandEmpty>
               <CommandGroup>
                 <CommandItem key="all" onSelect={toggleAll} className="cursor-pointer">
                   <div
@@ -230,7 +231,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                   {selectedValues.length > 0 && (
                     <>
                       <CommandItem onSelect={handleClear} className="flex-1 justify-center cursor-pointer">
-                        Clear
+                        Làm mới
                       </CommandItem>
                       <Separator orientation="vertical" className="flex min-h-6 h-full" />
                     </>
@@ -239,7 +240,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                     onSelect={() => setIsPopoverOpen(false)}
                     className="flex-1 justify-center cursor-pointer max-w-full"
                   >
-                    Close
+                    Đóng
                   </CommandItem>
                 </div>
               </CommandGroup>

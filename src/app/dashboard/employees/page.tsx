@@ -50,7 +50,7 @@ const EmployeesPage = () => {
   };
 
   return (
-    <div className="">
+    <>
       <div className="mb-5 py-2 rounded-md">
         <h1 className="font-semibold drop-shadow-md text-2xl">NHÂN VIÊN</h1>
       </div>
@@ -73,7 +73,7 @@ const EmployeesPage = () => {
         onPaginationChange={handlePaginationChange}
         loading={loading}
       />
-    </div>
+    </>
   );
 };
 
