@@ -3,17 +3,41 @@
 import ProtectPage from '@/components/auth/ProtectPage';
 import { UserRole } from '@/enums/userRolesEnum';
 import { Input } from '@/components/ui/input';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { RotateCcwIcon, UsersRound } from 'lucide-react';
 import { DataTable } from '@/components/data-table';
 import { columns } from './columns';
 import { useRouter } from 'next/navigation';
+import { EmployeeDto } from '@/models/dto/employeeDto';
+import { toast } from 'sonner';
+import { getEmployees } from '@/api/users/employee';
 
 const EmployeesPage = () => {
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [total, setTotal] = useState(0);
+  const [employees, setEmployees] = useState<EmployeeDto[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const [page, setPage] = useState<number>(1);
+  const [total, setTotal] = useState<number>(0);
+  const [limit, setLimit] = useState<number>(10);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [page, limit]);
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const res = await getEmployees(page, limit);
+      setEmployees(res.employees);
+      setTotal(res.pagination.total);
+      setLimit(res.pagination.limit);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handlePaginationChange = (newPage: number, newLimit: number) => {
     setPage(newPage);
@@ -31,7 +55,7 @@ const EmployeesPage = () => {
         <h1 className="font-semibold drop-shadow-md text-2xl">NHÂN VIÊN</h1>
       </div>
       <div className="flex flex-wrap items-center gap-1 mb-6 *:mt-2">
-        <Input placeholder="Tìm kiếm theo email..." className="max-w-sm sm:w-full" />
+        <Input placeholder="Tìm kiếm nhân viên..." className="max-w-sm sm:w-full" />
         <Button variant="outline">
           <RotateCcwIcon className="w-6 h-6" />
         </Button>
@@ -42,14 +66,15 @@ const EmployeesPage = () => {
       </div>
       <DataTable
         columns={columns}
-        data={[]}
+        data={employees}
         page={page}
         limit={limit}
         total={total}
         onPaginationChange={handlePaginationChange}
+        loading={loading}
       />
     </div>
   );
 };
- 
+
 export default ProtectPage(EmployeesPage, { allowedRoles: [UserRole.ADMIN, UserRole.HR] });
