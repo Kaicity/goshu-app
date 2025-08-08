@@ -8,7 +8,7 @@ import { GENDER_LABELS } from '@/enums/genderEnum';
 
 export default function MinimalTabs() {
   return (
-    <div className="p-1 mt-4 bg-white border rounded-lg shadow-sm">
+    <div className="p-1 mt-4 bg-card border rounded-lg shadow-sm">
       <Tabs defaultValue="personal-info" className="w-full mr-auto">
         <TabsList className="mb-6 flex w-full justify-start gap-8 border-b bg-transparent pb-0 overflow-x-auto">
           <TabsTrigger
