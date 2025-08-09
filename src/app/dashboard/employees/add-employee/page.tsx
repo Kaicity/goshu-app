@@ -2,12 +2,15 @@
 
 import { DatePicker } from '@/components/date-picker';
 import { HeaderTitle } from '@/components/HeaderTitle';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GENDER_LABELS } from '@/enums/genderEnum';
 import { UploadDropzone } from '@/lib/uploadthing';
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -51,30 +54,48 @@ export default function UpdateEmployeePage() {
           </TabsList>
 
           <TabsContent value="personal-info" className="p-2 w-full">
-            <h3 className="text-lg font-medium mb-5">Thông tin cá nhân</h3>
+            <HeaderTitle text="Thông tin cá nhân" />
 
-            <div className="flex flex-col md:flex-row gap-7">
-              {/* Cột ảnh */}
-              <div className="flex flex-col gap-2 md:w-1/3">
+            <div className="flex flex-col md:flex-row gap-7 mb-2">
+              <div className={cn('flex flex-col gap-2', currentProfileImage ? 'md:w-max' : 'md:w-1/3')}>
                 <Label>Hình ảnh nhân viên</Label>
-                <UploadDropzone
-                  onUploadBegin={() => setIsUploading(true)}
-                  onClientUploadComplete={(res) => {
-                    const url = res[0].ufsUrl;
 
-                    setCurrentProfileImage(url);
-                    setIsUploading(false);
-                    toast.success('Hình ảnh của bạn đã được upload');
-                  }}
-                  onUploadError={(error) => {
-                    toast.error(error.message);
-                  }}
-                  endpoint="singleImageUploader"
-                />
+                {currentProfileImage ? (
+                  <div className="relative w-full">
+                    <Image
+                      src={currentProfileImage}
+                      alt="Ảnh nhân viên"
+                      width={500}
+                      height={500}
+                      className="w-80 h-80 rounded-md object-cover border border-gray-200 dark:border-gray-700"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setCurrentProfileImage('')}
+                      className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded hover:bg-red-600"
+                    >
+                      Xóa
+                    </button>
+                  </div>
+                ) : (
+                  <UploadDropzone
+                    className="py-16 ut-button:bg-amber-500 ut-button:ut-readying:bg-amber-500/50 ut-button:p-2"
+                    onUploadBegin={() => setIsUploading(true)}
+                    onClientUploadComplete={(res) => {
+                      const url = res[0].ufsUrl;
+                      setCurrentProfileImage(url);
+                      setIsUploading(false);
+                      toast.success('Hình ảnh của bạn đã được upload');
+                    }}
+                    onUploadError={(error) => {
+                      toast.error(error.message);
+                    }}
+                    endpoint="singleImageUploader"
+                  />
+                )}
               </div>
 
-              {/* Cột thông tin */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-7 md:w-2/3">
+              <div className={cn('grid grid-cols-1 md:grid-cols-2 gap-7', currentProfileImage ? 'md:w-full' : 'md:w-2/3')}>
                 <div className="flex flex-col gap-2">
                   <Label>Họ và tên</Label>
                   <Input placeholder="Nhập họ và tên" />
@@ -115,6 +136,10 @@ export default function UpdateEmployeePage() {
                   <DatePicker />
                 </div>
               </div>
+            </div>
+
+            <div className="flex justify-end">
+              <Button>Tiếp theo</Button>
             </div>
           </TabsContent>
 
