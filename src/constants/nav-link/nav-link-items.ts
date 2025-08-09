@@ -97,7 +97,7 @@ const humanManageitems = [
   },
   {
     title: 'Phòng Ban',
-    url: '/department',
+    url: '/dashboard/departments',
     icon: Presentation,
     roles: [UserRole.ADMIN, UserRole.HR],
   },
