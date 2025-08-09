@@ -12,4 +12,7 @@ interface DepartmentPaginationDto {
     pagination: PaginationDto;
 }
 
-export type { DepartmentDto, DepartmentPaginationDto };
+interface DepartmentFilterDto{
+    search: string;
+}
+export type { DepartmentDto, DepartmentPaginationDto, DepartmentFilterDto };

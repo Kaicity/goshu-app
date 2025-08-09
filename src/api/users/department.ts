@@ -1,10 +1,10 @@
-import { DepartmentDto, DepartmentPaginationDto } from '@/models/dto/departmentDto';
+import { DepartmentDto, DepartmentFilterDto, DepartmentPaginationDto } from '@/models/dto/departmentDto';
 import { instance } from '../axiosClient';
 
-export const getDepartments = async (page: number, limit: number): Promise<DepartmentPaginationDto> => {
+export const getDepartments = async (page: number, limit: number, filters: DepartmentFilterDto): Promise<DepartmentPaginationDto> => {
   try {
     const response: any = await instance.get('/departments/getAll', {
-      params: { page, limit },
+      params: { page, limit, search: filters.search },
     });
     return {
       departments: response.data,
