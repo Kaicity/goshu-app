@@ -8,10 +8,15 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GENDER_LABELS } from '@/enums/genderEnum';
-import { UploadDropzone } from '@/lib/uploadthing';
-import { cn } from '@/lib/utils';
+import { MARITAL_LABELS } from '@/enums/maritalEnum';
+import { STATUS_LABELS } from '@/enums/statusEnum';
+import { TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
+import { UploadButton, UploadDropzone } from '@/lib/uploadthing';
+import type CountryDto from '@/models/dto/countryDto';
+import axios from 'axios';
+import { Camera, UploadCloud } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function UpdateEmployeePage() {
@@ -19,7 +24,19 @@ export default function UpdateEmployeePage() {
 
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
-  console.log(currentProfileImage);
+  const [countries, setCountries] = useState<CountryDto[]>([]);
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const res = await axios.get('https://open.oapi.vn/location/countries');
+        setCountries(res.data.data);
+      } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu:', error);
+      }
+    };
+    fetchCountries();
+  }, []);
 
   return (
     <>
@@ -54,20 +71,17 @@ export default function UpdateEmployeePage() {
           </TabsList>
 
           <TabsContent value="personal-info" className="p-2 w-full">
-            <HeaderTitle text="Thông tin cá nhân" />
-
-            <div className="flex flex-col md:flex-row gap-7 mb-2">
-              <div className={cn('flex flex-col gap-2', currentProfileImage ? 'md:w-max' : 'md:w-1/3')}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+              <div className="flex flex-col col-span-2 gap-2">
                 <Label>Hình ảnh nhân viên</Label>
 
                 {currentProfileImage ? (
-                  <div className="relative w-full">
+                  <div className="relative w-full max-w-[200px] aspect-square">
                     <Image
                       src={currentProfileImage}
                       alt="Ảnh nhân viên"
-                      width={500}
-                      height={500}
-                      className="w-80 h-80 rounded-md object-cover border border-gray-200 dark:border-gray-700"
+                      fill
+                      className="rounded-md object-cover border border-gray-200 dark:border-gray-700"
                     />
                     <button
                       type="button"
@@ -78,82 +92,322 @@ export default function UpdateEmployeePage() {
                     </button>
                   </div>
                 ) : (
-                  <UploadDropzone
-                    className="py-16 ut-button:bg-amber-500 ut-button:ut-readying:bg-amber-500/50 ut-button:p-2"
-                    onUploadBegin={() => setIsUploading(true)}
-                    onClientUploadComplete={(res) => {
-                      const url = res[0].ufsUrl;
-                      setCurrentProfileImage(url);
-                      setIsUploading(false);
-                      toast.success('Hình ảnh của bạn đã được upload');
-                    }}
-                    onUploadError={(error) => {
-                      toast.error(error.message);
-                    }}
-                    endpoint="singleImageUploader"
-                  />
+                  <div className="flex items-start">
+                    <UploadButton
+                      endpoint="singleImageUploader"
+                      onUploadBegin={() => setIsUploading(true)}
+                      onClientUploadComplete={(res) => {
+                        const url = res[0].ufsUrl;
+                        setCurrentProfileImage(url);
+                        setIsUploading(false);
+                        toast.success('Hình ảnh của bạn đã được upload');
+                      }}
+                      onUploadError={(error) => {
+                        toast.error(error.message);
+                      }}
+                      content={{
+                        button: isUploading ? (
+                          <div className="flex flex-col items-center">
+                            <UploadCloud className="w-5 h-5 animate-bounce" />
+                            <span className="text-xs">Đang tải...</span>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center gap-1">
+                            <Camera className="w-5 h-5" />
+                            <span className="text-xs">Chọn ảnh</span>
+                          </div>
+                        ),
+                        allowedContent: 'PNG, JPG (tối đa 5MB)',
+                      }}
+                      appearance={{
+                        button:
+                          'w-30 h-30 bg-primary dark:bg-secondary px-4 py-2 rounded-md hover:bg-primary/90 dark:hover:bg-primary/10 disabled:opacity-50',
+                        allowedContent: 'text-xs text-muted-foreground',
+                      }}
+                    />
+                  </div>
                 )}
               </div>
 
-              <div className={cn('grid grid-cols-1 md:grid-cols-2 gap-7', currentProfileImage ? 'md:w-full' : 'md:w-2/3')}>
-                <div className="flex flex-col gap-2">
-                  <Label>Họ và tên</Label>
-                  <Input placeholder="Nhập họ và tên" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label>Tên</Label>
-                  <Input placeholder="Nhập tên" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label>Email</Label>
-                  <Input placeholder="Nhập email" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label>Địa chỉ</Label>
-                  <Input placeholder="Nhập địa chỉ" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label>Điện thoại</Label>
-                  <Input placeholder="Nhập điện thoại" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label>Giới tính</Label>
-                  <Select>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Chọn giới tính" />
-                    </SelectTrigger>
+              <div className="flex flex-col gap-2">
+                <Label>Họ</Label>
+                <Input placeholder="Nhập họ" className="h-12" />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Tên</Label>
+                <Input placeholder="Nhập tên" className="h-12" />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Email</Label>
+                <Input placeholder="Nhập email" className="h-12" />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Điện thoại</Label>
+                <Input placeholder="Nhập điện thoại" className="h-12" />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Ngày sinh</Label>
+                <DatePicker title="Chọn ngày sinh" value={new Date()} onchange={() => {}} dateTypeFormat="dd/MM/yyyy" />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Giới tính</Label>
+                <Select>
+                  <SelectTrigger className="w-full !h-12">
+                    <SelectValue placeholder="Chọn giới tính" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(GENDER_LABELS).map(([key, label]) => (
+                      <SelectItem key={key} value={key}>
+                        <div className="flex items-center gap-2">{label}</div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Quốc tịch</Label>
+                <Select>
+                  <SelectTrigger className="w-full !h-12">
+                    <SelectValue placeholder="Chọn quốc tịch hiện tại" />
+                  </SelectTrigger>
+                  <SelectContent>
                     <SelectContent>
-                      {Object.entries(GENDER_LABELS).map(([key, label]) => (
-                        <SelectItem key={key} value={key}>
-                          {label}
-                        </SelectItem>
-                      ))}
+                      {countries
+                        .filter((country) => country.id && country.iso)
+                        .map((country, index) => (
+                          <SelectItem key={country.id || `${country.iso}-${index}`} value={country.iso}>
+                            <div className="flex items-center gap-2">
+                              <img src={country.flag} alt={country.name} className="w-5 h-5 rounded" />
+                              {country.niceName}
+                            </div>
+                          </SelectItem>
+                        ))}
                     </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label>Ngày sinh</Label>
-                  <DatePicker />
-                </div>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Tình trạng hôn nhân</Label>
+                <Select>
+                  <SelectTrigger className="w-full !h-12">
+                    <SelectValue placeholder="Chọn tình trạng hôn nhân" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(MARITAL_LABELS).map(([key, label]) => (
+                      <SelectItem key={key} value={key}>
+                        <div className="flex items-center gap-2">{label}</div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-col col-span-2 gap-2">
+                <Label>Địa chỉ</Label>
+                <Input placeholder="Nhập địa chỉ" className="h-12" />
               </div>
             </div>
 
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-2">
+              <Button variant="outline">Hủy</Button>
               <Button>Tiếp theo</Button>
             </div>
           </TabsContent>
 
           <TabsContent value="professional-information" className="p-0">
-            <h3 className="text-lg font-medium">Thông tin nâng cao</h3>
-            <p className="text-muted-foreground mt-2 text-sm">Quản lý thông tin chuyên môn của bạn.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+              <div className="flex flex-col gap-2">
+                <Label>Mã nhân viên</Label>
+                <Input placeholder="NV-XXXX" className="h-12" readOnly />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Username</Label>
+                <Input placeholder="Nhập Username" className="h-12" />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Hình thức làm việc</Label>
+                <Select>
+                  <SelectTrigger className="w-full !h-12">
+                    <SelectValue placeholder="Chọn hình thức làm việc" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(TYPEWORK_LABELS).map(([key, label]) => (
+                      <SelectItem key={key} value={key}>
+                        <div className="flex items-center gap-2">{label}</div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Vị trí hiện tại</Label>
+                <Input placeholder="Front-end developer, Kế toán,..." className="h-12" />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Phòng ban</Label>
+                <Select>
+                  <SelectTrigger className="w-full !h-12">
+                    <SelectValue placeholder="Chọn phòng ban" />
+                  </SelectTrigger>
+                  <SelectContent></SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Ngày tham gia công ty</Label>
+                <DatePicker title="Chọn ngày tham gia" value={new Date()} onchange={() => {}} dateTypeFormat="dd/MM/yyyy" />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Trạng thái</Label>
+                <Select disabled>
+                  <SelectTrigger className="w-full !h-12">
+                    <SelectValue placeholder="Trạng thái nhân viên" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(STATUS_LABELS).map(([key, label]) => (
+                      <SelectItem key={key} value={key}>
+                        <div className="flex items-center gap-2">{label}</div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Ngày bắt đầu làm việc</Label>
+                <DatePicker
+                  title="Chọn ngày bắt đầu làm việc"
+                  value={new Date()}
+                  onchange={() => {}}
+                  dateTypeFormat="dd/MM/yyyy"
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <Button variant="outline">Hủy</Button>
+              <Button>Tiếp theo</Button>
+            </div>
           </TabsContent>
+
           <TabsContent value="documents" className="p-0">
-            <h3 className="text-lg font-medium">Tài liệu</h3>
-            <p className="text-muted-foreground mt-2 text-sm">Quản lý tài liệu của bạn.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+              <div className="flex flex-col gap-2">
+                <Label>Tải hồ sơ CV</Label>
+                <UploadDropzone
+                  className="py-6 ut-button:bg-amber-500 ut-button:ut-readying:bg-amber-500/50 ut-button:p-2"
+                  onUploadBegin={() => setIsUploading(true)}
+                  onClientUploadComplete={(res) => {
+                    const url = res[0].ufsUrl;
+                    setCurrentProfileImage(url);
+                    setIsUploading(false);
+                    toast.success('Hình ảnh của bạn đã được upload');
+                  }}
+                  onUploadError={(error) => {
+                    toast.error(error.message);
+                  }}
+                  endpoint="singleImageUploader"
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Tải hồ sơ học vấn</Label>
+                <UploadDropzone
+                  className="py-6 ut-button:bg-amber-500 ut-button:ut-readying:bg-amber-500/50 ut-button:p-2"
+                  onUploadBegin={() => setIsUploading(true)}
+                  onClientUploadComplete={(res) => {
+                    const url = res[0].ufsUrl;
+                    setCurrentProfileImage(url);
+                    setIsUploading(false);
+                    toast.success('Hình ảnh của bạn đã được upload');
+                  }}
+                  onUploadError={(error) => {
+                    toast.error(error.message);
+                  }}
+                  endpoint="singleImageUploader"
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Tải hồ sơ chứng chỉ tiếng anh</Label>
+                <UploadDropzone
+                  className="py-6 ut-button:bg-amber-500 ut-button:ut-readying:bg-amber-500/50 ut-button:p-2"
+                  onUploadBegin={() => setIsUploading(true)}
+                  onClientUploadComplete={(res) => {
+                    const url = res[0].ufsUrl;
+                    setCurrentProfileImage(url);
+                    setIsUploading(false);
+                    toast.success('Hình ảnh của bạn đã được upload');
+                  }}
+                  onUploadError={(error) => {
+                    toast.error(error.message);
+                  }}
+                  endpoint="singleImageUploader"
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>Tải hồ sơ chứng chỉ khác</Label>
+                <UploadDropzone
+                  className="py-6 ut-button:bg-amber-500 ut-button:ut-readying:bg-amber-500/50 ut-button:p-2"
+                  onUploadBegin={() => setIsUploading(true)}
+                  onClientUploadComplete={(res) => {
+                    const url = res[0].ufsUrl;
+                    setCurrentProfileImage(url);
+                    setIsUploading(false);
+                    toast.success('Hình ảnh của bạn đã được upload');
+                  }}
+                  onUploadError={(error) => {
+                    toast.error(error.message);
+                  }}
+                  endpoint="singleImageUploader"
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <Button variant="outline">Hủy</Button>
+              <Button>Tiếp theo</Button>
+            </div>
           </TabsContent>
+
           <TabsContent value="account-access" className="p-0">
-            <h3 className="text-lg font-medium">Tài khoản truy cập</h3>
-            <p className="text-muted-foreground mt-2 text-sm">Quản lý quyền truy cập tài khoản của bạn.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+              <div className="flex flex-col gap-2">
+                <Label>Email / Tài khoản đăng nhập</Label>
+                <Input placeholder="user@gmail.com" className="h-12" />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>ID tài khoản Github</Label>
+                <Input placeholder="ISSD-2r44-333r3" className="h-12" />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>ID tài khoản Microsoft Team</Label>
+                <Input placeholder="ISSD-2r44-333r3" className="h-12" />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label>ID tài khoản Slack</Label>
+                <Input placeholder="ISSD-2r44-333r3" className="h-12" />
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <Button>Lưu thông tin</Button>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

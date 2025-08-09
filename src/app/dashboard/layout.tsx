@@ -18,7 +18,7 @@ export default async function RootLayout({
         <AppSidebar />
         <main className="w-full">
           <Navbar />
-          <div className="px-4">
+          <div className="px-4 mb-5">
             <AppBreadcrumb />
             {children}
           </div>
