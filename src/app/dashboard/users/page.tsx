@@ -11,12 +11,13 @@ import { ROLE_LABELS, UserRole } from '@/enums/userRolesEnum';
 import { RotateCcwIcon, UsersRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { DataTable } from '../../../components/data-table';
+import { DataTable } from '../../../components/DataTable';
 import { columns } from './columns';
 
 import type { UserAccountDto } from '@/models/dto/userAccountDto';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { MultiSelect } from '@/components/multi-select';
+import { MultiSelect } from '@/components/MultiSelect';
+import { HeaderTitle } from '@/components/HeaderTitle';
 
 const UsersPage = () => {
   const searchParams = useSearchParams();
@@ -105,9 +106,7 @@ const UsersPage = () => {
 
   return (
     <div className="">
-      <div className="mb-5 py-2 rounded-md">
-        <h1 className="font-semibold drop-shadow-md text-2xl">QUẢN LÝ NGƯỜI DÙNG</h1>
-      </div>
+      <HeaderTitle text="QUẢN LÝ NGƯỜI DÙNG" subText="Quản lý tài khoản người dùng" />
       {/* Search & Filters */}
       <div className="flex flex-wrap items-center gap-2 mb-6 *:mt-2">
         <Input

@@ -1,14 +1,13 @@
 'use client';
 import { getDepartments } from '@/api/users/department';
 import ProtectPage from '@/components/auth/ProtectPage';
-import { DataTable } from '@/components/data-table';
+import { DataTable } from '@/components/DataTable';
 import { HeaderTitle } from '@/components/HeaderTitle';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { UserRole } from '@/enums/userRolesEnum';
 import { DepartmentPaginationDto, DepartmentDto } from '@/models/dto/departmentDto';
 import { RotateCcwIcon, UsersRound } from 'lucide-react';
-import { set } from 'nprogress';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { columns } from './column';
@@ -65,7 +64,12 @@ const DepartmentsPage = () => {
           <UsersRound className="w-4 h-4 mr-2" />
           Tạo
         </Button>
-        <AddDepartmentDialog open={open} setOpen={setOpen} department={department ? department : null} reloadData={fetchDepartments} />
+        <AddDepartmentDialog
+          open={open}
+          setOpen={setOpen}
+          department={department ? department : null}
+          reloadData={fetchDepartments}
+        />
       </div>
       <DataTable
         data={departments}

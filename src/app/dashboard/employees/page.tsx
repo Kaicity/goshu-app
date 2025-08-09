@@ -6,12 +6,13 @@ import { Input } from '@/components/ui/input';
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { RotateCcwIcon, UsersRound } from 'lucide-react';
-import { DataTable } from '@/components/data-table';
+import { DataTable } from '@/components/DataTable';
 import { columns } from './columns';
 import { useRouter } from 'next/navigation';
 import { EmployeeDto } from '@/models/dto/employeeDto';
 import { toast } from 'sonner';
 import { getEmployees } from '@/api/users/employee';
+import { HeaderTitle } from '@/components/HeaderTitle';
 
 const EmployeesPage = () => {
   const [employees, setEmployees] = useState<EmployeeDto[]>([]);
@@ -52,9 +53,7 @@ const EmployeesPage = () => {
 
   return (
     <div className="">
-      <div className="mb-5 py-2 rounded-md">
-        <h1 className="font-semibold drop-shadow-md text-2xl">NHÂN VIÊN</h1>
-      </div>
+      <HeaderTitle text="NHÂN VIÊN" subText="Quản lý nhân viên trong công ty" />
       <div className="flex flex-wrap items-center gap-1 mb-6 *:mt-2">
         <Input placeholder="Tìm kiếm nhân viên..." className="max-w-sm sm:w-full" />
         <Button variant="outline">
