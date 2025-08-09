@@ -1,21 +1,16 @@
 'use client';
 
 import { createDepartment } from '@/api/users/department';
-import { createAccountUser, updateAccountUser } from '@/api/users/user';
 import { SubmitButton } from '@/components/SummitButton';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Status, STATUS_LABELS } from '@/enums/statusEnum';
-import { ROLE_ICONS, ROLE_LABELS, UserRole } from '@/enums/userRolesEnum';
 import { cn } from '@/lib/utils';
 import { DepartmentDto } from '@/models/dto/departmentDto';
 import { CreateDepartmentFormData, createDepartmentSchema } from '@/models/schemas/createDepartmentSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogDescription } from '@radix-ui/react-dialog';
-import { create } from 'domain';
 import { startTransition, useActionState, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -65,7 +60,6 @@ export function AddDepartmentDialog({ open, setOpen, department, reloadData: loa
   }, undefined);
 
   const onSubmit = async (data: CreateDepartmentFormData) => {
-    console.log(data);
     startTransition(() => {
       submitAction(data);
     });
@@ -81,21 +75,16 @@ export function AddDepartmentDialog({ open, setOpen, department, reloadData: loa
               {department ? 'Cập nhật thông tin phòng ban' : 'Điền thông tin phòng ban để tạo mới'}
             </DialogDescription>
           </DialogHeader>
-          {/* Role select */}
-          <div className="flex gap-4">{/* Status select */}</div>
-
           <div className="grid gap-2 space-y-2">
             <Label>Tên phòng ban</Label>
             <Input {...register('name')} placeholder="Nhập tên phòng ban" className="h-10" />
             {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
           </div>
-
           <div className="grid gap-2 space-y-2">
             <Label>Mô tả</Label>
             <Input {...register('description')} placeholder="Nhập mô tả" className="h-10" />
             {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
           </div>
-
           <DialogFooter className="flex justify-end gap-2">
             <Button
               type="button"
