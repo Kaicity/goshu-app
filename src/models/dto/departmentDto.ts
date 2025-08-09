@@ -1,10 +1,10 @@
 import { PaginationDto } from "./userAccountDto";
 
 interface DepartmentDto {
-    id: string,
+    id?: string,
     name: string,
     description: string,
-    updatedAt: Date,
+    updatedAt?: Date,
 }
 
 interface DepartmentPaginationDto {

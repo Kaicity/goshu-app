@@ -12,6 +12,7 @@ import { set } from 'nprogress';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { columns } from './column';
+import { AddDepartmentDialog } from './AddDepartmentDialog';
 
 const DepartmentsPage = () => {
   const [departments, setDepartments] = useState<DepartmentDto[]>([]);
@@ -19,6 +20,8 @@ const DepartmentsPage = () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [total, setTotal] = useState<number>(0);
+  const [open, setOpen] = useState(false);
+  const [department, setDepartment] = useState<DepartmentDto | null>(null);
 
   useEffect(() => {
     fetchDepartments();
@@ -52,10 +55,17 @@ const DepartmentsPage = () => {
         <Button variant="outline">
           <RotateCcwIcon className="w-6 h-6" />
         </Button>
-        <Button className="w-full md:w-[100px] ml-auto">
+        <Button
+          className="w-full md:w-[100px] ml-auto"
+          onClick={() => {
+            setOpen(true);
+            setDepartment(null);
+          }}
+        >
           <UsersRound className="w-4 h-4 mr-2" />
           Tạo
         </Button>
+        <AddDepartmentDialog open={open} setOpen={setOpen} department={department ? department : null} reloadData={fetchDepartments} />
       </div>
       <DataTable
         data={departments}
