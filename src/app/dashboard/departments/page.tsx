@@ -1,5 +1,5 @@
 'use client';
-import { deleteDepartment, getDepartments } from '@/api/departments.ts/department';
+import { deleteDepartment, getDepartments } from '@/api/departments/department';
 import ProtectPage from '@/components/auth/ProtectPage';
 import { DataTable } from '@/components/DataTable';
 import { HeaderTitle } from '@/components/HeaderTitle';

@@ -282,7 +282,7 @@ const PaymentsPage = () => {
       <div className="mb-8 px-4 py-2 bg-secondary rounded-md">
         <h1 className="font-semibold">All Payments</h1>
       </div>
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={data} page={0} limit={0} total={0} />
     </div>
   );
 };
