@@ -1,5 +1,6 @@
 'use client';
 
+import { getEmployee } from '@/api/employee/employee';
 import { DatePicker } from '@/components/date-picker';
 import { HeaderTitle } from '@/components/HeaderTitle';
 import { Button } from '@/components/ui/button';
@@ -13,18 +14,37 @@ import { STATUS_LABELS } from '@/enums/statusEnum';
 import { TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
 import { UploadButton, UploadDropzone } from '@/lib/uploadthing';
 import type CountryDto from '@/models/dto/countryDto';
+import type { EmployeeDto } from '@/models/dto/employeeDto';
 import axios from 'axios';
 import { Camera, UploadCloud } from 'lucide-react';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function UpdateEmployeePage() {
-  const [currentProfileImage, setCurrentProfileImage] = useState<string>('');
+  const params = useParams();
 
+  const [currentProfileImage, setCurrentProfileImage] = useState<string>('');
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const [countries, setCountries] = useState<CountryDto[]>([]);
+  const [employee, setEmployee] = useState<EmployeeDto | null>(null);
+
+  useEffect(() => {
+    const fetchEmployeeDetail = async () => {
+      try {
+        if (params.id) {
+          const res = await getEmployee(params.id as string);
+          setEmployee(res);
+        }
+      } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu:', error);
+      }
+    };
+
+    fetchEmployeeDetail();
+  }, []);
 
   useEffect(() => {
     const fetchCountries = async () => {

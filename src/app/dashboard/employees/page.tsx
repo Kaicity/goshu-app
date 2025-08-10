@@ -1,20 +1,21 @@
 'use client';
 
+import { getEmployees } from '@/api/employee/employee';
 import ProtectPage from '@/components/auth/ProtectPage';
-import { UserRole } from '@/enums/userRolesEnum';
-import { Input } from '@/components/ui/input';
-import React, { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { RotateCcwIcon, UsersRound } from 'lucide-react';
 import { DataTable } from '@/components/data-table';
-import { columns } from './columns';
-import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { UserRole } from '@/enums/userRolesEnum';
 import { EmployeeDto } from '@/models/dto/employeeDto';
+import { FileSpreadsheet, RotateCcwIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { getEmployees } from '@/api/users/employee';
+import { columns } from './columns';
 
 const EmployeesPage = () => {
   const [employees, setEmployees] = useState<EmployeeDto[]>([]);
+
   const [loading, setLoading] = useState(true);
 
   const [page, setPage] = useState<number>(1);
@@ -22,10 +23,10 @@ const EmployeesPage = () => {
   const [limit, setLimit] = useState<number>(10);
 
   useEffect(() => {
-    fetchUsers();
+    fetchEmployees();
   }, [page, limit]);
 
-  const fetchUsers = async () => {
+  const fetchEmployees = async () => {
     setLoading(true);
     try {
       const res = await getEmployees(page, limit);
@@ -45,9 +46,6 @@ const EmployeesPage = () => {
   };
 
   const router = useRouter();
-  const handleAddEmployee = () => {
-    router.push('/dashboard/employees/add-employee');
-  };
 
   return (
     <>
@@ -59,9 +57,12 @@ const EmployeesPage = () => {
         <Button variant="outline">
           <RotateCcwIcon className="w-6 h-6" />
         </Button>
-        <Button className="w-full md:w-[100px] ml-auto" onClick={handleAddEmployee}>
-          <UsersRound className="w-4 h-4 mr-2" />
-          Tạo
+        <Button
+          onClick={() => {}}
+          className="w-full md:w-[130px] ml-auto bg-green-600 hover:bg-green-700 text-white font-medium shadow-sm transition-all duration-200"
+        >
+          <FileSpreadsheet className="w-5 h-5 mr-2" />
+          Xuất Excel
         </Button>
       </div>
       <DataTable

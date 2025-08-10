@@ -1,9 +1,8 @@
-import { Status } from '@/enums/statusEnum';
 import { PaginationDto } from './userAccountDto';
 
 interface EmployeeDto {
   id: string;
-  fullname: string; //
+  fullname?: string; //
   username?: string; //
   employeeCode: string; //
   email: string; //
@@ -21,7 +20,7 @@ interface EmployeeDto {
   avatarUrl?: string; //
   document?: string;
   departmentId?: string; //
-  status?: Status;
+  status?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

@@ -12,6 +12,7 @@ import {
 import { EmployeeDto } from '@/models/dto/employeeDto';
 import { ColumnDef } from '@tanstack/react-table';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export const columns: ColumnDef<EmployeeDto>[] = [
   {
@@ -52,6 +53,8 @@ export const columns: ColumnDef<EmployeeDto>[] = [
     enableColumnFilter: true,
     cell: ({ row }) => {
       const resource = row.original;
+      const router = useRouter();
+
       return (
         <div className="flex justify-center">
           <DropdownMenu>
@@ -61,11 +64,15 @@ export const columns: ColumnDef<EmployeeDto>[] = [
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => (resource)}>
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push(`/dashboard/employees/info-update/${resource.id}`);
+                }}
+              >
                 <Edit className="w-4 h-4 mr-2" />
                 Chỉnh sửa
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => (resource)} className="text-red-500 focus:text-red-500">
+              <DropdownMenuItem onClick={() => resource} className="text-red-500 focus:text-red-500">
                 <Trash className="w-4 h-4 mr-2" />
                 Xoá
               </DropdownMenuItem>
