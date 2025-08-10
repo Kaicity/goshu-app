@@ -105,8 +105,8 @@ const UsersPage = () => {
   };
 
   return (
-    <div className="">
-      <HeaderTitle text="QUẢN LÝ NGƯỜI DÙNG" subText="Quản lý tài khoản người dùng" />
+    <>
+      <HeaderTitle text="Quản Lý Tài Khoản" subText="Quản lý tài khoản người dùng truy cập" />
       {/* Search & Filters */}
       <div className="flex flex-wrap items-center gap-2 mb-6 *:mt-2">
         <Input
@@ -171,8 +171,8 @@ const UsersPage = () => {
         }}
         loading={loading}
       />
-    </div>
+    </>
   );
 };
 
-export default ProtectPage(UsersPage, { allowedRoles: [UserRole.ADMIN] }); // cho phép only admin
+export default ProtectPage(UsersPage, { allowedRoles: [UserRole.ADMIN, UserRole.HR] }); // cho phép only admin

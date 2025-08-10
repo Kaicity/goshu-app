@@ -1,0 +1,44 @@
+import { EmployeePaginationDto, type EmployeeDto } from '@/models/dto/employeeDto';
+import { instance } from '../axiosClient';
+
+export const getEmployees = async (page: number, limit: number): Promise<EmployeePaginationDto> => {
+  try {
+    const response: any = await instance.get('/employees/getAll', {
+      params: {
+        page,
+        limit,
+      },
+    });
+    return {
+      employees: response.data,
+      pagination: {
+        page: response.pagination.currentPage,
+        limit: response.pagination.limit,
+        total: response.pagination.totalItems,
+      },
+    };
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message;
+    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+  }
+};
+
+export const updateEmployee = async (id: string, employee: EmployeeDto): Promise<any> => {
+  try {
+    const response = await instance.put(`/employees/updateEmployee/${id}`, employee);
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message;
+    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+  }
+};
+
+export const getEmployee = async (id: string): Promise<any> => {
+  try {
+    const response = await instance.get(`/employees/getEmployee/${id}`);
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message;
+    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+  }
+};

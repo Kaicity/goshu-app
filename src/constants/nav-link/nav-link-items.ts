@@ -44,7 +44,7 @@ const humanManageitems = [
         children: [
           {
             title: 'Thêm nhân viên',
-            url: '/dashboard/employees/add-employee',
+            url: '/dashboard/employees/info-update',
             icon: Inbox,
             roles: [UserRole.ADMIN, UserRole.HR],
           },
@@ -108,7 +108,7 @@ const systemsManageItems = [
     title: 'Tài Khoản Người Dùng',
     url: '/dashboard/users',
     icon: User,
-    roles: [UserRole.ADMIN],
+    roles: [UserRole.ADMIN, UserRole.HR],
   },
   {
     title: 'Thông tin Nhân Viên',
