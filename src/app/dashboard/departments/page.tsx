@@ -1,5 +1,5 @@
 'use client';
-import { getDepartments } from '@/api/users/department';
+import { deleteDepartment, getDepartments } from '@/api/users/department';
 import ProtectPage from '@/components/auth/ProtectPage';
 import { DataTable } from '@/components/DataTable';
 import { HeaderTitle } from '@/components/HeaderTitle';
@@ -58,6 +58,22 @@ const DepartmentsPage = () => {
     router.push('/dashboard/departments');
   };
 
+  const handleDelete = async (resource: DepartmentDto) => {
+    console.log('res', resource);
+    console.log('res id:', resource.id);
+    try {
+      const res = await deleteDepartment(resource.id || '');
+      if (!res) {
+        toast.success('Xóa phòng ban thành công');
+        fetchDepartments();
+      }
+    } catch (error: any) {
+      toast.error('Xóa phòng ban thất bại', {
+        description: error.message,
+      });
+    }
+  };
+
   return (
     <div className="">
       <HeaderTitle text="PHÒNG BAN" subText="Quản lý các phòng ban trong công ty" />
@@ -90,7 +106,7 @@ const DepartmentsPage = () => {
       </div>
       <DataTable
         data={departments}
-        columns={columns}
+        columns={columns(handleDelete)}
         page={page}
         limit={limit}
         total={total}
