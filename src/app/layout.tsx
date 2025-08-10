@@ -45,7 +45,7 @@ export default async function RootLayout({
             routerConfig={extractRouterConfig(ourFileRouter)}
           />
           <RouteProgress />
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
             {children}
             <Toaster richColors position="bottom-center" closeButton />
           </ThemeProvider>

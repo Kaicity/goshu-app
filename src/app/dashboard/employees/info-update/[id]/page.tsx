@@ -22,6 +22,11 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
+interface DepartmentDto {
+  name: string;
+  description: string;
+}
+
 export default function UpdateEmployeePage() {
   const params = useParams();
 
@@ -30,19 +35,9 @@ export default function UpdateEmployeePage() {
 
   const [countries, setCountries] = useState<CountryDto[]>([]);
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
+  const [departments, setDepartments] = useState<DepartmentDto[]>([]);
 
   useEffect(() => {
-    const fetchEmployeeDetail = async () => {
-      try {
-        if (params.id) {
-          const res = await getEmployee(params.id as string);
-          setEmployee(res);
-        }
-      } catch (error) {
-        console.error('Lỗi khi lấy dữ liệu:', error);
-      }
-    };
-
     fetchEmployeeDetail();
   }, []);
 
@@ -57,6 +52,24 @@ export default function UpdateEmployeePage() {
     };
     fetchCountries();
   }, []);
+
+  const fetchEmployeeDetail = async () => {
+    try {
+      if (params.id) {
+        const res = await getEmployee(params.id as string);
+        setEmployee(res);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const fetchDepartment = async () => {
+    try {
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <>
@@ -141,7 +154,7 @@ export default function UpdateEmployeePage() {
                       }}
                       appearance={{
                         button:
-                          'w-30 h-30 bg-primary dark:bg-secondary px-4 py-2 rounded-md hover:bg-primary/90 dark:hover:bg-primary/10 disabled:opacity-50',
+                          'w-30 h-30 bg-primary/50 dark:bg-secondary px-4 py-2 rounded-md hover:bg-primary/40 dark:hover:bg-primary/10 disabled:opacity-50',
                         allowedContent: 'text-xs text-muted-foreground',
                       }}
                     />
