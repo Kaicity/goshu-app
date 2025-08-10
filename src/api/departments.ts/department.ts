@@ -36,8 +36,8 @@ export const createDepartment = async (department: DepartmentDto): Promise<any> 
 
 export const deleteDepartment = async (id: string): Promise<boolean> => {
   try {
-    const response = await instance.delete(`/departments/deleteDeparment/${encodeURIComponent(id)}`);
-    console.log("Delete department response:", response);
+    const response = await instance.delete(`/departments/deleteDepartment/${encodeURIComponent(id)}`);
+    console.log('Delete department response:', response);
     if (response.data?.statusCode === 201) {
       return true;
     } else {
@@ -48,3 +48,14 @@ export const deleteDepartment = async (id: string): Promise<boolean> => {
     throw new Error(errorMessage);
   }
 };
+
+export const updateDepartment = async (id: string, department: DepartmentDto): Promise<any> => {
+  try {
+    const response = await instance.put(`departments/updateDepartment/${id}`, department);
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message;
+    throw new Error(errorMessage || 'Mất kết nối với hệ thống máy chủ');
+  }
+  
+}

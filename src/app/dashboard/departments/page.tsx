@@ -1,12 +1,12 @@
 'use client';
-import { deleteDepartment, getDepartments } from '@/api/users/department';
+import { deleteDepartment, getDepartments } from '@/api/departments.ts/department';
 import ProtectPage from '@/components/auth/ProtectPage';
 import { DataTable } from '@/components/DataTable';
 import { HeaderTitle } from '@/components/HeaderTitle';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { UserRole } from '@/enums/userRolesEnum';
-import { DepartmentPaginationDto, DepartmentDto } from '@/models/dto/departmentDto';
+import { DepartmentDto } from '@/models/dto/departmentDto';
 import { RotateCcwIcon, UsersRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -71,6 +71,13 @@ const DepartmentsPage = () => {
       toast.error('Xóa phòng ban thất bại', {
         description: error.message,
       });
+    }
+  };
+
+  const handleUpdate = async (resource: DepartmentDto) => {
+    if (resource) {
+      setDepartment(resource);
+      setOpen(true);
     }
   };
 

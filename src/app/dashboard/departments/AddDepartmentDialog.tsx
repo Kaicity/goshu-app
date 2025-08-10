@@ -1,6 +1,6 @@
 'use client';
 
-import { createDepartment } from '@/api/users/department';
+import { createDepartment } from '@/api/departments.ts/department';
 import { SubmitButton } from '@/components/SummitButton';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
