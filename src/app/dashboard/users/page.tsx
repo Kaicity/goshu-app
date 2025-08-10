@@ -11,12 +11,12 @@ import { ROLE_LABELS, UserRole } from '@/enums/userRolesEnum';
 import { RotateCcwIcon, UsersRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { DataTable } from '../../../components/data-table';
+import { DataTable } from '../../../components/DataTable';
 import { columns } from './columns';
 
 import type { UserAccountDto } from '@/models/dto/userAccountDto';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { MultiSelect } from '@/components/multi-select';
+import { MultiSelect } from '@/components/MultiSelect';
 import { HeaderTitle } from '@/components/HeaderTitle';
 
 const UsersPage = () => {
@@ -106,7 +106,7 @@ const UsersPage = () => {
 
   return (
     <>
-      <HeaderTitle text="Người Dùng" subText="Quản lý tài khoản truy cập hệ thống" />
+      <HeaderTitle text="Quản Lý Tài Khoản" subText="Quản lý tài khoản người dùng truy cập" />
       {/* Search & Filters */}
       <div className="flex flex-wrap items-center gap-2 mb-6 *:mt-2">
         <Input

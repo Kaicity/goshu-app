@@ -9,10 +9,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Type, TYPE_LABELS } from '@/enums/typeEnum';
 import { EmployeeDto } from '@/models/dto/employeeDto';
 import { ColumnDef } from '@tanstack/react-table';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
+
 import { useRouter } from 'next/navigation';
+import { format } from 'date-fns';
 
 export const columns: ColumnDef<EmployeeDto>[] = [
   {
@@ -40,12 +43,24 @@ export const columns: ColumnDef<EmployeeDto>[] = [
     header: 'CHỨC VỤ',
   },
   {
-    accessorKey: 'departmentId',
-    header: 'PHÒNG BAN',
+    accessorKey: 'type',
+    header: 'LOẠI NHÂN VIÊN',
+    cell: ({ row }) => {
+      const employee = row.original.type as Type;
+      return <div>{TYPE_LABELS[employee]}</div>;
+    },
   },
+  // {
+  //   accessorKey: 'departmentId',
+  //   header: 'PHÒNG BAN',
+  // },
   {
     accessorKey: 'updatedAt',
-    header: 'NGÀY CẬP NHẬT',
+    header: () => <div className="text-center">CẬP NHẬT LÚC</div>,
+    cell: ({ row }) => {
+      const updatedAt = row.original.updatedAt;
+      return <div className="text-center">{updatedAt ? format(new Date(updatedAt), 'dd/MM/yyyy HH:mm:ss') : ''}</div>;
+    },
   },
   {
     accessorKey: 'actions',

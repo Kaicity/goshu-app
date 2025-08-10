@@ -2,16 +2,19 @@
 
 import { getEmployees } from '@/api/employee/employee';
 import ProtectPage from '@/components/auth/ProtectPage';
-import { DataTable } from '@/components/data-table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+
 import { UserRole } from '@/enums/userRolesEnum';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { DataTable } from '@/components/DataTable';
+import { columns } from './columns';
+
 import { EmployeeDto } from '@/models/dto/employeeDto';
 import { FileSpreadsheet, RotateCcwIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { columns } from './columns';
+import { HeaderTitle } from '@/components/HeaderTitle';
 
 const EmployeesPage = () => {
   const [employees, setEmployees] = useState<EmployeeDto[]>([]);
@@ -30,6 +33,7 @@ const EmployeesPage = () => {
     setLoading(true);
     try {
       const res = await getEmployees(page, limit);
+      console.log(res);
       setEmployees(res.employees);
       setTotal(res.pagination.total);
       setLimit(res.pagination.limit);
@@ -49,9 +53,7 @@ const EmployeesPage = () => {
 
   return (
     <>
-      <div className="mb-5 py-2 rounded-md">
-        <h1 className="font-semibold drop-shadow-md text-2xl">NHÂN VIÊN</h1>
-      </div>
+      <HeaderTitle text="NHÂN VIÊN" subText="Quản lý nhân viên trong công ty" />
       <div className="flex flex-wrap items-center gap-1 mb-6 *:mt-2">
         <Input placeholder="Tìm kiếm nhân viên..." className="max-w-sm sm:w-full" />
         <Button variant="outline">
