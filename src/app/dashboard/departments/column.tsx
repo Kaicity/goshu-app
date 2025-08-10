@@ -1,57 +1,37 @@
 'use client';
-
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Type, TYPE_LABELS } from '@/enums/typeEnum';
-import { EmployeeDto } from '@/models/dto/employeeDto';
 import { ColumnDef } from '@tanstack/react-table';
-import { Edit, MoreHorizontal, Trash } from 'lucide-react';
+import { DepartmentDto } from '@/models/dto/departmentDto';
+import { Checkbox } from '@/components/ui/checkbox';
 import { format } from 'date-fns';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { Edit, MoreHorizontal, Trash } from 'lucide-react';
 
-export const columns: ColumnDef<EmployeeDto>[] = [
+export const columns = (handleDelete: (department: DepartmentDto) => void): ColumnDef<DepartmentDto>[] => [
   {
-    accessorKey: 'fullname',
-    header: 'HỌ VÀ TÊN',
+    id: 'select',
+    header: ({ table }) => (
+      <div className="flex justify-center">
+        <Checkbox
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+        />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="flex justify-center">
+        <Checkbox onCheckedChange={(value) => row.toggleSelected(!!value)} checked={row.getIsSelected()} />
+      </div>
+    ),
   },
   {
-    accessorKey: 'employeeCode',
-    header: 'MÃ NHÂN VIÊN',
+    accessorKey: 'name',
+    header: 'Tên phòng ban',
   },
   {
-    accessorKey: 'email',
-    header: 'EMAIL',
+    accessorKey: 'description',
+    header: 'Mô tả',
   },
-  {
-    accessorKey: 'phone',
-    header: 'SỐ ĐIỆN THOẠI',
-  },
-  {
-    accessorKey: 'birthday',
-    header: 'NGÀY SINH',
-  },
-  {
-    accessorKey: 'designation',
-    header: 'CHỨC VỤ',
-  },
-  {
-    accessorKey: 'type',
-    header: 'LOẠI NHÂN VIÊN',
-    cell: ({ row }) => {
-      const employee = row.original.type as Type;
-      return <div>{TYPE_LABELS[employee]}</div>;
-    },
-  },
-  // {
-  //   accessorKey: 'departmentId',
-  //   header: 'PHÒNG BAN',
-  // },
   {
     accessorKey: 'updatedAt',
     header: () => <div className="text-center">CẬP NHẬT LÚC</div>,
@@ -63,7 +43,6 @@ export const columns: ColumnDef<EmployeeDto>[] = [
   {
     accessorKey: 'actions',
     header: () => <div className="text-center ">HÀNH ĐỘNG</div>,
-    enableColumnFilter: true,
     cell: ({ row }) => {
       const resource = row.original;
       return (
@@ -79,7 +58,7 @@ export const columns: ColumnDef<EmployeeDto>[] = [
                 <Edit className="w-4 h-4 mr-2" />
                 Chỉnh sửa
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => resource} className="text-red-500 focus:text-red-500">
+              <DropdownMenuItem onClick={() => handleDelete(resource)} className="text-red-500 focus:text-red-500">
                 <Trash className="w-4 h-4 mr-2" />
                 Xoá
               </DropdownMenuItem>

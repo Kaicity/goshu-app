@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import ImageUpload from '@/components/upload-image';
+// import ImageUpload from '@/components/upload-image';
 import { GENDER_LABELS } from '@/enums/genderEnum';
 
 export default function MinimalTabs() {
@@ -39,7 +39,7 @@ export default function MinimalTabs() {
         <TabsContent value="personal-info" className="p-0 w-full">
           <h3 className="text-lg font-medium ml-2 ">Thông tin cá nhân</h3>
           <div className="max-w-md w-full ml-2">
-            <ImageUpload />
+            {/* <ImageUpload /> */}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-7  mt-2 ml-3">
             <div className="flex flex-col gap-2">
