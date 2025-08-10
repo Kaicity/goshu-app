@@ -150,7 +150,7 @@ export default function UpdateEmployeePage() {
                             <span className="text-xs">Chọn ảnh</span>
                           </div>
                         ),
-                        allowedContent: 'PNG, JPG (tối đa 5MB)',
+                        allowedContent: 'PNG, JPG (tối đa 8MB)',
                       }}
                       appearance={{
                         button:

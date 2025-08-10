@@ -8,7 +8,7 @@ const auth = (req: Request) => ({ id: 'fakeId' });
 export const ourFileRouter = {
   // Chỉ cho phép upload 1 hình ảnh
   singleImageUploader: f({
-    image: { maxFileSize: '4MB', maxFileCount: 1 },
+    image: { maxFileSize: '8MB', maxFileCount: 1 },
   })
     .middleware(async ({ req }) => {
       const user = await auth(req);
@@ -22,7 +22,7 @@ export const ourFileRouter = {
 
   // Cho phép upload nhiều file
   fileUploader: f({
-    image: { maxFileSize: '4MB', maxFileCount: 1 },
+    image: { maxFileSize: '8MB', maxFileCount: 1 },
     video: { maxFileSize: '16MB' },
     pdf: { maxFileSize: '4MB' },
     text: { maxFileSize: '64KB' },
