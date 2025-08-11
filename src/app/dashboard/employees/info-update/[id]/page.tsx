@@ -1,5 +1,6 @@
 'use client';
 
+import { getDepartments } from '@/api/departments.ts/department';
 import { getEmployee } from '@/api/employee/employee';
 import { DatePicker } from '@/components/date-picker';
 import { HeaderTitle } from '@/components/HeaderTitle';
@@ -13,19 +14,18 @@ import { MARITAL_LABELS } from '@/enums/maritalEnum';
 import { STATUS_LABELS } from '@/enums/statusEnum';
 import { TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
 import { UploadButton, UploadDropzone } from '@/lib/uploadthing';
-import type CountryDto from '@/models/dto/countryDto';
-import type { EmployeeDto } from '@/models/dto/employeeDto';
+import CountryDto from '@/models/dto/countryDto';
+import { DepartmentDto } from '@/models/dto/departmentDto';
+import { EmployeeDto } from '@/models/dto/employeeDto';
+import { CreateEmployeeFormData, createEmployeeSchema } from '@/models/schemas/createEmployeeSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { Camera, UploadCloud } from 'lucide-react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-
-interface DepartmentDto {
-  name: string;
-  description: string;
-}
 
 export default function UpdateEmployeePage() {
   const params = useParams();
@@ -37,8 +37,18 @@ export default function UpdateEmployeePage() {
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
   const [departments, setDepartments] = useState<DepartmentDto[]>([]);
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CreateEmployeeFormData>({
+    resolver: zodResolver(createEmployeeSchema),
+  });
+
   useEffect(() => {
     fetchEmployeeDetail();
+    fetchDepartments();
   }, []);
 
   useEffect(() => {
@@ -64,8 +74,10 @@ export default function UpdateEmployeePage() {
     }
   };
 
-  const fetchDepartment = async () => {
+  const fetchDepartments = async () => {
     try {
+      const res = await getDepartments(1, 100, { search: '' });
+      setDepartments(res.departments);
     } catch (error: any) {
       toast.error(error.message);
     }
@@ -257,7 +269,7 @@ export default function UpdateEmployeePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
               <div className="flex flex-col gap-2">
                 <Label>Mã nhân viên</Label>
-                <Input placeholder="NV-XXXX" className="h-12" readOnly />
+                <Input placeholder="NV-XXXX" className="h-12" value={employee?.employeeCode} readOnly />
               </div>
 
               <div className="flex flex-col gap-2">
@@ -292,7 +304,13 @@ export default function UpdateEmployeePage() {
                   <SelectTrigger className="w-full !h-12">
                     <SelectValue placeholder="Chọn phòng ban" />
                   </SelectTrigger>
-                  <SelectContent></SelectContent>
+                  <SelectContent>
+                    {departments.map((item) => (
+                      <SelectItem key={item.id} value={String(item.id)}>
+                        {item.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
               </div>
 
@@ -419,7 +437,7 @@ export default function UpdateEmployeePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
               <div className="flex flex-col gap-2">
                 <Label>Email / Tài khoản đăng nhập</Label>
-                <Input placeholder="user@gmail.com" className="h-12" />
+                <Input placeholder="user@gmail.com" className="h-12" readOnly value={employee?.email} />
               </div>
 
               <div className="flex flex-col gap-2">

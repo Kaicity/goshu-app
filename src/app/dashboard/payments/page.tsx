@@ -3,6 +3,7 @@ import ProtectPage from '@/components/auth/ProtectPage';
 import { Payment, columns } from './columns';
 import { DataTable } from '../../../components/DataTable';
 import { useEffect, useState } from 'react';
+import { DataTablePagination } from '@/components/TablePagination';
 const getData = async (): Promise<Payment[]> => {
   return [
     {

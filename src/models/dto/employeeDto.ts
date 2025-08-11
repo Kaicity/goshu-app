@@ -7,9 +7,9 @@ interface EmployeeDto {
   username?: string; //
   employeeCode: string; //
   email: string; //
-  github?: string;
+  githubId?: string;
   slackId?: string;
-  microsoftTeamsId?: string;
+  microsoftTeamId?: string;
   address?: string; //
   phone?: number; //
   birthday?: Date; //
