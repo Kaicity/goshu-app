@@ -7,7 +7,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from '@/components/ui/button';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
 
-export const columns = (handleDelete: (department: DepartmentDto) => void): ColumnDef<DepartmentDto>[] => [
+export const columns = (
+  handleDelete: (department: DepartmentDto) => void,
+  handleUpdate: (department: DepartmentDto) => void,
+): ColumnDef<DepartmentDto>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -54,7 +57,7 @@ export const columns = (handleDelete: (department: DepartmentDto) => void): Colu
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => resource}>
+              <DropdownMenuItem onClick={() => handleUpdate(resource)}>
                 <Edit className="w-4 h-4 mr-2" />
                 Chỉnh sửa
               </DropdownMenuItem>
