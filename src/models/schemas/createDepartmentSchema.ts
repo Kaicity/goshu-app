@@ -7,4 +7,12 @@ export const createDepartmentSchema = z.object({
   updatedAt: z.date().optional(),
 });
 
+export const updateDepartmentSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().or(z.literal('')),
+  description: z.string().or(z.literal('')),
+  updatedAt: z.date().optional(),
+});
+
 export type CreateDepartmentFormData = z.infer<typeof createDepartmentSchema>;
+export type UpdateDepartmentFormData = z.infer<typeof updateDepartmentSchema>;

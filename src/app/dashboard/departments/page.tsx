@@ -27,6 +27,7 @@ const DepartmentsPage = () => {
   const [search, setSearch] = useState<string>(searchParams.get('search') || '');
 
   useEffect(() => {
+    updateSearchParams();
     fetchDepartments();
   }, [page, limit, search]);
 
@@ -81,6 +82,15 @@ const DepartmentsPage = () => {
     }
   };
 
+  const updateSearchParams = () => {
+    const params = new URLSearchParams();
+    if (page) params.set('page', String(page));
+    if (limit) params.set('limit', String(limit));
+    if (search) params.set('search', String(search));
+
+    router.push(`/dashboard/departments?${params.toString()}`);
+  };
+
   return (
     <div className="">
       <HeaderTitle text="PHÒNG BAN" subText="Quản lý các phòng ban trong công ty" />
@@ -89,7 +99,10 @@ const DepartmentsPage = () => {
           placeholder="Tìm kiếm phòng ban..."
           className="max-w-sm sm:w-full"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
         />
         <Button variant="outline" onClick={resetFilters}>
           <RotateCcwIcon className="w-6 h-6" />
@@ -113,7 +126,7 @@ const DepartmentsPage = () => {
       </div>
       <DataTable
         data={departments}
-        columns={columns(handleDelete)}
+        columns={columns(handleDelete, handleUpdate)}
         page={page}
         limit={limit}
         total={total}

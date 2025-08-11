@@ -1,6 +1,6 @@
 'use client';
 
-import { createDepartment } from '@/api/departments/department';
+import { createDepartment, updateDepartment } from '@/api/departments/department';
 import { SubmitButton } from '@/components/SummitButton';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -8,7 +8,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { DepartmentDto } from '@/models/dto/departmentDto';
-import { CreateDepartmentFormData, createDepartmentSchema } from '@/models/schemas/createDepartmentSchema';
+
+import {
+  type CreateDepartmentFormData,
+  createDepartmentSchema,
+  updateDepartmentSchema,
+  type UpdateDepartmentFormData,
+} from '@/models/schemas/createDepartmentSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogDescription } from '@radix-ui/react-dialog';
 import { startTransition, useActionState, useEffect, useState } from 'react';
@@ -23,17 +29,28 @@ interface AddDepartmentDialogProps {
 }
 
 export function AddDepartmentDialog({ open, setOpen, department, reloadData: loadData }: AddDepartmentDialogProps) {
+  const isEdit = !!department;
+  const formSchema = isEdit ? updateDepartmentSchema : createDepartmentSchema;
+  type isEditFormData = CreateDepartmentFormData | UpdateDepartmentFormData;
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<CreateDepartmentFormData>({
-    resolver: zodResolver(createDepartmentSchema),
+  } = useForm<CreateDepartmentFormData | UpdateDepartmentFormData>({
+    resolver: zodResolver(formSchema),
   });
 
   useEffect(() => {
-    initialFormData();
+    if (department) {
+      reset({
+        name: department.name,
+        description: department.description,
+      });
+    } else {
+      initialFormData();
+    }
   }, [department]);
 
   const initialFormData = () => {
@@ -44,22 +61,31 @@ export function AddDepartmentDialog({ open, setOpen, department, reloadData: loa
   };
 
   const [state, submitAction, isPending] = useActionState(async (prevState: any, formData: CreateDepartmentFormData) => {
-    try {
-      const res = await createDepartment(formData);
+    if (department) {
+      const res = await updateDepartment(department.id as string, formData);
       if (res) {
-        toast.success('Tạo phòng ban thành công');
+        toast.success('Cập nhật phòng ban thành công');
         setOpen(false);
         initialFormData();
         loadData();
       }
-    } catch (error: any) {
-      toast.error('Tạo phòng ban thất bại', {
-        description: error.message,
-      });
-    }
+    } else
+      try {
+        const res = await createDepartment(formData);
+        if (res) {
+          toast.success('Tạo phòng ban thành công');
+          setOpen(false);
+          initialFormData();
+          loadData();
+        }
+      } catch (error: any) {
+        toast.error('Tạo phòng ban thất bại', {
+          description: error.message,
+        });
+      }
   }, undefined);
 
-  const onSubmit = async (data: CreateDepartmentFormData) => {
+  const onSubmit = async (data: isEditFormData) => {
     startTransition(() => {
       submitAction(data);
     });
@@ -70,7 +96,7 @@ export function AddDepartmentDialog({ open, setOpen, department, reloadData: loa
       <DialogContent className="max-w-md w-[500px] px-6 py-8">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <DialogHeader>
-            <DialogTitle className="text-xl">{'Tạo phòng ban'}</DialogTitle>
+            <DialogTitle className="text-xl">{department ? 'Cập nhật phòng ban' : 'Tạo phòng ban'}</DialogTitle>
             <DialogDescription>
               {department ? 'Cập nhật thông tin phòng ban' : 'Điền thông tin phòng ban để tạo mới'}
             </DialogDescription>
@@ -96,7 +122,7 @@ export function AddDepartmentDialog({ open, setOpen, department, reloadData: loa
             >
               Đóng
             </Button>
-            <SubmitButton text={'Tạo'} isPending={isPending} className={cn('w-auto')} />
+            <SubmitButton text={department ? 'Cập nhật' : 'Tạo'} isPending={isPending} className={cn('w-auto')} />
           </DialogFooter>
         </form>
       </DialogContent>
