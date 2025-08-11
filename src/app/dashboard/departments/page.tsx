@@ -60,8 +60,6 @@ const DepartmentsPage = () => {
   };
 
   const handleDelete = async (resource: DepartmentDto) => {
-    console.log('res', resource);
-    console.log('res id:', resource.id);
     try {
       const res = await deleteDepartment(resource.id || '');
       if (!res) {
