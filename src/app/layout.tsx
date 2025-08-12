@@ -32,7 +32,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex`}>
         <AppProvider>
           <NextSSRPlugin
@@ -45,7 +45,7 @@ export default async function RootLayout({
             routerConfig={extractRouterConfig(ourFileRouter)}
           />
           <RouteProgress />
-          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
             {children}
             <Toaster richColors position="bottom-center" closeButton />
           </ThemeProvider>
