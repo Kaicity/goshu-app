@@ -2,6 +2,7 @@
 
 import { getDepartments } from '@/api/departments/department';
 import { getEmployee, updateEmployee } from '@/api/employee/employee';
+import { deletefileDataUploadthing } from '@/api/uploadthing/uploadthing';
 import { DatePicker } from '@/components/date-picker';
 import { HeaderTitle } from '@/components/HeaderTitle';
 import { SubmitButton } from '@/components/SummitButton';
@@ -9,11 +10,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Spinner } from '@/components/ui/spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GENDER_LABELS } from '@/enums/genderEnum';
 import { MARITAL_LABELS } from '@/enums/maritalEnum';
 import { STATUS_LABELS } from '@/enums/statusEnum';
 import { TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
+import { useActionWithLoading } from '@/hooks/useExecute';
 import { UploadButton, UploadDropzone } from '@/lib/uploadthing';
 import { cn } from '@/lib/utils';
 import CountryDto from '@/models/dto/countryDto';
@@ -22,9 +25,9 @@ import { EmployeeDto } from '@/models/dto/employeeDto';
 import { CreateEmployeeFormData, createEmployeeSchema } from '@/models/schemas/createEmployeeSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
-import { Camera, Paperclip, UploadCloud } from 'lucide-react';
+import { Camera, Loader2, Paperclip, UploadCloud } from 'lucide-react';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { startTransition, useActionState, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -45,6 +48,7 @@ const documentsList = ['Tải hồ sơ CV', 'Tải hồ sơ học vấn', 'Tải
 
 export default function UpdateEmployeePage() {
   const params = useParams();
+  const router = useRouter();
 
   const [currentProfileImage, setCurrentProfileImage] = useState<string>('');
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -54,6 +58,9 @@ export default function UpdateEmployeePage() {
   const [countries, setCountries] = useState<CountryDto[]>([]);
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
   const [departments, setDepartments] = useState<DepartmentDto[]>([]);
+
+  // EXECUTE IMAGE UPLOAD
+  const { isLoadingAction, execute } = useActionWithLoading();
 
   // FORM-VALUES
   const [firstName, setFirstName] = useState<string>('');
@@ -130,8 +137,6 @@ export default function UpdateEmployeePage() {
     }
   }, [employee, reset, setValue]);
 
-  console.log(documents);
-
   useEffect(() => {
     reset((prev) => ({
       ...prev,
@@ -179,6 +184,7 @@ export default function UpdateEmployeePage() {
       }
     } catch (error: any) {
       toast.error(error.message);
+      router.back();
     }
   };
 
@@ -195,7 +201,6 @@ export default function UpdateEmployeePage() {
     try {
       const res = await updateEmployee(params.id as string, formData);
       if (res) {
-        console.log(res);
         toast.success('Cập nhật thông tin thành công');
         fetchEmployeeDetail();
       }
@@ -207,7 +212,6 @@ export default function UpdateEmployeePage() {
   }, undefined);
 
   const onSubmit = async (data: CreateEmployeeFormData) => {
-    console.log(data);
     startTransition(() => {
       submitAction(data);
     });
@@ -226,6 +230,20 @@ export default function UpdateEmployeePage() {
   const handleWorkingDateSelected = (date: Date | undefined) => {
     if (!date) return;
     setWorkDateSelected(date);
+  };
+
+  const handleDeleteFileUpload = async (fileUrl: string) => {
+    execute(
+      async () => {
+        if (fileUrl) {
+          await deletefileDataUploadthing(fileUrl);
+        }
+      },
+      {
+        successMessage: 'File hoặc hình ảnh đã được xóa',
+        errorMessage: 'Xóa File hoặc hình ảnh thất bại',
+      },
+    );
   };
 
   return (
@@ -271,11 +289,14 @@ export default function UpdateEmployeePage() {
                       />
                       <Button
                         type="button"
-                        variant="destructive"
-                        onClick={() => setCurrentProfileImage('')}
-                        className="absolute top-2 right-2 text-xs px-2 py-1"
+                        onClick={() => {
+                          handleDeleteFileUpload(currentProfileImage);
+                          setCurrentProfileImage('');
+                          setValue('avatarUrl', '');
+                        }}
+                        className="absolute top-2 right-2 text-xs p-2 bg-red-500 hover:bg-red-500/70 text-white dark:bg-red-700 dark:hover:bg-red-700/80"
                       >
-                        Xóa ảnh
+                        {isLoadingAction ? <Spinner size="small" className="text-white" /> : 'Xóa ảnh'}
                       </Button>
                     </div>
                   ) : (
@@ -296,7 +317,7 @@ export default function UpdateEmployeePage() {
                         content={{
                           button: isUploading ? (
                             <div className="flex flex-col items-center">
-                              <UploadCloud className="w-5 h-5 animate-bounce" />
+                              <Loader2 className="w-4 h-4 animate-spin mb-2 text-white" />
                               <span className="text-xs">Đang tải...</span>
                             </div>
                           ) : (
@@ -531,6 +552,7 @@ export default function UpdateEmployeePage() {
                           variant="destructive"
                           className="hover:bg-red-700 dark:hover:bg-red-400 text-xs"
                           onClick={() => {
+                            handleDeleteFileUpload(documents[index]);
                             setDocuments((prev) => {
                               const updated = [...prev];
                               updated[index] = '';
@@ -539,7 +561,7 @@ export default function UpdateEmployeePage() {
                             });
                           }}
                         >
-                          Xóa hồ sơ
+                          {isLoadingAction ? <Spinner size="small" className="text-white" /> : 'Xóa hồ sơ'}
                         </Button>
                       </div>
                     ) : (
