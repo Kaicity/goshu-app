@@ -1,27 +1,29 @@
 import { PaginationDto } from './userAccountDto';
-import { Type } from '@/enums/typeEnum';
 
 interface EmployeeDto {
   id: string;
-  fullname?: string; //
-  username?: string; //
-  employeeCode: string; //
-  email: string; //
-  github?: string;
+  fullname?: string;
+  username?: string;
+  employeeCode: string;
+  email: string;
+  internalEmail?: string;
+  githubId?: string;
   slackId?: string;
-  microsoftTeamsId?: string;
-  address?: string; //
-  phone?: number; //
-  birthday?: Date; //
-  gender?: string; //
-  designation?: string; //
-  type?: Type; //
-  joinDate?: Date; //
-  workingDate?: Date; //
-  avatarUrl?: string; //
-  document?: string;
-  departmentId?: string; //
+  microsoftTeamId?: string;
+  address?: string;
+  phone?: string;
+  birthday?: Date;
+  gender?: string;
+  designation?: string;
+  type?: string;
+  joinDate?: Date;
+  workingDate?: Date;
+  avatarUrl?: string;
+  document?: string[];
+  departmentId?: string;
   status?: string;
+  marital?: string;
+  country?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

@@ -23,7 +23,7 @@ export const getEmployees = async (page: number, limit: number): Promise<Employe
   }
 };
 
-export const updateEmployee = async (id: string, employee: EmployeeDto): Promise<any> => {
+export const updateEmployee = async (id: string, employee: Partial<EmployeeDto>): Promise<any> => {
   try {
     const response = await instance.put(`/employees/updateEmployee/${id}`, employee);
     return response.data;

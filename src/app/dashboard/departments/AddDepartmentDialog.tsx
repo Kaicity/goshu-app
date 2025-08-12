@@ -10,14 +10,14 @@ import { cn } from '@/lib/utils';
 import { DepartmentDto } from '@/models/dto/departmentDto';
 
 import {
-  type CreateDepartmentFormData,
   createDepartmentSchema,
   updateDepartmentSchema,
+  type CreateDepartmentFormData,
   type UpdateDepartmentFormData,
 } from '@/models/schemas/createDepartmentSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogDescription } from '@radix-ui/react-dialog';
-import { startTransition, useActionState, useEffect, useState } from 'react';
+import { startTransition, useActionState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -101,12 +101,12 @@ export function AddDepartmentDialog({ open, setOpen, department, reloadData: loa
               {department ? 'Cập nhật thông tin phòng ban' : 'Điền thông tin phòng ban để tạo mới'}
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-2 space-y-2">
+          <div className="grid gap-2">
             <Label>Tên phòng ban</Label>
             <Input {...register('name')} placeholder="Nhập tên phòng ban" className="h-10" />
             {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
           </div>
-          <div className="grid gap-2 space-y-2">
+          <div className="grid gap-2">
             <Label>Mô tả</Label>
             <Input {...register('description')} placeholder="Nhập mô tả" className="h-10" />
             {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}

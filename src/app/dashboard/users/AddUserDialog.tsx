@@ -93,7 +93,7 @@ export function AddUserDialog({ open, setOpen, user, reloadData: loadData }: Add
           setOpen(false);
           initialFormData();
           loadData();
-        } 
+        }
       } catch (error: any) {
         toast.error('Cập nhật tài khoản thất bại', {
           description: error.message,
@@ -135,7 +135,7 @@ export function AddUserDialog({ open, setOpen, user, reloadData: loadData }: Add
           </DialogHeader>
           {/* Role select */}
           <div className="flex gap-4">
-            <div className="flex flex-col space-y-2 w-full ">
+            <div className="flex flex-col gap-2 w-full ">
               <Label>Vai trò</Label>
               <Select value={roleSelected} onValueChange={setRoleSelected}>
                 <SelectTrigger className="w-full">
@@ -155,7 +155,7 @@ export function AddUserDialog({ open, setOpen, user, reloadData: loadData }: Add
             </div>
             {/* Status select */}
             {user && (
-              <div className="flex flex-col space-y-2 w-full ">
+              <div className="flex flex-col gap-2 w-full ">
                 <Label className="text-right pr-12">Trạng Thái</Label>
                 <Select value={statusSelected} onValueChange={setStatusSelected}>
                   <SelectTrigger className="w-full">
@@ -174,13 +174,13 @@ export function AddUserDialog({ open, setOpen, user, reloadData: loadData }: Add
             {errors.role && <p className="text-red-500 text-sm">{errors.role.message}</p>}
           </div>
 
-          <div className="grid gap-2 space-y-2">
+          <div className="grid gap-2">
             <Label>Email</Label>
             <Input {...register('email')} placeholder="Nhập email" autoComplete="new-email" className="h-10" readOnly={!!user} />
             {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
           </div>
 
-          <div className="grid gap-2 space-y-2">
+          <div className="grid gap-2">
             <Label>Mật khẩu</Label>
             <Input
               {...register('password')}
@@ -203,7 +203,7 @@ export function AddUserDialog({ open, setOpen, user, reloadData: loadData }: Add
             >
               Đóng
             </Button>
-            <SubmitButton text={user ? 'Cập nhật' : 'Tạo'} isPending={isPending} className={cn("w-auto")} />
+            <SubmitButton text={user ? 'Cập nhật' : 'Tạo'} isPending={isPending} className={cn('w-auto')} />
           </DialogFooter>
         </form>
       </DialogContent>
