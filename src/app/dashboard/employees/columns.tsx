@@ -5,17 +5,15 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Type, TYPE_LABELS } from '@/enums/typeEnum';
 import { EmployeeDto } from '@/models/dto/employeeDto';
 import { ColumnDef } from '@tanstack/react-table';
-import { Edit, MoreHorizontal, Trash } from 'lucide-react';
+import { ArrowUpDown, Edit, MoreHorizontal, Trash } from 'lucide-react';
 
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
+import { TypeWork, TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
 
 export const columns: ColumnDef<EmployeeDto>[] = [
   {
@@ -28,15 +26,20 @@ export const columns: ColumnDef<EmployeeDto>[] = [
   },
   {
     accessorKey: 'email',
-    header: 'EMAIL',
-  },
-  {
-    accessorKey: 'phone',
-    header: 'SỐ ĐIỆN THOẠI',
-  },
-  {
-    accessorKey: 'birthday',
-    header: 'NGÀY SINH',
+    header: ({ column }) => {
+      return (
+        <div className="">
+          <Button
+            className="hover:bg-gray-200"
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            EMAIL
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
   },
   {
     accessorKey: 'designation',
@@ -44,16 +47,19 @@ export const columns: ColumnDef<EmployeeDto>[] = [
   },
   {
     accessorKey: 'type',
-    header: 'LOẠI NHÂN VIÊN',
+    header: 'NƠI LÀM VIỆC',
     cell: ({ row }) => {
-      const employee = row.original.type as Type;
-      return <div>{TYPE_LABELS[employee]}</div>;
+      const employee = row.original.type as TypeWork;
+      return <div>{TYPEWORK_LABELS[employee]}</div>;
     },
   },
-  // {
-  //   accessorKey: 'departmentId',
-  //   header: 'PHÒNG BAN',
-  // },
+  {
+    accessorKey: 'departmentId',
+    header: 'PHÒNG BAN',
+    cell: ({ row }) => {
+      return <div>{row.original.departmentId?.name || ''}</div>;
+    },
+  },
   {
     accessorKey: 'updatedAt',
     header: () => <div className="text-center">CẬP NHẬT LÚC</div>,
@@ -69,7 +75,6 @@ export const columns: ColumnDef<EmployeeDto>[] = [
     cell: ({ row }) => {
       const resource = row.original;
       const router = useRouter();
-
       return (
         <div className="flex justify-center">
           <DropdownMenu>

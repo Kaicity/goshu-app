@@ -1,4 +1,6 @@
+import { TypeWork } from '@/enums/typeWorkEnum';
 import { PaginationDto } from './userAccountDto';
+import { DepartmentDto } from './departmentDto';
 
 interface EmployeeDto {
   id: string;
@@ -15,12 +17,12 @@ interface EmployeeDto {
   birthday?: Date;
   gender?: string;
   designation?: string;
-  type?: string;
+  type?: TypeWork;
   joinDate?: Date;
   workingDate?: Date;
   avatarUrl?: string;
   document?: string[];
-  departmentId?: string;
+  departmentId?: DepartmentDto;
   status?: string;
   marital?: string;
   country?: string;
@@ -33,4 +35,8 @@ interface EmployeePaginationDto {
   pagination: PaginationDto;
 }
 
-export type { EmployeeDto, EmployeePaginationDto };
+interface EmployeeFilterDto {
+  search?: string;
+}
+
+export type { EmployeeDto, EmployeePaginationDto, EmployeeFilterDto };
