@@ -15,6 +15,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { HeaderTitle } from '@/components/HeaderTitle';
+import { FilterDialog } from './FilterDiaglog';
 
 const EmployeesPage = () => {
   //search
@@ -24,6 +25,7 @@ const EmployeesPage = () => {
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
 
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const router = useRouter();
 
@@ -97,6 +99,10 @@ const EmployeesPage = () => {
           <FileSpreadsheet className="w-5 h-5 mr-2" />
           Xuất Excel
         </Button>
+
+        <Button onClick = {() => {setOpen(true);}}>Sắp Xếp</Button>
+          <FilterDialog open={open} setOpen={setOpen}  />
+
       </div>
 
       <DataTable

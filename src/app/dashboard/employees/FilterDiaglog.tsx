@@ -29,10 +29,6 @@ import { toast } from 'sonner';
 interface FilterDepartmentProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  // Phòng ban
-  departments: DepartmentDto[];
-  departmentSelected: string[];
-  onDepartmentChange: (ids: string[]) => void;
 }
 
 export function FilterDialog({ open, setOpen }: FilterDepartmentProps) {
@@ -61,7 +57,7 @@ export function FilterDialog({ open, setOpen }: FilterDepartmentProps) {
 
           {/* Deparment select */}
           <div className="flex gap-4">
-            <div className="flex flex-col gap-2 w-full ">
+            <div className="flex flex-col gap-2 ">
               <Label>Phòng Ban</Label>
 
               <MultiSelect
@@ -72,14 +68,14 @@ export function FilterDialog({ open, setOpen }: FilterDepartmentProps) {
                 value={departmentSelected}
                 onValueChange={(values) => setDepartmentSelected(values)}
                 placeholder="Chọn phòng ban"
-                className="relative sm:w-[200px] w-full justify-start"
+                className="relative justify-start"
               />
             </div>
 
             {/* Status select */}
-            <div className="flex flex-col gap-2 w-full ">
+            {/* <div className="flex flex-col gap-2 w-full ">
               <Label className="text-right pr-12">Trạng Thái</Label>
-            </div>
+            </div> */}
             {/* {errors.role && <p className="text-red-500 text-sm">{errors.role.message}</p>} */}
           </div>
           <DialogFooter className="flex justify-end gap-2">

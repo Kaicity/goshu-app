@@ -56,7 +56,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
       value = [],
       placeholder = 'Select options',
       animation = 0,
-      maxCount = 3,
+      maxCount = 1,
       modalPopover = false,
       asChild = false,
       className,
@@ -124,51 +124,59 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
             {...props}
             onClick={handleTogglePopover}
             className={cn(
-              'flex w-full p-1 rounded-md border min-h-10 h-auto items-center justify-between bg-inherit hover:bg-inherit [&_svg]:pointer-events-auto',
+              'flex w-auto p-1 rounded-md border min-h-min h-auto items-center justify-between bg-inherit hover:bg-inherit [&_svg]:pointer-events-auto',
+              'flex-wrap',
               className,
             )}
           >
-            <ListFilter className="text-primary" />
-            {selectedValues.length > 0 ? (
-              <div className="flex justify-between items-center w-full">
-                <div className="flex flex-wrap items-center">
-                  {selectedValues.slice(0, maxCount).map((value) => {
-                    const option = options.find((o) => o.value === value);
-                    const IconComponent = option?.icon;
-                    return (
-                      <Badge
-                        key={value}
-                        className={cn(isAnimating ? 'animate-bounce' : '', multiSelectVariants({ variant }))}
-                        style={{ animationDuration: `${animation}s` }}
+            <div className="flex items-center flex-wrap gap-2">
+              <ListFilter className="text-primary" />
+              {selectedValues.length > 0 ? (
+                selectedValues.slice(0, maxCount).map((value) => {
+                  const option = options.find((o) => o.value === value);
+                  const IconComponent = option?.icon;
+                  return (
+                    <Badge
+                      key={value}
+                      className={cn(isAnimating ? 'animate-bounce' : '', multiSelectVariants({ variant }))}
+                      style={{ animationDuration: `${animation}s` }}
+                      onClick={() => {
+                        removeOption(value);
+                      }}
+                    >
+                      {IconComponent && <IconComponent className="h-4 w-4 mr-2" />}
+                      {option?.label}
+                      <XCircle
+                        className="ml-2 h-4 w-4 cursor-pointer"
                         onClick={() => {
                           removeOption(value);
                         }}
-                      >
-                        {IconComponent && <IconComponent className="h-4 w-4 mr-2" />}
-                        {option?.label}
-                        <XCircle
-                          className="ml-2 h-4 w-4 cursor-pointer"
-                          onClick={() => {
-                            removeOption(value);
-                          }}
-                        />
-                      </Badge>
-                    );
-                  })}
-                  {selectedValues.length > maxCount && (
-                    <Badge
-                      className={cn(
-                        'bg-transparent text-foreground border-foreground/1 hover:bg-transparent',
-                        isAnimating ? 'animate-bounce' : '',
-                        multiSelectVariants({ variant }),
-                      )}
-                      style={{ animationDuration: `${animation}s` }}
-                    >
-                      {`+ ${selectedValues.length - maxCount} more`}
+                      />
                     </Badge>
+                  );
+                })
+              ) : (
+                <span className="text-sm text-muted-foreground">{placeholder}</span>
+              )}
+
+              {selectedValues.length > maxCount && (
+                <Badge
+                  className={cn(
+                    'bg-transparent text-foreground border-foreground/1 hover:bg-transparent',
+                    isAnimating ? 'animate-bounce' : '',
+                    multiSelectVariants({ variant }),
                   )}
-                </div>
-                <div className="flex items-center justify-between">
+                  style={{ animationDuration: `${animation}s` }}
+                >
+                  {`+ ${selectedValues.length - maxCount} more`}
+                </Badge>
+              )}
+            </div>
+
+            {/* Bên phải: nút clear + dropdown */}
+            <div className="flex items-center">
+              {selectedValues.length > 0 && (
+                <>
                   <XIcon
                     className="h-4 mx-2 cursor-pointer text-muted-foreground"
                     onClick={(event) => {
@@ -177,15 +185,10 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                     }}
                   />
                   <Separator orientation="vertical" className="flex min-h-6 h-full" />
-                  <ChevronDown className="h-4 mx-2 cursor-pointer text-muted-foreground" />
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center justify-between w-full mx-auto">
-                <span className="text-sm text-muted-foreground mx-3">{placeholder}</span>
-                <ChevronDown className="h-4 cursor-pointer text-muted-foreground mx-2" />
-              </div>
-            )}
+                </>
+              )}
+              <ChevronDown className="h-4 mx-2 cursor-pointer text-muted-foreground" />
+            </div>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start" onEscapeKeyDown={() => setIsPopoverOpen(false)}>

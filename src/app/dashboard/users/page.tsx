@@ -129,7 +129,7 @@ const UsersPage = () => {
             setPage(1);
           }}
           placeholder="Chọn vai trò"
-          className="relative sm:w-[200px] w-full justify-start"
+          className="relative justify-start"
         />
         <MultiSelect
           options={Object.entries(Status).map(([__, value]) => ({
@@ -142,7 +142,7 @@ const UsersPage = () => {
             setPage(1);
           }}
           placeholder="Chọn trạng thái"
-          className="relative sm:w-[220px] w-full justify-start"
+          className="relative justify-start"
         />
         <Button variant="outline" onClick={resetFilters}>
           <RotateCcwIcon className="w-6 h-6" />
