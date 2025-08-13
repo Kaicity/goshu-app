@@ -76,6 +76,8 @@ export default function UpdateEmployeePage() {
   const [departmentSelected, setDepartmentSelected] = useState<string>('');
   const [documents, setDocuments] = useState<string[]>(Array(documentsList.length).fill(''));
 
+  const getFullName = () => `${lastName} ${firstName}`.trim();
+
   const {
     register,
     handleSubmit,
@@ -106,7 +108,11 @@ export default function UpdateEmployeePage() {
   useEffect(() => {
     if (employee) {
       //format fullname nối chuỗi
-      employee.fullname && handleFullNameChange(employee.fullname as string);
+      if (employee?.fullname) {
+        const parts = employee.fullname.trim().split(/\s+/);
+        setLastName(parts[0]);
+        setFirstName(parts.slice(1).join(' '));
+      }
 
       //Load dữ liệu cũ từ API
       reset(employee);
@@ -164,19 +170,6 @@ export default function UpdateEmployeePage() {
     firstName,
   ]);
 
-  const handleFullNameChange = (value: string) => {
-    const trimmed = value.trim();
-    if (!trimmed) {
-      setFirstName('');
-      setLastName('');
-      return;
-    }
-
-    const parts: string[] = trimmed.split(/\s+/); // tách bằng 1 hoặc nhiều khoảng trắng
-    setLastName(parts[0]);
-    setFirstName(parts.slice(1).join(' '));
-  };
-
   const fetchEmployeeDetail = async () => {
     try {
       if (params.id) {
@@ -213,8 +206,13 @@ export default function UpdateEmployeePage() {
   }, undefined);
 
   const onSubmit = async (data: CreateEmployeeFormData) => {
+    const finalData: CreateEmployeeFormData = {
+      ...data,
+      fullname: `${lastName} ${firstName}`.trim(),
+    };
+
     startTransition(() => {
-      submitAction(data);
+      submitAction(finalData);
     });
   };
 
@@ -307,8 +305,31 @@ export default function UpdateEmployeePage() {
                         </Button>
                       </div>
 
-                      <div className="relative w-full h-62 rounded-md overflow-hidden">
-                        <Image src="/assets/backgroundLoginLayout.jpg" alt="Company banner" fill className="object-cover" />
+                      <div className="relative w-full h-62 rounded-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                        <Image src="/assets/banner-emp.jpg" alt="Hướng dẫn điền form" fill className="object-cover opacity-70" />
+
+                        <div className="absolute inset-0 p-4 flex flex-col justify-center bg-black/40 text-white space-y-3">
+                          <div>
+                            <h3 className="text-lg font-semibold mb-2">📋 Hướng dẫn cập nhật thông tin</h3>
+                            <ul className="text-sm space-y-1 list-disc list-inside">
+                              <li>Điền đầy đủ họ tên, ngày sinh và chức vụ.</li>
+                              <li>Chọn đúng phòng ban của bạn.</li>
+                              <li>Tải ảnh chân dung rõ nét.</li>
+                              <li>
+                                Nhấn <b>Cập nhật</b> để lưu thay đổi.
+                              </li>
+                            </ul>
+                          </div>
+
+                          <div className="bg-yellow-500/80 text-black p-2 mb-2 rounded-md">
+                            <h4 className="text-sm font-semibold mb-1">⚠️ Chú ý</h4>
+                            <ul className="text-xs list-disc list-inside space-y-1">
+                              <li>Không để trống các trường bắt buộc (*)</li>
+                              <li>Ảnh tải lên phải nhỏ hơn 5MB</li>
+                              <li>Kiểm tra kỹ chính tả trước khi lưu</li>
+                            </ul>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ) : (
@@ -349,8 +370,31 @@ export default function UpdateEmployeePage() {
                         />
                       </div>
 
-                      <div className="relative w-full h-62 rounded-md overflow-hidden">
-                        <Image src="/assets/backgroundLoginLayout.jpg" alt="Company banner" fill className="object-cover" />
+                      <div className="relative w-full h-62 rounded-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                        <Image src="/assets/banner-emp.jpg" alt="Hướng dẫn điền form" fill className="object-cover opacity-70" />
+
+                        <div className="absolute inset-0 p-4 flex flex-col justify-center bg-black/40 text-white space-y-3">
+                          <div>
+                            <h3 className="text-lg font-semibold mb-2">📋 Hướng dẫn cập nhật thông tin</h3>
+                            <ul className="text-sm space-y-1 list-disc list-inside">
+                              <li>Điền đầy đủ họ tên, ngày sinh và chức vụ.</li>
+                              <li>Chọn đúng phòng ban của bạn.</li>
+                              <li>Tải ảnh chân dung rõ nét.</li>
+                              <li>
+                                Nhấn <b>Cập nhật</b> để lưu thay đổi.
+                              </li>
+                            </ul>
+                          </div>
+
+                          <div className="bg-yellow-500/80 text-black p-2 mb-2 rounded-md">
+                            <h4 className="text-sm font-semibold mb-1">⚠️ Chú ý</h4>
+                            <ul className="text-xs list-disc list-inside space-y-1">
+                              <li>Không để trống các trường bắt buộc (*)</li>
+                              <li>Ảnh tải lên phải nhỏ hơn 5MB</li>
+                              <li>Kiểm tra kỹ chính tả trước khi lưu</li>
+                            </ul>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}

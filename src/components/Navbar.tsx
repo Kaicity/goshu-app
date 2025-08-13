@@ -1,31 +1,26 @@
-"use client";
+'use client';
 
-import { useApp } from "@/contexts/AppContext";
-import useNotification from "@/hooks/useNotification";
-import { formatTimeAgo } from "@/utils/formatTimeAgo";
-import {
-  Bell,
-  CircleOff,
-  Eye,
-  LogOut,
-  Moon,
-  Settings,
-  Sun,
-  User,
-} from "lucide-react";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
+import { useApp } from '@/contexts/AppContext';
+import useNotification from '@/hooks/useNotification';
+import { formatTimeAgo } from '@/utils/formatTimeAgo';
+import { BadgeCheck, Bell, CircleOff, CreditCard, Eye, LogOut, Moon, Settings, Sun, User } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Button } from './ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { SidebarTrigger } from "./ui/sidebar";
+} from './ui/dropdown-menu';
+import { SidebarTrigger, useSidebar } from './ui/sidebar';
+import Link from 'next/link';
+import { getEmployee } from '@/api/employee/employee';
+import type { EmployeeDto } from '@/models/dto/employeeDto';
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
@@ -34,6 +29,22 @@ const Navbar = () => {
 
   const { notifications, setNotifications, unreadCount } = useNotification();
   const [readCount, setReadCount] = useState(unreadCount);
+
+  const [employee, setEmployee] = useState<EmployeeDto | null>(null);
+
+  const { userAccount } = useApp();
+  useEffect(() => {
+    const fetchEmployeeDetail = async () => {
+      if (userAccount) {
+        const res = await getEmployee(userAccount.employeeId as string);
+        console.log(res);
+
+        setEmployee(res);
+      }
+    };
+
+    fetchEmployeeDetail();
+  }, [userAccount]);
 
   useEffect(() => {
     setReadCount(notifications.filter((n) => !n.read).length);
@@ -44,45 +55,36 @@ const Navbar = () => {
       {/* LEFT */}
       <SidebarTrigger />
       {/* RIGHT */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         {/* THEME MENU */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon">
+            <Button variant="ghost" size="icon" className="rounded-full">
               <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               <span className="sr-only">Toggle theme</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setTheme("light")}>
-              Light
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme("dark")}>
-              Dark
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme("system")}>
-              System
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme('light')}>Light</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme('dark')}>Dark</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme('system')}>System</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
         <div className="relative">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="relative">
+              <Button variant="ghost" className="relative rounded-full">
                 <Bell />
                 {readCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                  <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
                     {notifications.filter((n) => !n.read).length}
                   </span>
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-[400px] max-h-96 overflow-auto p-2"
-            >
+            <DropdownMenuContent align="end" className="w-[400px] max-h-96 overflow-auto p-2">
               <div className="flex items-center justify-between px-2 py-1">
                 <DropdownMenuLabel>Thông báo mới</DropdownMenuLabel>
                 {notifications.length > 0 && (
@@ -91,9 +93,7 @@ const Navbar = () => {
                     size="sm"
                     className="text-xs text-blue-500 hover:underline"
                     onClick={() => {
-                      setNotifications((prev) =>
-                        prev.map((n) => ({ ...n, read: true }))
-                      );
+                      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
                     }}
                   >
                     Xem tất cả
@@ -119,9 +119,7 @@ const Navbar = () => {
                       className="flex items-start space-x-2 hover:bg-accent cursor-pointer"
                       onSelect={(event) => {
                         event.preventDefault();
-                        const updated = notifications.map((n) =>
-                          n.id === notif.id ? { ...n, read: true } : n
-                        );
+                        const updated = notifications.map((n) => (n.id === notif.id ? { ...n, read: true } : n));
                         setNotifications(updated);
                       }}
                     >
@@ -129,13 +127,9 @@ const Navbar = () => {
                         <Bell className="w-4 h-4 mt-1 text-blue-500" />
                       </div>
                       <div className="flex-1 text-sm">
-                        <p className="font-medium text-foreground">
-                          {notif.message}
-                        </p>
+                        <p className="font-medium text-foreground">{notif.message}</p>
                         <div className="flex items-center">
-                          <p className="text-xs text-muted-foreground">
-                            {formatTimeAgo(notif.createdAt)}
-                          </p>
+                          <p className="text-xs text-muted-foreground">{formatTimeAgo(notif.createdAt)}</p>
                         </div>
                       </div>
                       {notif.read && (
@@ -155,24 +149,66 @@ const Navbar = () => {
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar>
-              <AvatarImage src="https://avatars.githubusercontent.com/u/80609391?v=4" />
-              <AvatarFallback>NMT</AvatarFallback>
+              <AvatarImage src={employee?.avatarUrl} alt={employee?.email} />
+              <AvatarFallback>
+                {employee?.fullname
+                  ? employee.fullname
+                      .split(' ') // Tách thành mảng ["Nguyễn", "Minh", "Thông"]
+                      .map((word) => word[0]?.toUpperCase()) // Lấy ký tự đầu rồi viết hoa
+                      .join('') // Ghép lại đi
+                  : 'AR'}
+              </AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent sideOffset={10}>
-            <DropdownMenuLabel>Tài khoản</DropdownMenuLabel>
+          <DropdownMenuContent
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            align="end"
+            sideOffset={10}
+          >
+            <DropdownMenuLabel className="p-0 font-normal">
+              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage src={employee?.avatarUrl} alt={employee?.email} />
+                  <AvatarFallback className="rounded-lg">
+                    {employee?.fullname
+                      ? employee.fullname
+                          .split(' ') // Tách thành mảng ["Nguyễn", "Minh", "Thông"]
+                          .map((word) => word[0]?.toUpperCase()) // Lấy ký tự đầu rồi viết hoa
+                          .join('') // Ghép lại đi
+                      : 'AR'}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">{employee?.fullname ? employee.fullname : 'Alexander Rio'}</span>
+                  <span className="truncate text-xs">{employee?.email}</span>
+                </div>
+              </div>
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <User className="h-[1.2rem] w-[1.2rem] mr-2" />
-              Thông tin cá nhân
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Settings className="h-[1.2rem] w-[1.2rem] mr-2" />
-              Cài đặt
-            </DropdownMenuItem>
-            <DropdownMenuItem variant="destructive" onClick={logout}>
-              <LogOut className="h-[1.2rem] w-[1.2rem] mr-2" />
+            <DropdownMenuGroup>
+              <DropdownMenuItem asChild>
+                <Link href={''}>
+                  <BadgeCheck />
+                  Tài khoản
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={''}>
+                  <CreditCard />
+                  Chính sách
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={''}>
+                  <Bell />
+                  Thông báo
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={logout}>
+              <LogOut />
               Đăng xuất
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -19,7 +19,7 @@ export const createEmployeeSchema = z.object({
   departmentId: z.string().optional(),
   country: z.string().optional(),
   marital: z.string().optional(),
-  internalEmail: z.string().email('Email không hợp lệ').optional(),
+  internalEmail: z.string().optional(),
 });
 
 export type CreateEmployeeFormData = z.infer<typeof createEmployeeSchema>;
