@@ -2,6 +2,7 @@
 
 import { getDepartments } from '@/api/departments/department';
 import { getEmployee, updateEmployee } from '@/api/employee/employee';
+import { deletefileDataUploadthing } from '@/api/uploadthing/uploadthing';
 import { DatePicker } from '@/components/date-picker';
 import { HeaderTitle } from '@/components/HeaderTitle';
 import { SubmitButton } from '@/components/SummitButton';
@@ -9,11 +10,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Spinner } from '@/components/ui/spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GENDER_LABELS } from '@/enums/genderEnum';
 import { MARITAL_LABELS } from '@/enums/maritalEnum';
 import { STATUS_LABELS } from '@/enums/statusEnum';
 import { TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
+import { useActionWithLoading } from '@/hooks/useExecute';
 import { UploadButton, UploadDropzone } from '@/lib/uploadthing';
 import { cn } from '@/lib/utils';
 import CountryDto from '@/models/dto/countryDto';
@@ -22,9 +25,10 @@ import { EmployeeDto } from '@/models/dto/employeeDto';
 import { CreateEmployeeFormData, createEmployeeSchema } from '@/models/schemas/createEmployeeSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
-import { Camera, Paperclip, UploadCloud } from 'lucide-react';
+import { ArrowLeft, Camera, Loader2, Paperclip, UploadCloud } from 'lucide-react';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
 import { startTransition, useActionState, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -45,6 +49,7 @@ const documentsList = ['Tải hồ sơ CV', 'Tải hồ sơ học vấn', 'Tải
 
 export default function UpdateEmployeePage() {
   const params = useParams();
+  const router = useRouter();
 
   const [currentProfileImage, setCurrentProfileImage] = useState<string>('');
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -54,6 +59,9 @@ export default function UpdateEmployeePage() {
   const [countries, setCountries] = useState<CountryDto[]>([]);
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
   const [departments, setDepartments] = useState<DepartmentDto[]>([]);
+
+  // EXECUTE IMAGE UPLOAD
+  const { isLoadingAction, execute } = useActionWithLoading();
 
   // FORM-VALUES
   const [firstName, setFirstName] = useState<string>('');
@@ -130,8 +138,6 @@ export default function UpdateEmployeePage() {
     }
   }, [employee, reset, setValue]);
 
-  console.log(documents);
-
   useEffect(() => {
     reset((prev) => ({
       ...prev,
@@ -179,6 +185,7 @@ export default function UpdateEmployeePage() {
       }
     } catch (error: any) {
       toast.error(error.message);
+      router.back();
     }
   };
 
@@ -195,7 +202,6 @@ export default function UpdateEmployeePage() {
     try {
       const res = await updateEmployee(params.id as string, formData);
       if (res) {
-        console.log(res);
         toast.success('Cập nhật thông tin thành công');
         fetchEmployeeDetail();
       }
@@ -207,7 +213,6 @@ export default function UpdateEmployeePage() {
   }, undefined);
 
   const onSubmit = async (data: CreateEmployeeFormData) => {
-    console.log(data);
     startTransition(() => {
       submitAction(data);
     });
@@ -228,8 +233,28 @@ export default function UpdateEmployeePage() {
     setWorkDateSelected(date);
   };
 
+  const handleDeleteFileUpload = async (fileUrl: string) => {
+    execute(
+      async () => {
+        if (fileUrl) {
+          await deletefileDataUploadthing(fileUrl);
+        }
+      },
+      {
+        successMessage: 'File hoặc hình ảnh đã được xóa',
+        errorMessage: 'Xóa File hoặc hình ảnh thất bại',
+      },
+    );
+  };
+
   return (
     <>
+      <Link href="/dashboard/employees">
+        <div className="flex gap-1 items-center">
+          <ArrowLeft size={20} />
+          <span className="text-sm">Trở lại</span>
+        </div>
+      </Link>
       <HeaderTitle text="Cập Nhật Thông Tin" subText="Quản lý thông tin cơ bản của nhân viên" />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-4 bg-card border rounded-lg shadow-sm">
@@ -260,59 +285,73 @@ export default function UpdateEmployeePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                 <div className="flex flex-col col-span-2 gap-2">
                   <Label>Hình ảnh nhân viên</Label>
-
                   {currentProfileImage ? (
-                    <div className="relative w-full max-w-[200px] aspect-square">
-                      <Image
-                        src={currentProfileImage}
-                        alt="Ảnh nhân viên"
-                        fill
-                        className="rounded-md object-cover border border-gray-200 dark:border-gray-700"
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        onClick={() => setCurrentProfileImage('')}
-                        className="absolute top-2 right-2 text-xs px-2 py-1"
-                      >
-                        Xóa ảnh
-                      </Button>
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-full max-w-[250px] aspect-square">
+                        <Image
+                          src={currentProfileImage}
+                          alt="Ảnh nhân viên"
+                          fill
+                          className="rounded-md object-cover border border-gray-200 dark:border-gray-700"
+                        />
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            handleDeleteFileUpload(currentProfileImage);
+                            setCurrentProfileImage('');
+                            setValue('avatarUrl', '');
+                          }}
+                          className="absolute top-2 right-2 text-xs p-2 bg-red-500 hover:bg-red-500/70 text-white dark:bg-red-700 dark:hover:bg-red-700/80"
+                        >
+                          {isLoadingAction ? <Spinner size="small" className="text-white" /> : 'Xóa ảnh'}
+                        </Button>
+                      </div>
+
+                      <div className="relative w-full h-62 rounded-md overflow-hidden">
+                        <Image src="/assets/backgroundLoginLayout.jpg" alt="Company banner" fill className="object-cover" />
+                      </div>
                     </div>
                   ) : (
-                    <div className="flex items-start">
-                      <UploadButton
-                        endpoint="singleImageUploader"
-                        onUploadBegin={() => setIsUploading(true)}
-                        onClientUploadComplete={(res) => {
-                          const url = res[0].ufsUrl;
-                          setCurrentProfileImage(url);
-                          setValue('avatarUrl', url);
-                          setIsUploading(false);
-                          toast.success('Hình ảnh của bạn đã được upload');
-                        }}
-                        onUploadError={(error) => {
-                          toast.error(error.message);
-                        }}
-                        content={{
-                          button: isUploading ? (
-                            <div className="flex flex-col items-center">
-                              <UploadCloud className="w-5 h-5 animate-bounce" />
-                              <span className="text-xs">Đang tải...</span>
-                            </div>
-                          ) : (
-                            <div className="flex flex-col items-center gap-1">
-                              <Camera className="w-5 h-5" />
-                              <span className="text-xs">Chọn ảnh</span>
-                            </div>
-                          ),
-                          allowedContent: 'PNG, JPG (tối đa 8MB)',
-                        }}
-                        appearance={{
-                          button:
-                            'w-30 h-30 bg-primary/50 dark:bg-secondary px-4 py-2 rounded-md hover:bg-primary/40 dark:hover:bg-primary/10 disabled:opacity-50',
-                          allowedContent: 'text-xs text-muted-foreground',
-                        }}
-                      />
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-start">
+                        <UploadButton
+                          endpoint="singleImageUploader"
+                          onUploadBegin={() => setIsUploading(true)}
+                          onClientUploadComplete={(res) => {
+                            const url = res[0].ufsUrl;
+                            setCurrentProfileImage(url);
+                            setValue('avatarUrl', url);
+                            setIsUploading(false);
+                            toast.success('Hình ảnh của bạn đã được upload');
+                          }}
+                          onUploadError={(error) => {
+                            toast.error(error.message);
+                          }}
+                          content={{
+                            button: isUploading ? (
+                              <div className="flex flex-col items-center">
+                                <Loader2 className="w-4 h-4 animate-spin mb-2 text-white" />
+                                <span className="text-xs">Đang tải...</span>
+                              </div>
+                            ) : (
+                              <div className="flex flex-col items-center gap-1">
+                                <Camera className="w-5 h-5" />
+                                <span className="text-xs">Chọn ảnh upload</span>
+                              </div>
+                            ),
+                            allowedContent: <></>,
+                          }}
+                          appearance={{
+                            button:
+                              'w-62 h-62 bg-primary/50 dark:bg-secondary px-4 py-2 rounded-md hover:bg-primary/40 dark:hover:bg-primary/10 disabled:opacity-50',
+                            allowedContent: 'text-xs text-muted-foreground',
+                          }}
+                        />
+                      </div>
+
+                      <div className="relative w-full h-62 rounded-md overflow-hidden">
+                        <Image src="/assets/backgroundLoginLayout.jpg" alt="Company banner" fill className="object-cover" />
+                      </div>
                     </div>
                   )}
                 </div>
@@ -514,43 +553,54 @@ export default function UpdateEmployeePage() {
                   <div key={index} className="flex flex-col gap-2">
                     <Label>{label}</Label>
                     {documents[index] ? (
-                      <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
-                        <div className="flex gap-2">
-                          <Paperclip size={22} className="text-primary" />
-                          <a
-                            href={documents[index]}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm text-blue-600 dark:text-blue-400 hover:underline truncate"
-                          >
-                            {documents[index].split('/').pop()}
-                          </a>
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          className="hover:bg-red-700 dark:hover:bg-red-400 text-xs"
-                          onClick={() => {
-                            setDocuments((prev) => {
-                              const updated = [...prev];
-                              updated[index] = '';
-                              setValue('document', updated);
-                              return updated;
-                            });
-                          }}
-                        >
-                          Xóa hồ sơ
-                        </Button>
-                      </div>
+                      (() => {
+                        const strUrl = documents[index];
+                        const fileUrl = strUrl.split('*')[1];
+                        const fileName = strUrl.split('*')[0];
+
+                        return (
+                          <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
+                            <div className="flex gap-2">
+                              <Paperclip size={20} className="text-primary" />
+                              <a
+                                href={fileUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm text-blue-600 dark:text-blue-400 hover:underline truncate"
+                              >
+                                {fileName}
+                              </a>
+                            </div>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              className="hover:bg-red-700 dark:hover:bg-red-400 text-xs"
+                              onClick={() => {
+                                handleDeleteFileUpload(documents[index]);
+                                setDocuments((prev) => {
+                                  const updated = [...prev];
+                                  updated[index] = '';
+                                  setValue('document', updated);
+                                  return updated;
+                                });
+                              }}
+                            >
+                              {isLoadingAction ? <Spinner size="small" className="text-white" /> : 'Xóa hồ sơ'}
+                            </Button>
+                          </div>
+                        );
+                      })()
                     ) : (
                       <UploadDropzone
                         className="py-6 ut-button:bg-amber-500 ut-button:ut-readying:bg-amber-500/50 ut-button:p-2"
                         onUploadBegin={() => setIsUploading(true)}
                         onClientUploadComplete={(res) => {
                           const url = res[0].ufsUrl;
+                          const originalName = res[0].name;
+
                           setDocuments((prev) => {
                             const updated = [...prev];
-                            updated[index] = url;
+                            updated[index] = originalName + '*' + url;
                             setValue('document', updated);
                             return updated;
                           });
