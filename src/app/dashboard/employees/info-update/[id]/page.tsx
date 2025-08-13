@@ -285,62 +285,73 @@ export default function UpdateEmployeePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                 <div className="flex flex-col col-span-2 gap-2">
                   <Label>Hình ảnh nhân viên</Label>
-
                   {currentProfileImage ? (
-                    <div className="relative w-full max-w-[200px] aspect-square">
-                      <Image
-                        src={currentProfileImage}
-                        alt="Ảnh nhân viên"
-                        fill
-                        className="rounded-md object-cover border border-gray-200 dark:border-gray-700"
-                      />
-                      <Button
-                        type="button"
-                        onClick={() => {
-                          handleDeleteFileUpload(currentProfileImage);
-                          setCurrentProfileImage('');
-                          setValue('avatarUrl', '');
-                        }}
-                        className="absolute top-2 right-2 text-xs p-2 bg-red-500 hover:bg-red-500/70 text-white dark:bg-red-700 dark:hover:bg-red-700/80"
-                      >
-                        {isLoadingAction ? <Spinner size="small" className="text-white" /> : 'Xóa ảnh'}
-                      </Button>
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-full max-w-[250px] aspect-square">
+                        <Image
+                          src={currentProfileImage}
+                          alt="Ảnh nhân viên"
+                          fill
+                          className="rounded-md object-cover border border-gray-200 dark:border-gray-700"
+                        />
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            handleDeleteFileUpload(currentProfileImage);
+                            setCurrentProfileImage('');
+                            setValue('avatarUrl', '');
+                          }}
+                          className="absolute top-2 right-2 text-xs p-2 bg-red-500 hover:bg-red-500/70 text-white dark:bg-red-700 dark:hover:bg-red-700/80"
+                        >
+                          {isLoadingAction ? <Spinner size="small" className="text-white" /> : 'Xóa ảnh'}
+                        </Button>
+                      </div>
+
+                      <div className="relative w-full h-62 rounded-md overflow-hidden">
+                        <Image src="/assets/backgroundLoginLayout.jpg" alt="Company banner" fill className="object-cover" />
+                      </div>
                     </div>
                   ) : (
-                    <div className="flex items-start">
-                      <UploadButton
-                        endpoint="singleImageUploader"
-                        onUploadBegin={() => setIsUploading(true)}
-                        onClientUploadComplete={(res) => {
-                          const url = res[0].ufsUrl;
-                          setCurrentProfileImage(url);
-                          setValue('avatarUrl', url);
-                          setIsUploading(false);
-                          toast.success('Hình ảnh của bạn đã được upload');
-                        }}
-                        onUploadError={(error) => {
-                          toast.error(error.message);
-                        }}
-                        content={{
-                          button: isUploading ? (
-                            <div className="flex flex-col items-center">
-                              <Loader2 className="w-4 h-4 animate-spin mb-2 text-white" />
-                              <span className="text-xs">Đang tải...</span>
-                            </div>
-                          ) : (
-                            <div className="flex flex-col items-center gap-1">
-                              <Camera className="w-5 h-5" />
-                              <span className="text-xs">Chọn ảnh</span>
-                            </div>
-                          ),
-                          allowedContent: 'PNG, JPG (tối đa 8MB)',
-                        }}
-                        appearance={{
-                          button:
-                            'w-30 h-30 bg-primary/50 dark:bg-secondary px-4 py-2 rounded-md hover:bg-primary/40 dark:hover:bg-primary/10 disabled:opacity-50',
-                          allowedContent: 'text-xs text-muted-foreground',
-                        }}
-                      />
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-start">
+                        <UploadButton
+                          endpoint="singleImageUploader"
+                          onUploadBegin={() => setIsUploading(true)}
+                          onClientUploadComplete={(res) => {
+                            const url = res[0].ufsUrl;
+                            setCurrentProfileImage(url);
+                            setValue('avatarUrl', url);
+                            setIsUploading(false);
+                            toast.success('Hình ảnh của bạn đã được upload');
+                          }}
+                          onUploadError={(error) => {
+                            toast.error(error.message);
+                          }}
+                          content={{
+                            button: isUploading ? (
+                              <div className="flex flex-col items-center">
+                                <Loader2 className="w-4 h-4 animate-spin mb-2 text-white" />
+                                <span className="text-xs">Đang tải...</span>
+                              </div>
+                            ) : (
+                              <div className="flex flex-col items-center gap-1">
+                                <Camera className="w-5 h-5" />
+                                <span className="text-xs">Chọn ảnh upload</span>
+                              </div>
+                            ),
+                            allowedContent: <></>,
+                          }}
+                          appearance={{
+                            button:
+                              'w-62 h-62 bg-primary/50 dark:bg-secondary px-4 py-2 rounded-md hover:bg-primary/40 dark:hover:bg-primary/10 disabled:opacity-50',
+                            allowedContent: 'text-xs text-muted-foreground',
+                          }}
+                        />
+                      </div>
+
+                      <div className="relative w-full h-62 rounded-md overflow-hidden">
+                        <Image src="/assets/backgroundLoginLayout.jpg" alt="Company banner" fill className="object-cover" />
+                      </div>
                     </div>
                   )}
                 </div>
