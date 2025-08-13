@@ -25,8 +25,9 @@ import { EmployeeDto } from '@/models/dto/employeeDto';
 import { CreateEmployeeFormData, createEmployeeSchema } from '@/models/schemas/createEmployeeSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
-import { Camera, Loader2, Paperclip, UploadCloud } from 'lucide-react';
+import { ArrowLeft, Camera, Loader2, Paperclip, UploadCloud } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { startTransition, useActionState, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -248,6 +249,12 @@ export default function UpdateEmployeePage() {
 
   return (
     <>
+      <Link href="/dashboard/employees">
+        <div className="flex gap-1 items-center">
+          <ArrowLeft size={20} />
+          <span className="text-sm">Trở lại</span>
+        </div>
+      </Link>
       <HeaderTitle text="Cập Nhật Thông Tin" subText="Quản lý thông tin cơ bản của nhân viên" />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-4 bg-card border rounded-lg shadow-sm">
@@ -535,44 +542,54 @@ export default function UpdateEmployeePage() {
                   <div key={index} className="flex flex-col gap-2">
                     <Label>{label}</Label>
                     {documents[index] ? (
-                      <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
-                        <div className="flex gap-2">
-                          <Paperclip size={22} className="text-primary" />
-                          <a
-                            href={documents[index]}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm text-blue-600 dark:text-blue-400 hover:underline truncate"
-                          >
-                            {documents[index].split('/').pop()}
-                          </a>
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          className="hover:bg-red-700 dark:hover:bg-red-400 text-xs"
-                          onClick={() => {
-                            handleDeleteFileUpload(documents[index]);
-                            setDocuments((prev) => {
-                              const updated = [...prev];
-                              updated[index] = '';
-                              setValue('document', updated);
-                              return updated;
-                            });
-                          }}
-                        >
-                          {isLoadingAction ? <Spinner size="small" className="text-white" /> : 'Xóa hồ sơ'}
-                        </Button>
-                      </div>
+                      (() => {
+                        const strUrl = documents[index];
+                        const fileUrl = strUrl.split('*')[1];
+                        const fileName = strUrl.split('*')[0];
+
+                        return (
+                          <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
+                            <div className="flex gap-2">
+                              <Paperclip size={20} className="text-primary" />
+                              <a
+                                href={fileUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm text-blue-600 dark:text-blue-400 hover:underline truncate"
+                              >
+                                {fileName}
+                              </a>
+                            </div>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              className="hover:bg-red-700 dark:hover:bg-red-400 text-xs"
+                              onClick={() => {
+                                handleDeleteFileUpload(documents[index]);
+                                setDocuments((prev) => {
+                                  const updated = [...prev];
+                                  updated[index] = '';
+                                  setValue('document', updated);
+                                  return updated;
+                                });
+                              }}
+                            >
+                              {isLoadingAction ? <Spinner size="small" className="text-white" /> : 'Xóa hồ sơ'}
+                            </Button>
+                          </div>
+                        );
+                      })()
                     ) : (
                       <UploadDropzone
                         className="py-6 ut-button:bg-amber-500 ut-button:ut-readying:bg-amber-500/50 ut-button:p-2"
                         onUploadBegin={() => setIsUploading(true)}
                         onClientUploadComplete={(res) => {
                           const url = res[0].ufsUrl;
+                          const originalName = res[0].name;
+
                           setDocuments((prev) => {
                             const updated = [...prev];
-                            updated[index] = url;
+                            updated[index] = originalName + '*' + url;
                             setValue('document', updated);
                             return updated;
                           });
