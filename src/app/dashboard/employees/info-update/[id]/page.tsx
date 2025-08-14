@@ -21,7 +21,7 @@ import { UploadButton, UploadDropzone } from '@/lib/uploadthing';
 import { cn } from '@/lib/utils';
 import CountryDto from '@/models/dto/countryDto';
 import { DepartmentDto } from '@/models/dto/departmentDto';
-import { EmployeeDto } from '@/models/dto/employeeDto';
+import type { EmployeeFormDto } from '@/models/dto/employeeDto';
 import { CreateEmployeeFormData, createEmployeeSchema } from '@/models/schemas/createEmployeeSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
@@ -57,7 +57,7 @@ export default function UpdateEmployeePage() {
   const [tab, setTab] = useState<string>(tabsInformation[0].value);
 
   const [countries, setCountries] = useState<CountryDto[]>([]);
-  const [employee, setEmployee] = useState<EmployeeDto | null>(null);
+  const [employee, setEmployee] = useState<EmployeeFormDto | null>(null);
   const [departments, setDepartments] = useState<DepartmentDto[]>([]);
 
   // EXECUTE IMAGE UPLOAD
@@ -104,10 +104,7 @@ export default function UpdateEmployeePage() {
   useEffect(() => {
     if (employee) {
       //Load dữ liệu cũ từ API
-      reset({
-        ...employee,
-        departmentId: employee.departmentId?.id,
-      });
+      reset(employee);
 
       if (employee.birthday) {
         const date = new Date(employee.birthday);
@@ -127,7 +124,7 @@ export default function UpdateEmployeePage() {
       // Dùng 1 ngôi toán tử nếu nó xảy ra, không thì thôi chứ biết seo nè
       employee.gender && setGenderSelected(employee.gender);
       employee.type && setTypeWorkSelected(employee.type);
-      employee.departmentId && setDepartmentSelected(employee.departmentId.id as string);
+      employee.departmentId && setDepartmentSelected(employee.departmentId);
       employee.avatarUrl && setCurrentProfileImage(employee.avatarUrl);
       employee.type && setTypeWorkSelected(employee.type);
       employee.document && employee.document.length > 0 && setDocuments(employee.document);
@@ -137,17 +134,17 @@ export default function UpdateEmployeePage() {
   }, [employee, reset, setValue]);
 
   useEffect(() => {
-    // reset((prev) => ({
-    //   ...prev,
-    //   birthday: birthdaySelected,
-    //   joinDate: joinDateSelected,
-    //   workingDate: workDateSelected,
-    //   gender: genderSelected,
-    //   type: typeWorkSelected,
-    //   departmentId: departmentSelected,
-    //   country: countrySelected,
-    //   marital: maritalSelected,
-    // }));
+    reset((prev) => ({
+      ...prev,
+      birthday: birthdaySelected,
+      joinDate: joinDateSelected,
+      workingDate: workDateSelected,
+      gender: genderSelected,
+      type: typeWorkSelected,
+      departmentId: departmentSelected,
+      country: countrySelected,
+      marital: maritalSelected,
+    }));
   }, [
     birthdaySelected,
     genderSelected,

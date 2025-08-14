@@ -1,4 +1,4 @@
-import { EmployeeFilterDto, EmployeePaginationDto, type EmployeeDto } from '@/models/dto/employeeDto';
+import { EmployeeFilterDto, EmployeePaginationDto, EmployeeFormDto } from '@/models/dto/employeeDto';
 import { instance } from '../axiosClient';
 
 export const getEmployees = async (page: number, limit: number, filters: EmployeeFilterDto): Promise<EmployeePaginationDto> => {
@@ -26,7 +26,7 @@ export const getEmployees = async (page: number, limit: number, filters: Employe
   }
 };
 
-export const updateEmployee = async (id: string, employee: Partial<EmployeeDto>): Promise<any> => {
+export const updateEmployee = async (id: string, employee: Partial<EmployeeFormDto>): Promise<any> => {
   try {
     const response = await instance.put(`/employees/updateEmployee/${id}`, employee);
     return response.data;

@@ -1,4 +1,3 @@
-import { TypeWork } from '@/enums/typeWorkEnum';
 import { z } from 'zod';
 
 export const createEmployeeSchema = z.object({
@@ -12,7 +11,7 @@ export const createEmployeeSchema = z.object({
   phone: z.string().max(15, 'Số điện thoại không hợp lệ.').optional(),
   gender: z.string().optional(),
   designation: z.string().max(100, 'Chức danh không được vượt quá 100 ký tự.').optional(),
-  type: z.nativeEnum(TypeWork).optional(),
+  type: z.string().optional(),
   birthday: z.coerce.date().optional(),
   joinDate: z.coerce.date().optional(),
   workingDate: z.coerce.date().optional(),

@@ -32,35 +32,10 @@ interface EmployeeDto {
   updatedAt?: Date;
 }
 
-interface EmployeeFormSubmit {
-  id: string;
-  firstname?: string;
-  lastname?: string;
-  username?: string;
-  employeeCode: string;
-  email: string;
-  internalEmail?: string;
-  githubId?: string;
-  slackId?: string;
-  microsoftTeamId?: string;
-  address?: string;
-  phone?: string;
-  birthday?: Date;
-  gender?: string;
-  designation?: string;
+type EmployeeFormDto = Omit<EmployeeDto, 'departmentId' | 'type'> & {
   type?: string;
-  joinDate?: Date;
-  workingDate?: Date;
-  avatarUrl?: string;
-  document?: string[];
   departmentId?: string;
-  status?: string;
-  marital?: string;
-  country?: string;
-  identityCard?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+};
 
 interface EmployeePaginationDto {
   employees: EmployeeDto[];
@@ -73,4 +48,4 @@ interface EmployeeFilterDto {
   departments?: string[];
 }
 
-export type { EmployeeDto, EmployeePaginationDto, EmployeeFilterDto, EmployeeFormSubmit };
+export type { EmployeeDto, EmployeePaginationDto, EmployeeFilterDto, EmployeeFormDto };
