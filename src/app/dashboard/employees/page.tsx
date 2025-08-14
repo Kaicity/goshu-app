@@ -115,6 +115,10 @@ const EmployeesPage = () => {
         <FilterDialog
           open={open}
           setOpen={setOpen}
+          // departmentSelected={departmentSelected}
+          // typeWorkSelected={typeWorkSelected}
+          // setDepartmentSelected={setDepartmentSelected}
+          // setTypeWorkSelected={setTypeWorkSelected}
           onFilter={(newFilter) => {
             setDepartmentSelected(newFilter.departments);
             setTypeWorkSelected(newFilter.typeWorks);
