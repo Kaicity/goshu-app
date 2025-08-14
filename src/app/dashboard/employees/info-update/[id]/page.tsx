@@ -21,7 +21,7 @@ import { UploadButton, UploadDropzone } from '@/lib/uploadthing';
 import { cn } from '@/lib/utils';
 import CountryDto from '@/models/dto/countryDto';
 import { DepartmentDto } from '@/models/dto/departmentDto';
-import { EmployeeDto } from '@/models/dto/employeeDto';
+import type { EmployeeFormDto } from '@/models/dto/employeeDto';
 import { CreateEmployeeFormData, createEmployeeSchema } from '@/models/schemas/createEmployeeSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
@@ -57,7 +57,7 @@ export default function UpdateEmployeePage() {
   const [tab, setTab] = useState<string>(tabsInformation[0].value);
 
   const [countries, setCountries] = useState<CountryDto[]>([]);
-  const [employee, setEmployee] = useState<EmployeeDto | null>(null);
+  const [employee, setEmployee] = useState<EmployeeFormDto | null>(null);
   const [departments, setDepartments] = useState<DepartmentDto[]>([]);
 
   // EXECUTE IMAGE UPLOAD

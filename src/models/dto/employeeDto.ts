@@ -32,6 +32,11 @@ interface EmployeeDto {
   updatedAt?: Date;
 }
 
+type EmployeeFormDto = Omit<EmployeeDto, 'departmentId' | 'type'> & {
+  type?: string;
+  departmentId?: string;
+};
+
 interface EmployeePaginationDto {
   employees: EmployeeDto[];
   pagination: PaginationDto;
@@ -43,4 +48,4 @@ interface EmployeeFilterDto {
   departments?: string[];
 }
 
-export type { EmployeeDto, EmployeePaginationDto, EmployeeFilterDto };
+export type { EmployeeDto, EmployeePaginationDto, EmployeeFilterDto, EmployeeFormDto };
