@@ -2,7 +2,8 @@ import { PaginationDto } from './userAccountDto';
 
 interface EmployeeDto {
   id: string;
-  fullname?: string;
+  firstname?: string;
+  lastname?: string;
   username?: string;
   employeeCode: string;
   email: string;
@@ -24,6 +25,7 @@ interface EmployeeDto {
   status?: string;
   marital?: string;
   country?: string;
+  identityCard?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

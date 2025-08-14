@@ -1,8 +1,9 @@
 import { z } from 'zod';
 
 export const createEmployeeSchema = z.object({
-  fullname: z.string().min(2, 'Vui lòng nhập họ và tên.').max(100, 'Họ và tên không được vượt quá 100 ký tự.').optional(),
-  username: z.string().min(2, 'Vui lòng nhập tên đăng nhập.').max(50, 'Tên đăng nhập không được vượt quá 50 ký tự.').optional(),
+  firstname: z.string().max(100, 'Họ không được vượt quá 50 ký tự.').optional(),
+  lastname: z.string().max(100, 'Tên không được vượt quá 50 ký tự.').optional(),
+  username: z.string().max(50, 'Tên đăng nhập không được vượt quá 50 ký tự.').optional(),
   githubId: z.string().optional(),
   slackId: z.string().optional(),
   microsoftTeamId: z.string().optional(),
@@ -19,7 +20,8 @@ export const createEmployeeSchema = z.object({
   departmentId: z.string().optional(),
   country: z.string().optional(),
   marital: z.string().optional(),
-  internalEmail: z.string().email('Email không hợp lệ').optional(),
+  internalEmail: z.string().optional(),
+  identityCard: z.string().optional(),
 });
 
 export type CreateEmployeeFormData = z.infer<typeof createEmployeeSchema>;
