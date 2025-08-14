@@ -14,5 +14,6 @@ interface DepartmentPaginationDto {
 
 interface DepartmentFilterDto{
     search: string;
+    
 }
 export type { DepartmentDto, DepartmentPaginationDto, DepartmentFilterDto };
