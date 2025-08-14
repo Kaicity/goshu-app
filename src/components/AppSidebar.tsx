@@ -46,14 +46,17 @@ const AppSidebar = () => {
   const path = usePathname();
 
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
+  const [fullname, setFullname] = useState<string>('');
 
   useEffect(() => {
     const fetchEmployeeDetail = async () => {
       if (userAccount) {
         const res = await getEmployee(userAccount.employeeId as string);
-        console.log(res);
-
         setEmployee(res);
+
+        if (res.firstname || res.lastname) {
+          setFullname(res.lastname + ' ' + res.firstname);
+        }
       }
     };
 
@@ -180,8 +183,8 @@ const AppSidebar = () => {
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage src={employee?.avatarUrl} alt={employee?.email} />
                     <AvatarFallback className="rounded-lg">
-                      {employee?.fullname
-                        ? employee.fullname
+                      {fullname
+                        ? fullname
                             .split(' ') // Tách thành mảng ["Nguyễn", "Minh", "Thông"]
                             .map((word) => word[0]?.toUpperCase()) // Lấy ký tự đầu rồi viết hoa
                             .join('') // Ghép lại đi
@@ -189,7 +192,7 @@ const AppSidebar = () => {
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{employee?.fullname ? employee.fullname : 'Alexander Rio'}</span>
+                    <span className="truncate font-semibold">{fullname ? fullname : 'Alexander Rio'}</span>
                     <span className="truncate text-xs">{employee?.email}</span>
                   </div>
                   <ChevronsUpDown className="ml-auto size-4" />
@@ -206,8 +209,8 @@ const AppSidebar = () => {
                     <Avatar className="h-8 w-8 rounded-lg">
                       <AvatarImage src={employee?.avatarUrl} alt={employee?.email} />
                       <AvatarFallback className="rounded-lg">
-                        {employee?.fullname
-                          ? employee.fullname
+                        {fullname
+                          ? fullname
                               .split(' ') // Tách thành mảng ["Nguyễn", "Minh", "Thông"]
                               .map((word) => word[0]?.toUpperCase()) // Lấy ký tự đầu rồi viết hoa
                               .join('') // Ghép lại đi
@@ -215,7 +218,7 @@ const AppSidebar = () => {
                       </AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">{employee?.fullname ? employee.fullname : 'Alexander Rio'}</span>
+                      <span className="truncate font-semibold">{fullname ? fullname : 'Alexander Rio'}</span>
                       <span className="truncate text-xs">{employee?.email}</span>
                     </div>
                   </div>
