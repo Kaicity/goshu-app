@@ -20,13 +20,10 @@ interface FilterDepartmentProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   onFilter: (filters: { departments: string[]; typeWorks: string[] }) => void;
-  // departmentSelected: string[];
-  // typeWorkSelected: string[];
-  // setDepartmentSelected: (deps: string[]) => void;
-  // setTypeWorkSelected: (types: string[]) => void;
+  resetTrigger: boolean;
 }
 
-export function FilterDialog({ open, setOpen, onFilter }: FilterDepartmentProps) {
+export function FilterDialog({ open, setOpen, onFilter, resetTrigger }: FilterDepartmentProps) {
   const searchParams = useSearchParams();
   const [departmentSelected, setDepartmentSelected] = useState<string[]>([]);
   const [typeWorkSelected, setTypeWorkSelected] = useState<string[]>((searchParams.get('type') ?? '').split(',').filter(Boolean));
@@ -40,6 +37,12 @@ export function FilterDialog({ open, setOpen, onFilter }: FilterDepartmentProps)
   useEffect(() => {
     fetchDepartments();
   }, []);
+
+   useEffect(() => {
+    // Khi resetTrigger thay đổi, clear checkbox
+    setDepartmentSelected([]);
+    setTypeWorkSelected([]);
+  }, [resetTrigger]);
 
   const fetchDepartments = async () => {
     try {

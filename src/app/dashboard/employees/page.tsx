@@ -33,6 +33,8 @@ const EmployeesPage = () => {
   const [total, setTotal] = useState<number>(0);
   const [limit, setLimit] = useState<number>(searchParams.get('limit') ? Number(searchParams.get('limit')) : 10);
 
+  const [resetTrigger, setResetTrigger] = useState(false);
+
   useEffect(() => {
     updateSearchParams();
     fetchEmployees();
@@ -66,6 +68,8 @@ const EmployeesPage = () => {
     setLimit(10);
     setDepartmentSelected([]);
     setTypeWorkSelected([]);
+
+    setResetTrigger((prev) => !prev);
 
     router.push('/dashboard/employees');
   };
@@ -115,10 +119,7 @@ const EmployeesPage = () => {
         <FilterDialog
           open={open}
           setOpen={setOpen}
-          // departmentSelected={departmentSelected}
-          // typeWorkSelected={typeWorkSelected}
-          // setDepartmentSelected={setDepartmentSelected}
-          // setTypeWorkSelected={setTypeWorkSelected}
+          resetTrigger={resetTrigger}
           onFilter={(newFilter) => {
             setDepartmentSelected(newFilter.departments);
             setTypeWorkSelected(newFilter.typeWorks);
