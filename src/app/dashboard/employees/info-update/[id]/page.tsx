@@ -313,7 +313,7 @@ export default function UpdateEmployeePage() {
                           }}
                           content={{
                             button: isUploading ? (
-                              <div className="flex flex-col items-center">
+                              <div className="flex flex-col items-center mx-auto">
                                 <Loader2 className="w-4 h-4 animate-spin mb-2 text-white" />
                                 <span className="text-xs">Đang tải...</span>
                               </div>
