@@ -25,7 +25,7 @@ import { EmployeeDto } from '@/models/dto/employeeDto';
 import { CreateEmployeeFormData, createEmployeeSchema } from '@/models/schemas/createEmployeeSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
-import { ArrowLeft, Camera, Loader2, Paperclip, UploadCloud } from 'lucide-react';
+import { ArrowLeft, Camera, Loader2, Paperclip } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
@@ -64,8 +64,6 @@ export default function UpdateEmployeePage() {
   const { isLoadingAction, execute } = useActionWithLoading();
 
   // FORM-VALUES
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
   const [genderSelected, setGenderSelected] = useState<string>('');
   const [countrySelected, setCountrySelected] = useState<string>('');
   const [maritalSelected, setMaritalSelected] = useState<string>('');
@@ -75,8 +73,6 @@ export default function UpdateEmployeePage() {
   const [typeWorkSelected, setTypeWorkSelected] = useState<string>('');
   const [departmentSelected, setDepartmentSelected] = useState<string>('');
   const [documents, setDocuments] = useState<string[]>(Array(documentsList.length).fill(''));
-
-  const getFullName = () => `${lastName} ${firstName}`.trim();
 
   const {
     register,
@@ -107,13 +103,6 @@ export default function UpdateEmployeePage() {
 
   useEffect(() => {
     if (employee) {
-      //format fullname nối chuỗi
-      if (employee?.fullname) {
-        const parts = employee.fullname.trim().split(/\s+/);
-        setLastName(parts[0]);
-        setFirstName(parts.slice(1).join(' '));
-      }
-
       //Load dữ liệu cũ từ API
       reset(employee);
 
@@ -155,7 +144,6 @@ export default function UpdateEmployeePage() {
       departmentId: departmentSelected,
       country: countrySelected,
       marital: maritalSelected,
-      fullname: lastName + ' ' + firstName,
     }));
   }, [
     birthdaySelected,
@@ -166,8 +154,6 @@ export default function UpdateEmployeePage() {
     workDateSelected,
     countrySelected,
     maritalSelected,
-    lastName,
-    firstName,
   ]);
 
   const fetchEmployeeDetail = async () => {
@@ -206,13 +192,8 @@ export default function UpdateEmployeePage() {
   }, undefined);
 
   const onSubmit = async (data: CreateEmployeeFormData) => {
-    const finalData: CreateEmployeeFormData = {
-      ...data,
-      fullname: `${lastName} ${firstName}`.trim(),
-    };
-
     startTransition(() => {
-      submitAction(finalData);
+      submitAction(data);
     });
   };
 
@@ -280,8 +261,8 @@ export default function UpdateEmployeePage() {
 
             {/* PERSONAL INFORMATION */}
             <TabsContent value="personal-info" className="p-2 w-full">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                <div className="flex flex-col col-span-2 gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
+                <div className="flex flex-col col-span-3 gap-2">
                   <Label>Hình ảnh nhân viên</Label>
                   {currentProfileImage ? (
                     <div className="flex items-center gap-3">
@@ -333,7 +314,7 @@ export default function UpdateEmployeePage() {
                       </div>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col md:flex-row md:items-center gap-2">
                       <div className="flex items-start">
                         <UploadButton
                           endpoint="singleImageUploader"
@@ -400,22 +381,22 @@ export default function UpdateEmployeePage() {
                   )}
                 </div>
 
-                <div className="flex flex-col gap-2">
-                  <Label>Tên</Label>
-                  <Input
-                    placeholder="Nhập tên"
-                    className="h-12"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </div>
-
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
                   <Label>Họ đệm</Label>
-                  <Input placeholder="Nhập họ" className="h-12" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                  <Input placeholder="Nhập họ" className="h-12" {...register('lastname')} />
                 </div>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                  <Label>Tên</Label>
+                  <Input placeholder="Nhập tên" className="h-12" {...register('firstname')} />
+                </div>
+
+                <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                  <Label>Căn Cước Công Dân</Label>
+                  <Input placeholder="0-XXX-XXX-XXX" className="h-12" {...register('identityCard')} />
+                </div>
+
+                <div className="flex flex-col col-span-3 md:col-span-1 gap-2">
                   <Label className={cn(errors.internalEmail ? 'text-red-500' : '')}>Email nội bộ</Label>
                   <Input
                     placeholder={errors.internalEmail ? errors.internalEmail.message : 'Nhập Email'}
@@ -424,17 +405,17 @@ export default function UpdateEmployeePage() {
                   />
                 </div>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col col-span-3 md:col-span-1 gap-2">
                   <Label>Điện thoại</Label>
                   <Input placeholder="Nhập điện thoại" className="h-12" {...register('phone')} />
                 </div>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col col-span-3 md:col-span-1 gap-2">
                   <Label>Ngày sinh</Label>
                   <DatePicker onDateChange={handleBirthdayChange} dateValue={birthdaySelected} />
                 </div>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col col-span-3 md:col-span-1 gap-2">
                   <Label>Giới tính</Label>
                   <Select value={genderSelected} onValueChange={(value) => setGenderSelected(value)}>
                     <SelectTrigger className="w-full !h-12">
@@ -450,7 +431,7 @@ export default function UpdateEmployeePage() {
                   </Select>
                 </div>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col col-span-3 md:col-span-1 gap-2">
                   <Label>Quốc tịch</Label>
                   <Select value={countrySelected} onValueChange={setCountrySelected}>
                     <SelectTrigger className="w-full !h-12">
@@ -473,7 +454,7 @@ export default function UpdateEmployeePage() {
                   </Select>
                 </div>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col col-span-3 md:col-span-1 gap-2">
                   <Label>Tình trạng hôn nhân</Label>
                   <Select value={maritalSelected} onValueChange={setMaritalSelected}>
                     <SelectTrigger className="w-full !h-12">
@@ -488,7 +469,7 @@ export default function UpdateEmployeePage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex flex-col col-span-2 gap-2">
+                <div className="flex flex-col col-span-3 gap-2">
                   <Label>Địa chỉ thường trú</Label>
                   <Input placeholder="Nhập địa chỉ" className="h-12" {...register('address')} />
                 </div>
