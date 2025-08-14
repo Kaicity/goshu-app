@@ -133,29 +133,6 @@ export default function UpdateEmployeePage() {
     }
   }, [employee, reset, setValue]);
 
-  useEffect(() => {
-    reset((prev) => ({
-      ...prev,
-      birthday: birthdaySelected,
-      joinDate: joinDateSelected,
-      workingDate: workDateSelected,
-      gender: genderSelected,
-      type: typeWorkSelected,
-      departmentId: departmentSelected,
-      country: countrySelected,
-      marital: maritalSelected,
-    }));
-  }, [
-    birthdaySelected,
-    genderSelected,
-    departmentSelected,
-    typeWorkSelected,
-    joinDateSelected,
-    workDateSelected,
-    countrySelected,
-    maritalSelected,
-  ]);
-
   const fetchEmployeeDetail = async () => {
     try {
       if (params.id) {
@@ -192,6 +169,8 @@ export default function UpdateEmployeePage() {
   }, undefined);
 
   const onSubmit = async (data: CreateEmployeeFormData) => {
+    console.log(data);
+
     startTransition(() => {
       submitAction(data);
     });
@@ -200,16 +179,19 @@ export default function UpdateEmployeePage() {
   const handleBirthdayChange = (date: Date | undefined) => {
     if (!date) return;
     setBirthdaySelected(date);
+    setValue('birthday', birthdaySelected);
   };
 
   const handleJoinDateSelected = (date: Date | undefined) => {
     if (!date) return;
     setJoinDateSelected(date);
+    setValue('joinDate', joinDateSelected);
   };
 
   const handleWorkingDateSelected = (date: Date | undefined) => {
     if (!date) return;
     setWorkDateSelected(date);
+    setValue('workingDate', workDateSelected);
   };
 
   const handleDeleteFileUpload = async (fileUrl: string) => {
@@ -417,7 +399,13 @@ export default function UpdateEmployeePage() {
 
                 <div className="flex flex-col col-span-3 md:col-span-1 gap-2">
                   <Label>Giới tính</Label>
-                  <Select value={genderSelected} onValueChange={(value) => setGenderSelected(value)}>
+                  <Select
+                    value={genderSelected}
+                    onValueChange={(value) => {
+                      setGenderSelected(value);
+                      setValue('gender', value);
+                    }}
+                  >
                     <SelectTrigger className="w-full !h-12">
                       <SelectValue placeholder="Chọn giới tính" />
                     </SelectTrigger>
@@ -433,7 +421,13 @@ export default function UpdateEmployeePage() {
 
                 <div className="flex flex-col col-span-3 md:col-span-1 gap-2">
                   <Label>Quốc tịch</Label>
-                  <Select value={countrySelected} onValueChange={setCountrySelected}>
+                  <Select
+                    value={countrySelected}
+                    onValueChange={(value) => {
+                      setCountrySelected(value);
+                      setValue('country', value);
+                    }}
+                  >
                     <SelectTrigger className="w-full !h-12">
                       <SelectValue placeholder="Chọn quốc tịch hiện tại" />
                     </SelectTrigger>
@@ -456,7 +450,13 @@ export default function UpdateEmployeePage() {
 
                 <div className="flex flex-col col-span-3 md:col-span-1 gap-2">
                   <Label>Tình trạng hôn nhân</Label>
-                  <Select value={maritalSelected} onValueChange={setMaritalSelected}>
+                  <Select
+                    value={maritalSelected}
+                    onValueChange={(value) => {
+                      setMaritalSelected(value);
+                      setValue('marital', value);
+                    }}
+                  >
                     <SelectTrigger className="w-full !h-12">
                       <SelectValue placeholder="Chọn tình trạng hôn nhân" />
                     </SelectTrigger>
@@ -502,7 +502,13 @@ export default function UpdateEmployeePage() {
 
                 <div className="flex flex-col gap-2">
                   <Label>Hình thức làm việc</Label>
-                  <Select value={typeWorkSelected} onValueChange={setTypeWorkSelected}>
+                  <Select
+                    value={typeWorkSelected}
+                    onValueChange={(value) => {
+                      setTypeWorkSelected(value);
+                      setValue('type', value);
+                    }}
+                  >
                     <SelectTrigger className="w-full !h-12">
                       <SelectValue placeholder="Chọn hình thức làm việc" />
                     </SelectTrigger>
@@ -523,7 +529,13 @@ export default function UpdateEmployeePage() {
 
                 <div className="flex flex-col gap-2">
                   <Label>Phòng ban</Label>
-                  <Select value={departmentSelected} onValueChange={setDepartmentSelected}>
+                  <Select
+                    value={departmentSelected}
+                    onValueChange={(value) => {
+                      setDepartmentSelected(value);
+                      setValue('departmentId', value);
+                    }}
+                  >
                     <SelectTrigger className="w-full !h-12">
                       <SelectValue placeholder="Chọn phòng ban" />
                     </SelectTrigger>
