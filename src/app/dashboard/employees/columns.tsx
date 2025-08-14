@@ -31,7 +31,7 @@ export const columns: ColumnDef<EmployeeDto>[] = [
       const employee = row.original;
       const fullName = `${employee.lastname ?? ''} ${employee.firstname ?? ''}`.trim() || '--/--';
       return (
-        <div className="flex items-center gap-2 min-w-[200px] flex-grow">
+        <div className="flex items-center gap-3 min-w-[200px] flex-grow">
           <img
             src={employee?.avatarUrl?.trim() ? employee.avatarUrl : '/assets/default-avatar.png'}
             alt={fullName}
