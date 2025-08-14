@@ -33,6 +33,8 @@ const EmployeesPage = () => {
   const [total, setTotal] = useState<number>(0);
   const [limit, setLimit] = useState<number>(searchParams.get('limit') ? Number(searchParams.get('limit')) : 10);
 
+  const [resetTrigger, setResetTrigger] = useState(false);
+
   useEffect(() => {
     updateSearchParams();
     fetchEmployees();
@@ -41,7 +43,7 @@ const EmployeesPage = () => {
 
   const fetchEmployees = async () => {
     setLoading(true);
-    console.log('Fetching employees with filters:', departmentSelected);
+    console.log('Table data:', employees);
     try {
       const res = await getEmployees(page, limit, { search, departments: departmentSelected, typeWorks: typeWorkSelected });
       console.log('res', res);
@@ -66,6 +68,8 @@ const EmployeesPage = () => {
     setLimit(10);
     setDepartmentSelected([]);
     setTypeWorkSelected([]);
+
+    setResetTrigger((prev) => !prev);
 
     router.push('/dashboard/employees');
   };
@@ -115,6 +119,7 @@ const EmployeesPage = () => {
         <FilterDialog
           open={open}
           setOpen={setOpen}
+          resetTrigger={resetTrigger}
           onFilter={(newFilter) => {
             setDepartmentSelected(newFilter.departments);
             setTypeWorkSelected(newFilter.typeWorks);

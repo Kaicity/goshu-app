@@ -10,6 +10,7 @@ import { TypeWork, TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
 import { cn } from '@/lib/utils';
 import { DepartmentDto } from '@/models/dto/departmentDto';
 import { DialogDescription } from '@radix-ui/react-dialog';
+import { RotateCcwIcon } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -19,18 +20,17 @@ interface FilterDepartmentProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   onFilter: (filters: { departments: string[]; typeWorks: string[] }) => void;
+  resetTrigger: boolean;
 }
 
-export function FilterDialog({ open, setOpen, onFilter }: FilterDepartmentProps) {
+export function FilterDialog({ open, setOpen, onFilter, resetTrigger }: FilterDepartmentProps) {
   const searchParams = useSearchParams();
   const [departmentSelected, setDepartmentSelected] = useState<string[]>([]);
   const [typeWorkSelected, setTypeWorkSelected] = useState<string[]>((searchParams.get('type') ?? '').split(',').filter(Boolean));
   const [departments, setDepartments] = useState<DepartmentDto[]>([]);
 
   const {
-    register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm();
 
@@ -38,15 +38,11 @@ export function FilterDialog({ open, setOpen, onFilter }: FilterDepartmentProps)
     fetchDepartments();
   }, []);
 
-  useEffect(() => {
-    if (departmentSelected.length > 0 || typeWorkSelected.length > 0) {
-      reset((prev) => ({
-        ...prev,
-        departments: departmentSelected,
-        typeWorks: typeWorkSelected,
-      }));
-    }
-  }, [departmentSelected, typeWorkSelected]);
+   useEffect(() => {
+    // Khi resetTrigger thay đổi, clear checkbox
+    setDepartmentSelected([]);
+    setTypeWorkSelected([]);
+  }, [resetTrigger]);
 
   const fetchDepartments = async () => {
     try {
@@ -73,6 +69,10 @@ export function FilterDialog({ open, setOpen, onFilter }: FilterDepartmentProps)
     onFilter(filterData);
     setOpen(false);
   };
+  const resetFilters = () => {
+    setDepartmentSelected([]);
+    setTypeWorkSelected([]);
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -97,7 +97,7 @@ export function FilterDialog({ open, setOpen, onFilter }: FilterDepartmentProps)
 
             <Label>CHỌN NƠI LÀM VIỆC</Label>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {Object.entries(TypeWork).map(([key, value]) => (
+              {Object.entries(TypeWork).map(([key, __]) => (
                 <label key={key} className="flex items-center gap-2 cursor-pointer text-xs">
                   <Checkbox
                     checked={typeWorkSelected.includes(key as TypeWork)}
@@ -117,6 +117,9 @@ export function FilterDialog({ open, setOpen, onFilter }: FilterDepartmentProps)
               }}
             >
               Đóng
+            </Button>
+            <Button type="button" variant="outline" onClick={resetFilters}>
+              <RotateCcwIcon className="w-6 h-6" />
             </Button>
             <SubmitButton text={'Áp dụng'} className={cn('w-auto')} />
           </DialogFooter>
