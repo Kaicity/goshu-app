@@ -1,43 +1,53 @@
 'use client';
 
 import { getDepartments } from '@/api/departments/department';
-import { createAccountUser, updateAccountUser } from '@/api/users/user';
-import { MultiSelect } from '@/components/MultiSelect';
 import { SubmitButton } from '@/components/SummitButton';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Status, STATUS_LABELS } from '@/enums/statusEnum';
-import { ROLE_ICONS, ROLE_LABELS, UserRole } from '@/enums/userRolesEnum';
+import { TypeWork, TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
 import { cn } from '@/lib/utils';
 import { DepartmentDto } from '@/models/dto/departmentDto';
-import type { UserAccountDto } from '@/models/dto/userAccountDto';
-import {
-  createAccountSchema,
-  updateAccountSchema,
-  type createAccountFormData,
-  type updateAccountFormData,
-} from '@/models/schemas/createAccountSchema';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogDescription } from '@radix-ui/react-dialog';
-import { startTransition, use, useActionState, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 interface FilterDepartmentProps {
   open: boolean;
   setOpen: (open: boolean) => void;
+  onFilter: (filters: { departments: string[]; typeWorks: string[] }) => void;
 }
 
-export function FilterDialog({ open, setOpen }: FilterDepartmentProps) {
+export function FilterDialog({ open, setOpen, onFilter }: FilterDepartmentProps) {
+  const searchParams = useSearchParams();
   const [departmentSelected, setDepartmentSelected] = useState<string[]>([]);
+  const [typeWorkSelected, setTypeWorkSelected] = useState<string[]>((searchParams.get('type') ?? '').split(',').filter(Boolean));
   const [departments, setDepartments] = useState<DepartmentDto[]>([]);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
 
   useEffect(() => {
     fetchDepartments();
   }, []);
+
+  useEffect(() => {
+    if (departmentSelected.length > 0 || typeWorkSelected.length > 0) {
+      reset((prev) => ({
+        ...prev,
+        departments: departmentSelected,
+        typeWorks: typeWorkSelected,
+      }));
+    }
+  }, [departmentSelected, typeWorkSelected]);
+
   const fetchDepartments = async () => {
     try {
       const res = await getDepartments(1, 100, { search: '' });
@@ -46,41 +56,61 @@ export function FilterDialog({ open, setOpen }: FilterDepartmentProps) {
       toast.error(error.message);
     }
   };
+
+  const toggleDepartment = (id: string) => {
+    setDepartmentSelected((prev) => (prev.includes(id) ? prev.filter((dep) => dep !== id) : [...prev, id]));
+  };
+  const toggleTypeWork = (id: TypeWork) => {
+    setTypeWorkSelected((prev) => (prev.includes(id) ? prev.filter((dep) => dep !== id) : [...prev, id]));
+  };
+
+  const onSubmit = () => {
+    const filterData = {
+      departments: departmentSelected,
+      typeWorks: typeWorkSelected,
+    };
+    console.log('f data', filterData);
+    onFilter(filterData);
+    setOpen(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-w-md w-[500px] px-6 py-8">
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle className="text-xl">{'Sắp Xếp'}</DialogTitle>
             <DialogDescription>Lựa chọn sắp xếp theo</DialogDescription>
           </DialogHeader>
 
           {/* Deparment select */}
-          <div className="flex gap-4">
-            <div className="flex flex-col gap-2 ">
-              <Label>Phòng Ban</Label>
-
-              <MultiSelect
-                options={departments.map((department) => ({
-                  label: department.name,
-                  value: department.id!,
-                }))}
-                value={departmentSelected}
-                onValueChange={(values) => setDepartmentSelected(values)}
-                placeholder="Chọn phòng ban"
-                className="relative justify-start"
-              />
+          <div className="flex flex-col gap-2">
+            <Label>CHỌN PHÒNG BAN</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {departments.map((dep) => (
+                <label key={dep.id} className="flex items-center gap-2 cursor-pointer text-xs">
+                  <Checkbox checked={departmentSelected.includes(dep.id!)} onCheckedChange={() => toggleDepartment(dep.id!)} />
+                  <span>{dep.name}</span>
+                </label>
+              ))}
             </div>
 
-            {/* Status select */}
-            {/* <div className="flex flex-col gap-2 w-full ">
-              <Label className="text-right pr-12">Trạng Thái</Label>
-            </div> */}
-            {/* {errors.role && <p className="text-red-500 text-sm">{errors.role.message}</p>} */}
+            <Label>CHỌN NƠI LÀM VIỆC</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {Object.entries(TypeWork).map(([key, value]) => (
+                <label key={key} className="flex items-center gap-2 cursor-pointer text-xs">
+                  <Checkbox
+                    checked={typeWorkSelected.includes(key as TypeWork)}
+                    onCheckedChange={() => toggleTypeWork(key as TypeWork)}
+                  />
+                  <span>{TYPEWORK_LABELS[key as TypeWork]}</span>
+                </label>
+              ))}
+            </div>
           </div>
           <DialogFooter className="flex justify-end gap-2">
             <Button
-              type="button"
+              type="button" // ghi ro rang ten type,
               variant="outline"
               onClick={() => {
                 setOpen(false);
@@ -88,7 +118,7 @@ export function FilterDialog({ open, setOpen }: FilterDepartmentProps) {
             >
               Đóng
             </Button>
-            <SubmitButton text={'Tạo'} className={cn('w-auto')} />
+            <SubmitButton text={'Áp dụng'} className={cn('w-auto')} />
           </DialogFooter>
         </form>
       </DialogContent>

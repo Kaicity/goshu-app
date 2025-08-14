@@ -8,6 +8,8 @@ export const getEmployees = async (page: number, limit: number, filters: Employe
         page,
         limit,
         search: filters.search,
+        department: filters.departments,
+        type: filters.typeWorks,
       },
     });
     return {

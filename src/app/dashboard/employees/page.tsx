@@ -2,13 +2,11 @@
 
 import { getEmployees } from '@/api/employee/employee';
 import ProtectPage from '@/components/auth/ProtectPage';
-
 import { UserRole } from '@/enums/userRolesEnum';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/DataTable';
 import { columns } from './columns';
-
 import { EmployeeDto } from '@/models/dto/employeeDto';
 import { FileSpreadsheet, RotateCcwIcon } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -22,10 +20,12 @@ const EmployeesPage = () => {
   const searchParams = useSearchParams();
   const [employees, setEmployees] = useState<EmployeeDto[]>([]);
   const [search, setSearch] = useState<string>(searchParams.get('search') || '');
-  const [employee, setEmployee] = useState<EmployeeDto | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
+  const [departmentSelected, setDepartmentSelected] = useState<string[]>([]);
+
+  const [typeWorkSelected, setTypeWorkSelected] = useState<string[]>([]);
 
   const router = useRouter();
 
@@ -37,13 +37,14 @@ const EmployeesPage = () => {
     updateSearchParams();
     fetchEmployees();
     console.log('Table data:', employees);
-  }, [page, limit, search]);
+  }, [page, limit, search, departmentSelected, typeWorkSelected]);
 
   const fetchEmployees = async () => {
     setLoading(true);
+    console.log('Fetching employees with filters:', departmentSelected);
     try {
-      const res = await getEmployees(page, limit, { search });
-      console.log('res',res);
+      const res = await getEmployees(page, limit, { search, departments: departmentSelected, typeWorks: typeWorkSelected });
+      console.log('res', res);
       setEmployees(res.employees);
       setTotal(res.pagination.total);
       setLimit(res.pagination.limit);
@@ -63,6 +64,8 @@ const EmployeesPage = () => {
     setSearch('');
     setPage(1);
     setLimit(10);
+    setDepartmentSelected([]);
+    setTypeWorkSelected([]);
 
     router.push('/dashboard/employees');
   };
@@ -72,6 +75,8 @@ const EmployeesPage = () => {
     if (page) params.set('page', String(page));
     if (limit) params.set('limit', String(limit));
     if (search) params.set('search', String(search));
+    if (departmentSelected) params.set('department', departmentSelected.join(','));
+    if (typeWorkSelected) params.set('type', typeWorkSelected.join(','));
 
     router.push(`/dashboard/employees?${params.toString()}`);
   };
@@ -100,9 +105,21 @@ const EmployeesPage = () => {
           Xuất Excel
         </Button>
 
-        <Button onClick = {() => {setOpen(true);}}>Sắp Xếp</Button>
-          <FilterDialog open={open} setOpen={setOpen}  />
-
+        <Button
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          Sắp Xếp
+        </Button>
+        <FilterDialog
+          open={open}
+          setOpen={setOpen}
+          onFilter={(newFilter) => {
+            setDepartmentSelected(newFilter.departments);
+            setTypeWorkSelected(newFilter.typeWorks);
+          }}
+        />
       </div>
 
       <DataTable

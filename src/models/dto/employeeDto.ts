@@ -37,6 +37,8 @@ interface EmployeePaginationDto {
 
 interface EmployeeFilterDto {
   search?: string;
+  typeWorks?: string[];
+  departments?: string[];
 }
 
 export type { EmployeeDto, EmployeePaginationDto, EmployeeFilterDto };
