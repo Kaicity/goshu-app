@@ -104,7 +104,10 @@ export default function UpdateEmployeePage() {
   useEffect(() => {
     if (employee) {
       //Load dữ liệu cũ từ API
-      reset(employee);
+      reset({
+        ...employee,
+        departmentId: employee.departmentId?.id,
+      });
 
       if (employee.birthday) {
         const date = new Date(employee.birthday);
@@ -124,7 +127,7 @@ export default function UpdateEmployeePage() {
       // Dùng 1 ngôi toán tử nếu nó xảy ra, không thì thôi chứ biết seo nè
       employee.gender && setGenderSelected(employee.gender);
       employee.type && setTypeWorkSelected(employee.type);
-      employee.departmentId && setDepartmentSelected(employee.departmentId);
+      employee.departmentId && setDepartmentSelected(employee.departmentId.id as string);
       employee.avatarUrl && setCurrentProfileImage(employee.avatarUrl);
       employee.type && setTypeWorkSelected(employee.type);
       employee.document && employee.document.length > 0 && setDocuments(employee.document);
@@ -134,17 +137,17 @@ export default function UpdateEmployeePage() {
   }, [employee, reset, setValue]);
 
   useEffect(() => {
-    reset((prev) => ({
-      ...prev,
-      birthday: birthdaySelected,
-      joinDate: joinDateSelected,
-      workingDate: workDateSelected,
-      gender: genderSelected,
-      type: typeWorkSelected,
-      departmentId: departmentSelected,
-      country: countrySelected,
-      marital: maritalSelected,
-    }));
+    // reset((prev) => ({
+    //   ...prev,
+    //   birthday: birthdaySelected,
+    //   joinDate: joinDateSelected,
+    //   workingDate: workDateSelected,
+    //   gender: genderSelected,
+    //   type: typeWorkSelected,
+    //   departmentId: departmentSelected,
+    //   country: countrySelected,
+    //   marital: maritalSelected,
+    // }));
   }, [
     birthdaySelected,
     genderSelected,
