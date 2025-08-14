@@ -1,24 +1,46 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { EmployeeDto } from '@/models/dto/employeeDto';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Edit, MoreHorizontal, Trash } from 'lucide-react';
-
+import { ArrowUpDown, Edit, MoreHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { TypeWork, TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
 
 export const columns: ColumnDef<EmployeeDto>[] = [
   {
-    accessorKey: 'fullname',
-    header: 'HỌ VÀ TÊN',
+    id: 'fullname',
+    accessorFn: (row) => `${row.lastname || ''} ${row.firstname || ''}`.trim(),
+    header: ({ column }) => {
+      return (
+        <div className="">
+          <Button
+            className="hover:bg-gray-200"
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            HỌ VÀ TÊN
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const employee = row.original;
+      const fullName = `${employee.lastname ?? ''} ${employee.firstname ?? ''}`.trim() || '--/--';
+      return (
+        <div className="flex items-center gap-2 min-w-[200px] flex-grow">
+          <img
+            src={employee?.avatarUrl?.trim() ? employee.avatarUrl : '/assets/default-avatar.png'}
+            alt={fullName}
+            className="w-8 h-8 rounded-full object-cover"
+          />
+          <span>{fullName}</span>
+        </div>
+      );
+    },
   },
   {
     accessorKey: 'employeeCode',
@@ -28,7 +50,7 @@ export const columns: ColumnDef<EmployeeDto>[] = [
     accessorKey: 'email',
     header: ({ column }) => {
       return (
-        <div className="">
+        <>
           <Button
             className="hover:bg-gray-200"
             variant="ghost"
@@ -37,27 +59,32 @@ export const columns: ColumnDef<EmployeeDto>[] = [
             EMAIL
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
-        </div>
+        </>
       );
     },
   },
   {
     accessorKey: 'designation',
     header: 'CHỨC VỤ',
+    cell: ({ row }) => {
+      const designation = row.original.designation;
+      return <>{designation || '--/--'}</>;
+    },
   },
   {
     accessorKey: 'type',
     header: 'NƠI LÀM VIỆC',
     cell: ({ row }) => {
       const employee = row.original.type as TypeWork;
-      return <div>{TYPEWORK_LABELS[employee]}</div>;
+      return <>{TYPEWORK_LABELS[employee] || '--/--'}</>;
     },
   },
   {
     accessorKey: 'departmentId',
     header: 'PHÒNG BAN',
     cell: ({ row }) => {
-      return <div>{row.original.departmentId?.name || ''}</div>;
+      const department = row.original.departmentId?.name;
+      return <div>{department || '--/--'}</div>;
     },
   },
   {
@@ -91,10 +118,6 @@ export const columns: ColumnDef<EmployeeDto>[] = [
               >
                 <Edit className="w-4 h-4 mr-2" />
                 Chỉnh sửa
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => resource} className="text-red-500 focus:text-red-500">
-                <Trash className="w-4 h-4 mr-2" />
-                Xoá
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

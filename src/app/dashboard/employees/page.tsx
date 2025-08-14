@@ -43,7 +43,7 @@ const EmployeesPage = () => {
 
   const fetchEmployees = async () => {
     setLoading(true);
-    console.log('Fetching employees with filters:', departmentSelected);
+    console.log('Table data:', employees);
     try {
       const res = await getEmployees(page, limit, { search, departments: departmentSelected, typeWorks: typeWorkSelected });
       console.log('res', res);
