@@ -86,7 +86,7 @@ const LoginPage = () => {
       <div className="absolute top-0 right-0 p-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon">
+            <Button variant="ghost" size="icon" className="rounded-full">
               <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               <span className="sr-only">Toggle theme</span>
@@ -118,11 +118,11 @@ const LoginPage = () => {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="flex flex-col gap-6">
                   <div className="grid gap-3">
-                    <Label className={getValidateInput(errors.email, 'text')}>Tên đăng nhập / Email</Label>
+                    <Label className={getValidateInput(errors.email, 'text')}>Username hoặc Email</Label>
                     <Input
                       {...register('email')}
                       id="email"
-                      placeholder="david@example.com"
+                      placeholder="davidnguyen@gmail.com"
                       className={getValidateInput(errors.email, 'border')}
                     />
                     {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
@@ -138,6 +138,7 @@ const LoginPage = () => {
                       {...register('password')}
                       id="password"
                       type="password"
+                      placeholder="**********"
                       className={getValidateInput(errors.password, 'border')}
                     />
                     {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}

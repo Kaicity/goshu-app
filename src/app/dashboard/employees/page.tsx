@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/DataTable';
 import { columns } from './columns';
 import { EmployeeDto } from '@/models/dto/employeeDto';
-import { FileSpreadsheet, RotateCcwIcon } from 'lucide-react';
+import { FileSpreadsheet, RotateCcwIcon, Search } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -89,15 +89,18 @@ const EmployeesPage = () => {
     <>
       <HeaderTitle text="NHÂN VIÊN" subText="Quản lý nhân viên trong công ty" />
       <div className="flex flex-wrap items-center gap-1 mb-6 *:mt-2">
-        <Input
-          placeholder="Tìm kiếm nhân viên..."
-          className="max-w-sm sm:w-full"
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(1);
-          }}
-        />
+        <div className="relative max-w-sm sm:w-full">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
+          <Input
+            placeholder="Tìm kiếm theo email..."
+            className="pl-10"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+          />
+        </div>
         <Button variant="outline" onClick={resetFilters}>
           <RotateCcwIcon className="w-6 h-6" />
         </Button>

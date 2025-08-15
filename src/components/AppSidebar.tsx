@@ -1,7 +1,19 @@
 'use client';
 
 import { humanManageitems, systemsManageItems } from '@/constants/nav-link/nav-link-items';
-import { BadgeCheck, Bell, ChevronRight, ChevronsUpDown, ChevronUp, CreditCard, LogOut, Sparkles, User2 } from 'lucide-react';
+import {
+  BadgeCheck,
+  Bell,
+  ChevronRight,
+  ChevronsUpDown,
+  ChevronUp,
+  CreditCard,
+  LogOut,
+  Moon,
+  Sparkles,
+  Sun,
+  User2,
+} from 'lucide-react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
@@ -28,40 +40,33 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  SidebarSeparator,
   useSidebar,
 } from './ui/sidebar';
 import { useApp } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
 import { UserRole } from '@/enums/userRolesEnum';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { EmployeeDto } from '@/models/dto/employeeDto';
 import { getEmployee } from '@/api/employee/employee';
+import { Button } from './ui/button';
+import { useTheme } from 'next-themes';
 
 const AppSidebar = () => {
   const { userAccount } = useApp();
   const { isMobile } = useSidebar();
   const path = usePathname();
 
-  const [employee, setEmployee] = useState<EmployeeDto | null>(null);
-  const [fullname, setFullname] = useState<string>('');
+  const [mounted, setMounted] = useState(false);
+
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
-    const fetchEmployeeDetail = async () => {
-      if (userAccount) {
-        const res = await getEmployee(userAccount.employeeId as string);
-        setEmployee(res);
+    setMounted(true);
+  }, []);
 
-        if (res.firstname || res.lastname) {
-          setFullname(res.lastname + ' ' + res.firstname);
-        }
-      }
-    };
+  if (!mounted) return null;
 
-    fetchEmployeeDetail();
-  }, [userAccount]);
+  const isDark = theme === 'dark';
 
   return (
     <Sidebar collapsible="icon">
@@ -174,83 +179,17 @@ const AppSidebar = () => {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size="lg"
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                >
-                  <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src={employee?.avatarUrl} alt={employee?.email} />
-                    <AvatarFallback className="rounded-lg">
-                      {fullname
-                        ? fullname
-                            .split(' ') // Tách thành mảng ["Nguyễn", "Minh", "Thông"]
-                            .map((word) => word[0]?.toUpperCase()) // Lấy ký tự đầu rồi viết hoa
-                            .join('') // Ghép lại đi
-                        : 'AR'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{fullname ? fullname : 'Alexander Rio'}</span>
-                    <span className="truncate text-xs">{employee?.email}</span>
-                  </div>
-                  <ChevronsUpDown className="ml-auto size-4" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-                side={isMobile ? 'bottom' : 'right'}
-                align="end"
-                sideOffset={4}
-              >
-                <DropdownMenuLabel className="p-0 font-normal">
-                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                    <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage src={employee?.avatarUrl} alt={employee?.email} />
-                      <AvatarFallback className="rounded-lg">
-                        {fullname
-                          ? fullname
-                              .split(' ') // Tách thành mảng ["Nguyễn", "Minh", "Thông"]
-                              .map((word) => word[0]?.toUpperCase()) // Lấy ký tự đầu rồi viết hoa
-                              .join('') // Ghép lại đi
-                          : 'AR'}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">{fullname ? fullname : 'Alexander Rio'}</span>
-                      <span className="truncate text-xs">{employee?.email}</span>
-                    </div>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem asChild>
-                    <Link href={''}>
-                      <BadgeCheck />
-                      Tài khoản
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href={''}>
-                      <CreditCard />
-                      Chính sách
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href={''}>
-                      <Bell />
-                      Thông báo
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <LogOut />
-                  Đăng xuất
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex gap-1 justify-between px-3">
+              <Button onClick={() => setTheme('light')} className="w-1/2" variant={theme === 'light' ? 'default' : 'ghost'}>
+                <Sun className="h-5 w-5" />
+                <span className="sr-only">Light mode</span>
+              </Button>
+
+              <Button onClick={() => setTheme('dark')} className="w-1/2" variant={theme === 'dark' ? 'default' : 'ghost'}>
+                <Moon className="h-5 w-5" />
+                <span className="sr-only">Dark mode</span>
+              </Button>
+            </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

@@ -8,16 +8,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Status, STATUS_LABELS } from '@/enums/statusEnum';
 import { ROLE_LABELS, UserRole } from '@/enums/userRolesEnum';
-import { RotateCcwIcon, UsersRound } from 'lucide-react';
+import { PlusCircle, RotateCcwIcon, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { DataTable } from '../../../components/DataTable';
 import { columns } from './columns';
 
+import { HeaderTitle } from '@/components/HeaderTitle';
+import { MultiSelect } from '@/components/MultiSelect';
 import type { UserAccountDto } from '@/models/dto/userAccountDto';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { MultiSelect } from '@/components/MultiSelect';
-import { HeaderTitle } from '@/components/HeaderTitle';
 
 const UsersPage = () => {
   const searchParams = useSearchParams();
@@ -109,15 +109,20 @@ const UsersPage = () => {
       <HeaderTitle text="Quản Lý Tài Khoản" subText="Quản lý tài khoản người dùng truy cập" />
       {/* Search & Filters */}
       <div className="flex flex-wrap items-center gap-2 mb-6 *:mt-2">
-        <Input
-          placeholder="Tìm kiếm theo email..."
-          className="max-w-sm sm:w-full"
-          value={search} //value hiện tại 1 chiều. Khi giá trị mặc định bằng rỗng
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(1);
-          }}
-        />
+        <div className="relative max-w-sm sm:w-full">
+          {/* Icon Search bên trái */}
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
+          {/* Input có padding-left để tránh icon chồng lên chữ */}
+          <Input
+            placeholder="Tìm kiếm theo email..."
+            className="pl-10"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+          />
+        </div>
         <MultiSelect
           options={Object.entries(UserRole).map(([__, value]) => ({
             label: ROLE_LABELS[value],
@@ -129,7 +134,7 @@ const UsersPage = () => {
             setPage(1);
           }}
           placeholder="Chọn vai trò"
-          className="relative justify-start"
+          className="relative justify-start px-4"
         />
         <MultiSelect
           options={Object.entries(Status).map(([__, value]) => ({
@@ -142,7 +147,7 @@ const UsersPage = () => {
             setPage(1);
           }}
           placeholder="Chọn trạng thái"
-          className="relative justify-start"
+          className="relative justify-start px-4"
         />
         <Button variant="outline" onClick={resetFilters}>
           <RotateCcwIcon className="w-6 h-6" />
@@ -154,7 +159,7 @@ const UsersPage = () => {
             setUser(null);
           }}
         >
-          <UsersRound className="w-4 h-4 mr-2" />
+          <PlusCircle className="w-4 h-4 mr-2" />
           Tạo
         </Button>
         <AddUserDialog open={open} setOpen={setOpen} user={user ? user : null} reloadData={fetchUsers} />

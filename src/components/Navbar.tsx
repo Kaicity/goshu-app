@@ -3,7 +3,20 @@
 import { useApp } from '@/contexts/AppContext';
 import useNotification from '@/hooks/useNotification';
 import { formatTimeAgo } from '@/utils/formatTimeAgo';
-import { BadgeCheck, Bell, CircleOff, CreditCard, Eye, LogOut, Moon, Settings, Sun, User } from 'lucide-react';
+import {
+  BadgeCheck,
+  Bell,
+  ChevronsUpDown,
+  CircleOff,
+  CreditCard,
+  Eye,
+  LogOut,
+  Moon,
+  Search,
+  Settings,
+  Sun,
+  User,
+} from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
@@ -17,14 +30,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import { SidebarTrigger, useSidebar } from './ui/sidebar';
+import { SidebarMenuButton, SidebarTrigger, useSidebar } from './ui/sidebar';
 import Link from 'next/link';
 import { getEmployee } from '@/api/employee/employee';
 import type { EmployeeDto } from '@/models/dto/employeeDto';
+import { Input } from './ui/input';
 
 const Navbar = () => {
-  const { theme, setTheme } = useTheme();
-
   const { logout } = useApp();
 
   const { notifications, setNotifications, unreadCount } = useNotification();
@@ -32,6 +44,8 @@ const Navbar = () => {
 
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
   const [fullname, setFullname] = useState<string>('');
+
+  const { isMobile } = useSidebar();
 
   const { userAccount } = useApp();
   useEffect(() => {
@@ -59,26 +73,16 @@ const Navbar = () => {
       <SidebarTrigger />
       {/* RIGHT */}
       <div className="flex items-center gap-3">
-        {/* THEME MENU */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">Toggle theme</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setTheme('light')}>Light</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme('dark')}>Dark</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme('system')}>System</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="relative max-w-sm sm:w-full">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
+          {/* Input có padding-left để tránh icon chồng lên chữ */}
+          <Input placeholder="Tìm kiếm theo email..." className="pl-10" />
+        </div>
 
         <div className="relative">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative rounded-full">
+              <Button variant="outline" className="relative bg-secondary text-black dark:text-white">
                 <Bell />
                 {readCount > 0 && (
                   <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
@@ -87,7 +91,7 @@ const Navbar = () => {
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[400px] max-h-96 overflow-auto p-2">
+            <DropdownMenuContent align="end" className="w-[400px] max-h-96 overflow-auto p-2" sideOffset={8}>
               <div className="flex items-center justify-between px-2 py-1">
                 <DropdownMenuLabel>Thông báo mới</DropdownMenuLabel>
                 {notifications.length > 0 && (
@@ -149,25 +153,36 @@ const Navbar = () => {
         </div>
 
         {/* USER MENU */}
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Avatar>
-              <AvatarImage src={employee?.avatarUrl} alt={employee?.email} />
-              <AvatarFallback>
-                {fullname
-                  ? fullname
-                      .split(' ') // Tách thành mảng ["Nguyễn", "Minh", "Thông"]
-                      .map((word) => word[0]?.toUpperCase()) // Lấy ký tự đầu rồi viết hoa
-                      .join('') // Ghép lại đi
-                  : 'AR'}
-              </AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
 
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            >
+              <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarImage src={employee?.avatarUrl} alt={employee?.email} />
+                <AvatarFallback className="rounded-lg">
+                  {fullname
+                    ? fullname
+                        .split(' ') // Tách thành mảng ["Nguyễn", "Minh", "Thông"]
+                        .map((word) => word[0]?.toUpperCase()) // Lấy ký tự đầu rồi viết hoa
+                        .join('') // Ghép lại đi
+                    : 'AR'}
+                </AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">{fullname ? fullname : 'Alexander Rio'}</span>
+                <span className="truncate text-xs">{employee?.email}</span>
+              </div>
+              <ChevronsUpDown className="ml-auto size-4" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            side={isMobile ? 'right' : 'bottom'}
             align="end"
-            sideOffset={10}
+            sideOffset={4}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">

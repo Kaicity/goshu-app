@@ -8,8 +8,13 @@ import { ArrowUpDown, Edit, MoreHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { TypeWork, TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
+import { vi } from 'date-fns/locale';
 
 export const columns: ColumnDef<EmployeeDto>[] = [
+  {
+    accessorKey: 'employeeCode',
+    header: 'MÃ NHÂN VIÊN',
+  },
   {
     id: 'fullname',
     accessorFn: (row) => `${row.lastname || ''} ${row.firstname || ''}`.trim(),
@@ -41,10 +46,6 @@ export const columns: ColumnDef<EmployeeDto>[] = [
         </div>
       );
     },
-  },
-  {
-    accessorKey: 'employeeCode',
-    header: 'MÃ NHÂN VIÊN',
   },
   {
     accessorKey: 'email',
@@ -92,7 +93,9 @@ export const columns: ColumnDef<EmployeeDto>[] = [
     header: () => <div className="text-center">CẬP NHẬT LÚC</div>,
     cell: ({ row }) => {
       const updatedAt = row.original.updatedAt;
-      return <div className="text-center">{updatedAt ? format(new Date(updatedAt), 'dd/MM/yyyy HH:mm:ss') : ''}</div>;
+      return (
+        <div className="text-center">{updatedAt ? format(new Date(updatedAt), 'dd/MM/yyyy HH:mm b', { locale: vi }) : ''}</div>
+      );
     },
   },
   {

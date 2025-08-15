@@ -38,7 +38,7 @@ export function FilterDialog({ open, setOpen, onFilter, resetTrigger }: FilterDe
     fetchDepartments();
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     // Khi resetTrigger thay đổi, clear checkbox
     setDepartmentSelected([]);
     setTypeWorkSelected([]);
@@ -76,17 +76,23 @@ export function FilterDialog({ open, setOpen, onFilter, resetTrigger }: FilterDe
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-md w-[500px] px-6 py-8">
+      <DialogContent className="max-w-md w-[350px] px-6 py-8">
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle className="text-xl">{'Sắp Xếp'}</DialogTitle>
             <DialogDescription>Lựa chọn sắp xếp theo</DialogDescription>
           </DialogHeader>
 
+          <div className="flex w-full">
+            <Button type="button" className="w-full" variant="outline" onClick={resetFilters}>
+              <RotateCcwIcon className="w-6 h-6" />
+              làm mới
+            </Button>
+          </div>
           {/* Deparment select */}
           <div className="flex flex-col gap-2">
             <Label>CHỌN PHÒNG BAN</Label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {departments.map((dep) => (
                 <label key={dep.id} className="flex items-center gap-2 cursor-pointer text-xs">
                   <Checkbox checked={departmentSelected.includes(dep.id!)} onCheckedChange={() => toggleDepartment(dep.id!)} />
@@ -96,7 +102,7 @@ export function FilterDialog({ open, setOpen, onFilter, resetTrigger }: FilterDe
             </div>
 
             <Label>CHỌN NƠI LÀM VIỆC</Label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {Object.entries(TypeWork).map(([key, __]) => (
                 <label key={key} className="flex items-center gap-2 cursor-pointer text-xs">
                   <Checkbox
@@ -108,20 +114,15 @@ export function FilterDialog({ open, setOpen, onFilter, resetTrigger }: FilterDe
               ))}
             </div>
           </div>
-          <DialogFooter className="flex justify-end gap-2">
-            <Button
-              type="button" // ghi ro rang ten type,
-              variant="outline"
-              onClick={() => {
-                setOpen(false);
-              }}
-            >
-              Đóng
-            </Button>
-            <Button type="button" variant="outline" onClick={resetFilters}>
-              <RotateCcwIcon className="w-6 h-6" />
-            </Button>
-            <SubmitButton text={'Áp dụng'} className={cn('w-auto')} />
+
+          <DialogFooter>
+            <div className="flex justify-between w-full">
+              <Button type="button" variant="outline" onClick={() => setOpen(false)} className="w-36">
+                Đóng
+              </Button>
+
+              <SubmitButton text="Áp dụng" className="w-36" />
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>
