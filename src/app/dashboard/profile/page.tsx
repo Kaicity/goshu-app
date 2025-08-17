@@ -5,18 +5,67 @@ import { HeaderTitle } from '@/components/HeaderTitle';
 import ProfileMenuItem from '@/components/ProfileMenuItem';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useApp } from '@/contexts/AppContext';
+import { Gender, GENDER_LABELS } from '@/enums/genderEnum';
+import { Marital, MARITAL_LABELS } from '@/enums/maritalEnum';
+import CountryDto from '@/models/dto/countryDto';
 import type { EmployeeDto } from '@/models/dto/employeeDto';
 import { Bold, Briefcase, Italic, Mail, Pencil, Underline } from 'lucide-react';
+import { register } from 'module';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
+
+interface TabsInformation {
+  value: string;
+  label: string;
+}
+
+interface Employee {
+  country: string; // employee.country hiện chỉ là string
+}
+
+interface Props {
+  employee?: Employee;
+  countries: CountryDto[];
+}
+
+const EmployeeCountry: React.FC<Props> = ({ employee, countries }) => {
+  // Map từ employee.country (string) sang object CountryDto
+  const country: CountryDto | undefined = countries.find(
+    (c) =>
+      c.id === employee?.country || // nếu backend lưu id
+      c.iso === employee?.country || // nếu backend lưu iso code
+      c.name === employee?.country, // nếu backend lưu name
+  );
+  return (
+    <div className="flex flex-col col-span-3 md:col-span-1 gap-2">
+      <Label>Quốc tịch</Label>
+      <div className="flex items-center h-12 border rounded px-3 bg-gray-50">
+        {country?.flag && <img src={country.flag} alt={country.name} className="w-5 h-5 rounded mr-2" />}
+        <span>{country?.niceName ?? '--/--'}</span>
+      </div>
+    </div>
+  );
+};
+
+const tabsInformation: TabsInformation[] = [
+  { value: 'personal-info', label: 'Thông tin cá nhân' },
+  { value: 'professional-information', label: 'Thông tin nâng cao' },
+  { value: 'documents', label: 'Tài liệu' },
+  { value: 'account-access', label: 'Tài khoản truy cập' },
+];
 
 const ProfilePage = () => {
   const { userAccount } = useApp();
 
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
+  const [countries, setCountries] = useState<CountryDto[]>([]);
+  const [tab, setTab] = useState<string>(tabsInformation[0].value);
 
   useEffect(() => {
     const fetchEmployeeDetail = async () => {
@@ -28,13 +77,24 @@ const ProfilePage = () => {
 
     fetchEmployeeDetail();
   }, [userAccount]);
+
+  const getGenderLabel = (gender?: string) => {
+    if (!gender) return '';
+    return GENDER_LABELS[gender as Gender] ?? '';
+  };
+
+  const getMartialLabel = (martial?: string) => {
+    if (!martial) return '';
+    return MARITAL_LABELS[martial as Marital] ?? '';
+  };
+
   return (
     <>
       <HeaderTitle text="Thông tin nhân viên" subText="Thông tin chi tiết của nhân viên" />
-      <Card>
-        <div className="px-6 py-0">
+      <Card className="h-250 md:h-300">
+        <div className="px-6 py-0 ">
           <div className="flex md:flex-row md:items-end md:justify-between">
-            <div className="flex items-start space-x-4">
+            <div className="flex items-start space-x-4 ">
               {/* Profile Image */}
               <Image
                 src={(employee?.avatarUrl as string) ?? '/assets/default-avatar.png'}
@@ -73,15 +133,96 @@ const ProfilePage = () => {
           <Separator className="my-6" />
 
           <div className="">
-            <div className="flex justify-between items-start gap-6">
-              <div className="w-1/3 ">
+            <div className="flex justify-between items-start gap-3">
+              <div className="w-auto">
                 <ProfileMenuItem />
               </div>
 
-              <div className="bg-amber-800 w-full h-60">
-                <h5 className="text-xl text-center mt-20 text-blue-600 font-bold">
-                  UI TRANG NÀY DỄ LẮM CHỈ GÁN DATA LÊN THÔI À :vvvvvv
-                </h5>
+              <div className="w-full h-60">
+                <div className="w-full">
+                  <Tabs
+                    defaultValue="personal-info"
+                    className="w-full mr-auto"
+                    value={tab}
+                    onValueChange={(value) => setTab(value)}
+                  >
+                    <TabsList className="mb-6 w-full flex justify-start overflow-x-auto scrollbar-hide border-b border-border">
+                      {tabsInformation.map((tab) => (
+                        <TabsTrigger
+                          key={tab.value}
+                          value={tab.value}
+                          className={`
+            relative px-6 py-2 text-sm font-medium text-muted-foreground
+            rounded-none bg-transparent
+            transition-all duration-200 ease-in-out
+            hover:text-foreground hover:bg-accent/30
+            data-[state=active]:text-primary
+            data-[state=active]:bg-transparent
+            after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:scale-x-0 after:bg-primary after:transition-transform after:duration-200
+            data-[state=active]:after:scale-x-100
+          `}
+                        >
+                          {tab.label}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+
+                    {/* Personal-info */}
+                    <TabsContent value="personal-info">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Họ đệm</Label>
+                          <Input value={employee?.lastname ?? ''} placeholder="Nhập họ" readOnly className="h-12" />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Tên</Label>
+                          <Input value={employee?.firstname ?? ''} placeholder="Nhập tên" readOnly className="h-12" />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Căn Cước Công Dân</Label>
+                          <Input value={employee?.identityCard ?? ''} placeholder="0-XXX-XXX-XXX" readOnly className="h-12" />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Email</Label>
+                          <Input value={employee?.email ?? ''} placeholder="Nhập email" readOnly className="h-12" />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Điện thoại</Label>
+                          <Input value={employee?.phone ?? ''} placeholder="Nhập điện thoại" readOnly className="h-12" />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Ngày sinh</Label>
+                          <Input
+                            value={employee?.birthday ? new Date(employee.birthday).toLocaleDateString('vi-VN') : ''}
+                            readOnly
+                            className="h-12"
+                          />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Giới tính</Label>
+                          <Input value={getGenderLabel(employee?.gender)} placeholder="--/--" readOnly className="h-12" />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Quốc gia</Label>
+                          <Input value={employee?.country ?? ''} placeholder="--/--" readOnly className="h-12" />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Tình trạng hôn nhân</Label>
+                          <Input value={getMartialLabel(employee?.marital)} placeholder="--/--" readOnly className="h-12" />
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                    {/* Professional-info */}
+                    <TabsContent value="professional-information">hahi</TabsContent>
+
+                    {/* Documents */}
+                    <TabsContent value="documents">huhi</TabsContent>
+
+                    {/* Account-access */}
+                    <TabsContent value="account-access">hohi</TabsContent>
+                  </Tabs>
+                </div>
               </div>
             </div>
           </div>
