@@ -72,6 +72,7 @@ export default function UpdateEmployeePage() {
   const [workDateSelected, setWorkDateSelected] = useState<Date>(new Date());
   const [typeWorkSelected, setTypeWorkSelected] = useState<string>('');
   const [departmentSelected, setDepartmentSelected] = useState<string>('');
+
   const [documents, setDocuments] = useState<string[]>(Array(documentsList.length).fill(''));
 
   const {
@@ -106,6 +107,9 @@ export default function UpdateEmployeePage() {
       //Load dữ liệu cũ từ API
       reset(employee);
 
+      setDepartmentSelected((employee.departmentId as any)?.id || '');
+      setValue('departmentId', (employee.departmentId as any)?.id || '');
+
       if (employee.birthday) {
         const date = new Date(employee.birthday);
         setBirthdaySelected(date);
@@ -124,7 +128,7 @@ export default function UpdateEmployeePage() {
       // Dùng 1 ngôi toán tử nếu nó xảy ra, không thì thôi chứ biết seo nè
       employee.gender && setGenderSelected(employee.gender);
       employee.type && setTypeWorkSelected(employee.type);
-      employee.departmentId && setDepartmentSelected(employee.departmentId);
+      // employee.departmentId && setDepartmentSelected(employee.departmentId);
       employee.avatarUrl && setCurrentProfileImage(employee.avatarUrl);
       employee.type && setTypeWorkSelected(employee.type);
       employee.document && employee.document.length > 0 && setDocuments(employee.document);
@@ -541,7 +545,7 @@ export default function UpdateEmployeePage() {
                     </SelectTrigger>
                     <SelectContent>
                       {departments.map((item) => (
-                        <SelectItem key={item.id} value={String(item.id)}>
+                        <SelectItem key={item.id} value={item.id as string}>
                           {item.name}
                         </SelectItem>
                       ))}

@@ -39,6 +39,7 @@ export const updateEmployee = async (id: string, employee: Partial<EmployeeFormD
 export const getEmployee = async (id: string): Promise<any> => {
   try {
     const response = await instance.get(`/employees/getEmployee/${id}`);
+    console.log('getEmployee response', response.data);
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;

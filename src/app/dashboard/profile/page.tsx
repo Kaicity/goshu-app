@@ -13,6 +13,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useApp } from '@/contexts/AppContext';
 import { Gender, GENDER_LABELS } from '@/enums/genderEnum';
 import { Marital, MARITAL_LABELS } from '@/enums/maritalEnum';
+import { TYPEWORK_LABELS, TypeWork } from '@/enums/typeWorkEnum';
 import CountryDto from '@/models/dto/countryDto';
 import type { EmployeeDto } from '@/models/dto/employeeDto';
 import { Bold, Briefcase, Italic, Mail, Pencil, Underline } from 'lucide-react';
@@ -24,34 +25,6 @@ interface TabsInformation {
   value: string;
   label: string;
 }
-
-interface Employee {
-  country: string; // employee.country hiện chỉ là string
-}
-
-interface Props {
-  employee?: Employee;
-  countries: CountryDto[];
-}
-
-const EmployeeCountry: React.FC<Props> = ({ employee, countries }) => {
-  // Map từ employee.country (string) sang object CountryDto
-  const country: CountryDto | undefined = countries.find(
-    (c) =>
-      c.id === employee?.country || // nếu backend lưu id
-      c.iso === employee?.country || // nếu backend lưu iso code
-      c.name === employee?.country, // nếu backend lưu name
-  );
-  return (
-    <div className="flex flex-col col-span-3 md:col-span-1 gap-2">
-      <Label>Quốc tịch</Label>
-      <div className="flex items-center h-12 border rounded px-3 bg-gray-50">
-        {country?.flag && <img src={country.flag} alt={country.name} className="w-5 h-5 rounded mr-2" />}
-        <span>{country?.niceName ?? '--/--'}</span>
-      </div>
-    </div>
-  );
-};
 
 const tabsInformation: TabsInformation[] = [
   { value: 'personal-info', label: 'Thông tin cá nhân' },
@@ -71,6 +44,7 @@ const ProfilePage = () => {
     const fetchEmployeeDetail = async () => {
       if (userAccount) {
         const res = await getEmployee(userAccount.employeeId as string);
+        console.log('res', res);
         setEmployee(res);
       }
     };
@@ -88,10 +62,17 @@ const ProfilePage = () => {
     return MARITAL_LABELS[martial as Marital] ?? '';
   };
 
+  const getTypeLabel = (type?: string) => {
+    if (!type) return '';
+    return TYPEWORK_LABELS[type as TypeWork] ?? '';
+  };
+
+
+
   return (
     <>
       <HeaderTitle text="Thông tin nhân viên" subText="Thông tin chi tiết của nhân viên" />
-      <Card className="h-250 md:h-300">
+      <Card className="h-280 md:h-170">
         <div className="px-6 py-0 ">
           <div className="flex md:flex-row md:items-end md:justify-between">
             <div className="flex items-start space-x-4 ">
@@ -193,7 +174,7 @@ const ProfilePage = () => {
                         <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
                           <Label>Ngày sinh</Label>
                           <Input
-                            value={employee?.birthday ? new Date(employee.birthday).toLocaleDateString('vi-VN') : ''}
+                            value={employee?.birthday ? new Date(employee.birthday).toLocaleDateString('vi-VN') : 'huhu'}
                             readOnly
                             className="h-12"
                           />
@@ -210,12 +191,42 @@ const ProfilePage = () => {
                           <Label>Tình trạng hôn nhân</Label>
                           <Input value={getMartialLabel(employee?.marital)} placeholder="--/--" readOnly className="h-12" />
                         </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Địa chỉ thường trú</Label>
+                          <Input value={employee?.address ?? ''} placeholder="--/--" readOnly className="h-12" />
+                        </div>
                       </div>
                     </TabsContent>
 
                     {/* Professional-info */}
-                    <TabsContent value="professional-information">hahi</TabsContent>
-
+                    <TabsContent value="professional-information">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Mã nhân viên</Label>
+                          <Input value={employee?.employeeCode ?? ''} placeholder="--/--" readOnly className="h-12" />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Username</Label>
+                          <Input value={employee?.username ?? ''} placeholder="--/--" readOnly className="h-12" />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Chức vụ</Label>
+                          <Input value={getTypeLabel(employee?.type)} placeholder="--/--" readOnly className="h-12" />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Phòng ban</Label>
+                          <Input value={employee?.departmentId?.name ?? ''} placeholder="--/--" readOnly className="h-12" />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Ngày vào công ty</Label>
+                          <Input
+                            value={employee?.joinDate ? new Date(employee.joinDate).toLocaleDateString('vi-VN') : '--/--'}
+                            readOnly
+                            className="h-12"
+                          />
+                        </div>
+                      </div>
+                    </TabsContent>
                     {/* Documents */}
                     <TabsContent value="documents">huhi</TabsContent>
 
