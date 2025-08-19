@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useApp } from '@/contexts/AppContext';
 import { GENDER_LABELS } from '@/enums/genderEnum';
 import { MARITAL_LABELS } from '@/enums/maritalEnum';
 import { STATUS_LABELS } from '@/enums/statusEnum';
@@ -74,7 +75,7 @@ export default function UpdateEmployeePage() {
   const [departmentSelected, setDepartmentSelected] = useState<string>('');
 
   const [documents, setDocuments] = useState<string[]>(Array(documentsList.length).fill(''));
-
+  const { userAccount } = useApp();
   const {
     register,
     handleSubmit,
@@ -87,7 +88,9 @@ export default function UpdateEmployeePage() {
 
   useEffect(() => {
     fetchEmployeeDetail();
-    fetchDepartments();
+    if (userAccount?.role === 'ADMIN' || userAccount?.role === 'HR') {
+      fetchDepartments();
+    }
   }, []);
 
   useEffect(() => {
@@ -139,10 +142,8 @@ export default function UpdateEmployeePage() {
 
   const fetchEmployeeDetail = async () => {
     try {
-      if (params.id) {
-        const res = await getEmployee(params.id as string);
-        setEmployee(res);
-      }
+      const res = await getEmployee(params.id as string);
+      setEmployee(res);
     } catch (error: any) {
       toast.error(error.message);
       router.back();
