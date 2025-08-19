@@ -215,7 +215,7 @@ export default function UpdateEmployeePage() {
   };
 
   const handleBackRole = () => {
-    if (userAccount?.role === 'HR') {
+    if (userAccount?.role === 'HR' || userAccount?.role === 'ADMIN') {
       router.push('/dashboard/employees');
     } else if (userAccount?.role === 'EMPLOYEE') {
       router.push('/dashboard/profile');
