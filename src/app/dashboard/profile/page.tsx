@@ -1,6 +1,7 @@
 'use client';
 
 import { getEmployee } from '@/api/employee/employee';
+import ProtectPage from '@/components/auth/ProtectPage';
 import { HeaderTitle } from '@/components/HeaderTitle';
 import ProfileMenuItem from '@/components/ProfileMenuItem';
 import { Button } from '@/components/ui/button';
@@ -13,12 +14,16 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useApp } from '@/contexts/AppContext';
 import { Gender, GENDER_LABELS } from '@/enums/genderEnum';
 import { Marital, MARITAL_LABELS } from '@/enums/maritalEnum';
+import { Status, STATUS_LABELS } from '@/enums/statusEnum';
 import { TYPEWORK_LABELS, TypeWork } from '@/enums/typeWorkEnum';
+import { UserRole } from '@/enums/userRolesEnum';
 import CountryDto from '@/models/dto/countryDto';
 import type { EmployeeDto } from '@/models/dto/employeeDto';
-import { Bold, Briefcase, Italic, Mail, Pencil, Underline } from 'lucide-react';
+import { get } from 'http';
+import { Bold, Briefcase, Italic, Mail, Paperclip, Pencil, Underline } from 'lucide-react';
 import { register } from 'module';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 interface TabsInformation {
@@ -33,19 +38,24 @@ const tabsInformation: TabsInformation[] = [
   { value: 'account-access', label: 'Tài khoản truy cập' },
 ];
 
+const documentsList = ['Tải hồ sơ CV', 'Tải hồ sơ học vấn', 'Tải hồ sơ chứng chỉ tiếng anh', 'Tải hồ sơ chứng chỉ khác'];
+
 const ProfilePage = () => {
   const { userAccount } = useApp();
+  const router = useRouter();
 
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
-  const [countries, setCountries] = useState<CountryDto[]>([]);
   const [tab, setTab] = useState<string>(tabsInformation[0].value);
-
+  const [documents, setDocuments] = useState<string[]>(Array(documentsList.length).fill(''));
+  // const router = useRouter();
   useEffect(() => {
     const fetchEmployeeDetail = async () => {
       if (userAccount) {
         const res = await getEmployee(userAccount.employeeId as string);
         console.log('res', res);
+        console.log('resss', userAccount?.employeeId);
         setEmployee(res);
+        setDocuments(res.document);
       }
     };
 
@@ -66,8 +76,6 @@ const ProfilePage = () => {
     if (!type) return '';
     return TYPEWORK_LABELS[type as TypeWork] ?? '';
   };
-
-
 
   return (
     <>
@@ -105,7 +113,12 @@ const ProfilePage = () => {
             </div>
 
             {/* Edit Button */}
-            <Button className="w-max">
+            <Button
+              className="w-max"
+              onClick={() => {
+                router.push(`/dashboard/employees/info-update/${userAccount?.employeeId}`);
+              }}
+            >
               <Pencil className="w-4 h-4 mr-2" />
               Edit Profile
             </Button>
@@ -214,24 +227,93 @@ const ProfilePage = () => {
                           <Input value={getTypeLabel(employee?.type)} placeholder="--/--" readOnly className="h-12" />
                         </div>
                         <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Vị trí hiện tại</Label>
+                          <Input value={employee?.designation ?? ''} placeholder="--/--" readOnly className="h-12" />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
                           <Label>Phòng ban</Label>
                           <Input value={employee?.departmentId?.name ?? ''} placeholder="--/--" readOnly className="h-12" />
                         </div>
                         <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Ngày vào công ty</Label>
+                          <Label>Ngày tham gia công ty</Label>
                           <Input
                             value={employee?.joinDate ? new Date(employee.joinDate).toLocaleDateString('vi-VN') : '--/--'}
                             readOnly
                             className="h-12"
                           />
                         </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Ngày bắt đầu làm việc</Label>
+                          <Input
+                            value={employee?.workingDate ? new Date(employee.workingDate).toLocaleDateString('vi-VN') : '--/--'}
+                            readOnly
+                            className="h-12"
+                          />
+                        </div>
                       </div>
                     </TabsContent>
-                    {/* Documents */}
-                    <TabsContent value="documents">huhi</TabsContent>
 
+                    {/* Documents */}
+                    <TabsContent value="documents">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                        {documentsList.map((label, index) => (
+                          <div key={index} className="flex flex-col gap-2">
+                            <Label>{label}</Label>
+                            {documents[index] ? (
+                              (() => {
+                                const strUrl = documents[index];
+                                const fileUrl = strUrl.split('*')[1];
+                                const fileName = strUrl.split('*')[0];
+
+                                return (
+                                  <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
+                                    <div className="flex gap-2">
+                                      <Paperclip size={20} className="text-primary" />
+                                      <a
+                                        href={fileUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-sm text-blue-600 dark:text-blue-400 hover:underline truncate"
+                                      >
+                                        {fileName}
+                                      </a>
+                                    </div>
+                                  </div>
+                                );
+                              })()
+                            ) : (
+                              <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
+                                <div className="flex gap-2">
+                                  <Paperclip size={20} className="text-primary" />
+                                  <span className="text-sm text-gray-500 dark:text-gray-400">Chưa có tài liệu</span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </TabsContent>
                     {/* Account-access */}
-                    <TabsContent value="account-access">hohi</TabsContent>
+                    <TabsContent value="account-access">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>Email / Tài khoản đăng nhập</Label>
+                          <Input value={employee?.email ?? ''} placeholder="--/--" readOnly className="h-12" />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>ID tài khoản Github</Label>
+                          <Input value={employee?.githubId ?? ''} placeholder="--/--" readOnly className="h-12" />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>ID tài khoản Microsoft Teams</Label>
+                          <Input value={employee?.microsoftTeamId ?? ''} placeholder="--/--" readOnly className="h-12" />
+                        </div>
+                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
+                          <Label>ID tài khoản Slack</Label>
+                          <Input value={employee?.slackId ?? ''} placeholder="--/--" readOnly className="h-12" />
+                        </div>
+                      </div>
+                    </TabsContent>
                   </Tabs>
                 </div>
               </div>
@@ -243,4 +325,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default ProtectPage(ProfilePage, { allowedRoles: [UserRole.ADMIN, UserRole.HR, UserRole.EMPLOYEE] });

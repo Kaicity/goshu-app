@@ -1,6 +1,7 @@
 import { TypeWork } from '@/enums/typeWorkEnum';
 import { PaginationDto } from './userAccountDto';
 import { DepartmentDto } from './departmentDto';
+import { Status } from '@/enums/statusEnum';
 
 interface EmployeeDto {
   id: string;
@@ -24,7 +25,7 @@ interface EmployeeDto {
   avatarUrl?: string;
   document?: string[];
   departmentId?: DepartmentDto;
-  status?: string;
+  status?: Status;
   marital?: string;
   country?: string;
   identityCard?: string;
