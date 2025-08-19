@@ -30,7 +30,7 @@ import { ArrowLeft, Camera, Loader2, Paperclip } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { startTransition, useActionState, useEffect, useState } from 'react';
+import { startTransition, use, useActionState, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -88,7 +88,7 @@ export default function UpdateEmployeePage() {
 
   useEffect(() => {
     fetchEmployeeDetail();
-    if (userAccount?.role === 'ADMIN' || userAccount?.role === 'HR') {
+    if (userAccount?.role === 'HR') {
       fetchDepartments();
     }
   }, []);
