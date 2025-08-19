@@ -30,6 +30,7 @@ import { ArrowLeft, Camera, Loader2, Paperclip } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import { set } from 'nprogress';
 import { startTransition, use, useActionState, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -88,10 +89,10 @@ export default function UpdateEmployeePage() {
 
   useEffect(() => {
     fetchEmployeeDetail();
-    if (userAccount?.role === 'HR') {
+    if (userAccount?.role === 'HR' || userAccount?.role === 'ADMIN') {
       fetchDepartments();
     }
-  }, []);
+  }, [userAccount?.role]);
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -213,14 +214,20 @@ export default function UpdateEmployeePage() {
     );
   };
 
+  const handleBackRole = () => {
+    if (userAccount?.role === 'HR') {
+      router.push('/dashboard/employees');
+    } else if (userAccount?.role === 'EMPLOYEE') {
+      router.push('/dashboard/profile');
+    }
+  };
+
   return (
     <>
-      <Link href="/dashboard/employees">
-        <div className="flex gap-1 items-center">
-          <ArrowLeft size={20} />
-          <span className="text-sm">Trở lại</span>
-        </div>
-      </Link>
+      <div className="flex gap-1 items-center" onClick={handleBackRole}>
+        <ArrowLeft size={20} />
+        <span className="text-sm hover:text-gray-400">Trở lại</span>
+      </div>
       <HeaderTitle text="Cập Nhật Thông Tin" subText="Quản lý thông tin cơ bản của nhân viên" />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-4 bg-card border rounded-lg shadow-sm">
