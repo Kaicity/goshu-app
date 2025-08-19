@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useApp } from '@/contexts/AppContext';
 import { GENDER_LABELS } from '@/enums/genderEnum';
 import { MARITAL_LABELS } from '@/enums/maritalEnum';
 import { STATUS_LABELS } from '@/enums/statusEnum';
@@ -29,7 +30,8 @@ import { ArrowLeft, Camera, Loader2, Paperclip } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { startTransition, useActionState, useEffect, useState } from 'react';
+import { set } from 'nprogress';
+import { startTransition, use, useActionState, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -72,8 +74,9 @@ export default function UpdateEmployeePage() {
   const [workDateSelected, setWorkDateSelected] = useState<Date>(new Date());
   const [typeWorkSelected, setTypeWorkSelected] = useState<string>('');
   const [departmentSelected, setDepartmentSelected] = useState<string>('');
-  const [documents, setDocuments] = useState<string[]>(Array(documentsList.length).fill(''));
 
+  const [documents, setDocuments] = useState<string[]>(Array(documentsList.length).fill(''));
+  const { userAccount } = useApp();
   const {
     register,
     handleSubmit,
@@ -86,8 +89,10 @@ export default function UpdateEmployeePage() {
 
   useEffect(() => {
     fetchEmployeeDetail();
-    fetchDepartments();
-  }, []);
+    if (userAccount?.role === 'HR' || userAccount?.role === 'ADMIN') {
+      fetchDepartments();
+    }
+  }, [userAccount?.role]);
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -105,6 +110,9 @@ export default function UpdateEmployeePage() {
     if (employee) {
       //Load dữ liệu cũ từ API
       reset(employee);
+
+      setDepartmentSelected((employee.departmentId as any)?.id || '');
+      setValue('departmentId', (employee.departmentId as any)?.id || '');
 
       if (employee.birthday) {
         const date = new Date(employee.birthday);
@@ -124,7 +132,7 @@ export default function UpdateEmployeePage() {
       // Dùng 1 ngôi toán tử nếu nó xảy ra, không thì thôi chứ biết seo nè
       employee.gender && setGenderSelected(employee.gender);
       employee.type && setTypeWorkSelected(employee.type);
-      employee.departmentId && setDepartmentSelected(employee.departmentId);
+      // employee.departmentId && setDepartmentSelected(employee.departmentId);
       employee.avatarUrl && setCurrentProfileImage(employee.avatarUrl);
       employee.type && setTypeWorkSelected(employee.type);
       employee.document && employee.document.length > 0 && setDocuments(employee.document);
@@ -135,10 +143,8 @@ export default function UpdateEmployeePage() {
 
   const fetchEmployeeDetail = async () => {
     try {
-      if (params.id) {
-        const res = await getEmployee(params.id as string);
-        setEmployee(res);
-      }
+      const res = await getEmployee(params.id as string);
+      setEmployee(res);
     } catch (error: any) {
       toast.error(error.message);
       router.back();
@@ -208,14 +214,20 @@ export default function UpdateEmployeePage() {
     );
   };
 
+  const handleBackRole = () => {
+    if (userAccount?.role === 'HR' || userAccount?.role === 'ADMIN') {
+      router.push('/dashboard/employees');
+    } else if (userAccount?.role === 'EMPLOYEE') {
+      router.push('/dashboard/profile');
+    }
+  };
+
   return (
     <>
-      <Link href="/dashboard/employees">
-        <div className="flex gap-1 items-center">
-          <ArrowLeft size={20} />
-          <span className="text-sm">Trở lại</span>
-        </div>
-      </Link>
+      <div className="flex gap-1 items-center" onClick={handleBackRole}>
+        <ArrowLeft size={20} />
+        <span className="text-sm hover:text-gray-400">Trở lại</span>
+      </div>
       <HeaderTitle text="Cập Nhật Thông Tin" subText="Quản lý thông tin cơ bản của nhân viên" />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-4 bg-card border rounded-lg shadow-sm">
@@ -541,7 +553,7 @@ export default function UpdateEmployeePage() {
                     </SelectTrigger>
                     <SelectContent>
                       {departments.map((item) => (
-                        <SelectItem key={item.id} value={String(item.id)}>
+                        <SelectItem key={item.id} value={item.id as string}>
                           {item.name}
                         </SelectItem>
                       ))}

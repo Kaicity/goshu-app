@@ -94,7 +94,7 @@ export const columns: ColumnDef<EmployeeDto>[] = [
     cell: ({ row }) => {
       const updatedAt = row.original.updatedAt;
       return (
-        <div className="text-center">{updatedAt ? format(new Date(updatedAt), 'dd/MM/yyyy HH:mm b', { locale: vi }) : ''}</div>
+        <div className="text-center">{updatedAt ? format(new Date(updatedAt), 'dd/MM/yyyy HH:mm:ss ', { locale: vi }) : ''}</div>
       );
     },
   },

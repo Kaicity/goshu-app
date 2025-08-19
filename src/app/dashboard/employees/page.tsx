@@ -38,12 +38,10 @@ const EmployeesPage = () => {
   useEffect(() => {
     updateSearchParams();
     fetchEmployees();
-    console.log('Table data:', employees);
   }, [page, limit, search, departmentSelected, typeWorkSelected]);
 
   const fetchEmployees = async () => {
     setLoading(true);
-    console.log('Table data:', employees);
     try {
       const res = await getEmployees(page, limit, { search, departments: departmentSelected, typeWorks: typeWorkSelected });
       console.log('res', res);
