@@ -136,7 +136,7 @@ const ProfilePage = () => {
                     value={tab}
                     onValueChange={(value) => setTab(value)}
                   >
-                    <TabsList className="mb-6 w-full flex justify-start overflow-x-auto scrollbar-hide border-b border-border">
+                    <TabsList className="mb-3 w-full flex justify-start overflow-x-auto scrollbar-hide border-b border-border">
                       {tabsInformation.map((tab) => (
                         <TabsTrigger
                           key={tab.value}
@@ -158,7 +158,7 @@ const ProfilePage = () => {
                     </TabsList>
                     {/* Personal-info */}
                     <TabsContent value="personal-info">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <TextBorder label="Họ" value={employee?.lastname ?? ''} />
                         <TextBorder label="Tên" value={employee?.firstname ?? ''} />
                         <TextBorder label="Căn Cước Công Dân" value={employee?.identityCard ?? ''} />

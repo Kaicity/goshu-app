@@ -11,7 +11,7 @@ export const TextBorder = ({ label, value = '', placeholder = '--/--' }: TextBor
   return (
     <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
       <Label>{label}</Label>
-      <Input value={value} placeholder={placeholder} readOnly className="h-12" />
+      <Input value={value} placeholder={placeholder} readOnly className="h-12 w-full" />
     </div>
   );
 };
