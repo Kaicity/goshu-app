@@ -43,7 +43,6 @@ const ProfilePage = () => {
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
   const [tab, setTab] = useState<string>(tabsInformation[0].value);
   const [documents, setDocuments] = useState<string[]>(Array(documentsList.length).fill(''));
-  // const router = useRouter();
   useEffect(() => {
     const fetchEmployeeDetail = async () => {
       if (userAccount) {
@@ -76,7 +75,7 @@ const ProfilePage = () => {
   return (
     <>
       <HeaderTitle text="Thông tin nhân viên" subText="Thông tin chi tiết của nhân viên" />
-      <Card className="h-280 md:h-170">
+      <Card className="">
         <div className="px-6 py-0 ">
           <div className="flex md:flex-row md:items-end md:justify-between">
             <div className="flex items-start space-x-4 ">
@@ -128,20 +127,19 @@ const ProfilePage = () => {
                 <ProfileMenuItem />
               </div>
 
-              <div className="w-full h-60">
-                <div className="w-full">
-                  <Tabs
-                    defaultValue="personal-info"
-                    className="w-full mr-auto"
-                    value={tab}
-                    onValueChange={(value) => setTab(value)}
-                  >
-                    <TabsList className="mb-3 w-full flex justify-start overflow-x-auto scrollbar-hide border-b border-border">
-                      {tabsInformation.map((tab) => (
-                        <TabsTrigger
-                          key={tab.value}
-                          value={tab.value}
-                          className={`
+              <div className="w-full">
+                <Tabs
+                  defaultValue="personal-info"
+                  className="w-full mr-auto"
+                  value={tab}
+                  onValueChange={(value) => setTab(value)}
+                >
+                  <TabsList className="mb-3 w-[350px] md:w-auto flex justify-start overflow-x-auto ">
+                    {tabsInformation.map((tab) => (
+                      <TabsTrigger
+                        key={tab.value}
+                        value={tab.value}
+                        className={`
             relative px-6 py-2 text-sm font-medium text-muted-foreground
             rounded-none bg-transparent
             transition-all duration-200 ease-in-out
@@ -151,98 +149,97 @@ const ProfilePage = () => {
             after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:scale-x-0 after:bg-primary after:transition-transform after:duration-200
             data-[state=active]:after:scale-x-100
           `}
-                        >
-                          {tab.label}
-                        </TabsTrigger>
-                      ))}
-                    </TabsList>
-                    {/* Personal-info */}
-                    <TabsContent value="personal-info">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <TextBorder label="Họ" value={employee?.lastname ?? ''} />
-                        <TextBorder label="Tên" value={employee?.firstname ?? ''} />
-                        <TextBorder label="Căn Cước Công Dân" value={employee?.identityCard ?? ''} />
-                        <TextBorder label="Email" value={employee?.email ?? ''} />
-                        <TextBorder label="Điện thoại" value={employee?.phone ?? ''} />
-                        <TextBorder
-                          label="Ngày sinh"
-                          value={employee?.birthday ? new Date(employee.birthday).toLocaleDateString('vi-VN') : ''}
-                        />
-                        <TextBorder label="Giới tính" value={getGenderLabel(employee?.gender)} />
-                        <TextBorder label="Quốc gia" value={employee?.country ?? ''} />
-                        <TextBorder label="Tình trạng hôn nhân" value={getMartialLabel(employee?.marital)} />
-                        <TextBorder label="Địa chỉ thường trú" value={employee?.address ?? ''} />
-                      </div>
-                    </TabsContent>
-                    {/* Professional-info */}
-                    <TabsContent value="professional-information">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <TextBorder label="Mã nhân viên" value={employee?.employeeCode ?? ''} />
-                        <TextBorder label="Username" value={employee?.username ?? ''} />
-                        <TextBorder label="Chức vụ" value={getTypeLabel(employee?.type)} />
-                        <TextBorder label="Vị trí hiện tại" value={employee?.designation ?? ''} />
-                        <TextBorder label="Phòng ban" value={employee?.departmentId?.name ?? ''} />
-                        <TextBorder
-                          label="Ngày tham gia công ty"
-                          value={employee?.joinDate ? new Date(employee.joinDate).toLocaleDateString('vi-VN') : '--/--'}
-                        />
-                        <TextBorder
-                          label="Ngày bắt đầu làm việc"
-                          value={employee?.workingDate ? new Date(employee.workingDate).toLocaleDateString('vi-VN') : '--/--'}
-                        />
-                      </div>
-                    </TabsContent>
-                    {/* Documents */}
-                    <TabsContent value="documents">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                        {documentsList.map((label, index) => (
-                          <div key={index} className="flex flex-col gap-2">
-                            <Label>{label}</Label>
-                            {documents[index] ? (
-                              (() => {
-                                const strUrl = documents[index];
-                                const fileUrl = strUrl.split('*')[1];
-                                const fileName = strUrl.split('*')[0];
+                      >
+                        {tab.label}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                  {/* Personal-info */}
+                  <TabsContent value="personal-info">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <TextBorder label="Họ" value={employee?.lastname ?? ''} />
+                      <TextBorder label="Tên" value={employee?.firstname ?? ''} />
+                      <TextBorder label="Căn Cước Công Dân" value={employee?.identityCard ?? ''} />
+                      <TextBorder label="Email" value={employee?.email ?? ''} />
+                      <TextBorder label="Điện thoại" value={employee?.phone ?? ''} />
+                      <TextBorder
+                        label="Ngày sinh"
+                        value={employee?.birthday ? new Date(employee.birthday).toLocaleDateString('vi-VN') : ''}
+                      />
+                      <TextBorder label="Giới tính" value={getGenderLabel(employee?.gender)} />
+                      <TextBorder label="Quốc gia" value={employee?.country ?? ''} />
+                      <TextBorder label="Tình trạng hôn nhân" value={getMartialLabel(employee?.marital)} />
+                      <TextBorder label="Địa chỉ thường trú" value={employee?.address ?? ''} />
+                    </div>
+                  </TabsContent>
+                  {/* Professional-info */}
+                  <TabsContent value="professional-information">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <TextBorder label="Mã nhân viên" value={employee?.employeeCode ?? ''} />
+                      <TextBorder label="Username" value={employee?.username ?? ''} />
+                      <TextBorder label="Chức vụ" value={getTypeLabel(employee?.type)} />
+                      <TextBorder label="Vị trí hiện tại" value={employee?.designation ?? ''} />
+                      <TextBorder label="Phòng ban" value={employee?.departmentId?.name ?? ''} />
+                      <TextBorder
+                        label="Ngày tham gia công ty"
+                        value={employee?.joinDate ? new Date(employee.joinDate).toLocaleDateString('vi-VN') : '--/--'}
+                      />
+                      <TextBorder
+                        label="Ngày bắt đầu làm việc"
+                        value={employee?.workingDate ? new Date(employee.workingDate).toLocaleDateString('vi-VN') : '--/--'}
+                      />
+                    </div>
+                  </TabsContent>
+                  {/* Documents */}
+                  <TabsContent value="documents">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                      {documentsList.map((label, index) => (
+                        <div key={index} className="flex flex-col gap-2">
+                          <Label>{label}</Label>
+                          {documents[index] ? (
+                            (() => {
+                              const strUrl = documents[index];
+                              const fileUrl = strUrl.split('*')[1];
+                              const fileName = strUrl.split('*')[0];
 
-                                return (
-                                  <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
-                                    <div className="flex gap-2">
-                                      <Paperclip size={20} className="text-primary" />
-                                      <a
-                                        href={fileUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-sm text-blue-600 dark:text-blue-400 hover:underline truncate"
-                                      >
-                                        {fileName}
-                                      </a>
-                                    </div>
+                              return (
+                                <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
+                                  <div className="flex gap-2">
+                                    <Paperclip size={20} className="text-primary" />
+                                    <a
+                                      href={fileUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-sm text-blue-600 dark:text-blue-400 hover:underline truncate"
+                                    >
+                                      {fileName}
+                                    </a>
                                   </div>
-                                );
-                              })()
-                            ) : (
-                              <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
-                                <div className="flex gap-2">
-                                  <Paperclip size={20} className="text-primary" />
-                                  <span className="text-sm text-gray-500 dark:text-gray-400">Chưa có tài liệu</span>
                                 </div>
+                              );
+                            })()
+                          ) : (
+                            <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
+                              <div className="flex gap-2">
+                                <Paperclip size={20} className="text-primary" />
+                                <span className="text-sm text-gray-500 dark:text-gray-400">Chưa có tài liệu</span>
                               </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </TabsContent>
-                    {/* Account-access */}
-                    <TabsContent value="account-access">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <TextBorder label="Email / Tài khoản đăng nhập" value={employee?.email ?? ''} />
-                        <TextBorder label="ID tài khoản Github" value={employee?.githubId ?? ''} />
-                        <TextBorder label="ID tài khoản Microsoft Teams" value={employee?.microsoftTeamId ?? ''} />
-                        <TextBorder label="ID tài khoản Slack" value={employee?.slackId ?? ''} />
-                      </div>
-                    </TabsContent>
-                  </Tabs>
-                </div>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </TabsContent>
+                  {/* Account-access */}
+                  <TabsContent value="account-access">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <TextBorder label="Email / Tài khoản đăng nhập" value={employee?.email ?? ''} />
+                      <TextBorder label="ID tài khoản Github" value={employee?.githubId ?? ''} />
+                      <TextBorder label="ID tài khoản Microsoft Teams" value={employee?.microsoftTeamId ?? ''} />
+                      <TextBorder label="ID tài khoản Slack" value={employee?.slackId ?? ''} />
+                    </div>
+                  </TabsContent>
+                </Tabs>
               </div>
             </div>
           </div>
