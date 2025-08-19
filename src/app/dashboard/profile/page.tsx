@@ -5,26 +5,22 @@ import ProtectPage from '@/components/auth/ProtectPage';
 import { HeaderTitle } from '@/components/HeaderTitle';
 import ProfileMenuItem from '@/components/ProfileMenuItem';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useApp } from '@/contexts/AppContext';
 import { Gender, GENDER_LABELS } from '@/enums/genderEnum';
 import { Marital, MARITAL_LABELS } from '@/enums/maritalEnum';
-import { Status, STATUS_LABELS } from '@/enums/statusEnum';
-import { TYPEWORK_LABELS, TypeWork } from '@/enums/typeWorkEnum';
+import { TypeWork, TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
 import { UserRole } from '@/enums/userRolesEnum';
-import CountryDto from '@/models/dto/countryDto';
 import type { EmployeeDto } from '@/models/dto/employeeDto';
-import { get } from 'http';
-import { Bold, Briefcase, Italic, Mail, Paperclip, Pencil, Underline } from 'lucide-react';
-import { register } from 'module';
+import { Briefcase, Mail, Paperclip, Pencil } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { TextBorder } from '@/components/BoderText';
 
 interface TabsInformation {
   value: string;
@@ -160,99 +156,42 @@ const ProfilePage = () => {
                         </TabsTrigger>
                       ))}
                     </TabsList>
-
                     {/* Personal-info */}
                     <TabsContent value="personal-info">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Họ đệm</Label>
-                          <Input value={employee?.lastname ?? ''} placeholder="Nhập họ" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Tên</Label>
-                          <Input value={employee?.firstname ?? ''} placeholder="Nhập tên" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Căn Cước Công Dân</Label>
-                          <Input value={employee?.identityCard ?? ''} placeholder="0-XXX-XXX-XXX" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Email</Label>
-                          <Input value={employee?.email ?? ''} placeholder="Nhập email" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Điện thoại</Label>
-                          <Input value={employee?.phone ?? ''} placeholder="Nhập điện thoại" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Ngày sinh</Label>
-                          <Input
-                            value={employee?.birthday ? new Date(employee.birthday).toLocaleDateString('vi-VN') : 'huhu'}
-                            readOnly
-                            className="h-12"
-                          />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Giới tính</Label>
-                          <Input value={getGenderLabel(employee?.gender)} placeholder="--/--" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Quốc gia</Label>
-                          <Input value={employee?.country ?? ''} placeholder="--/--" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Tình trạng hôn nhân</Label>
-                          <Input value={getMartialLabel(employee?.marital)} placeholder="--/--" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Địa chỉ thường trú</Label>
-                          <Input value={employee?.address ?? ''} placeholder="--/--" readOnly className="h-12" />
-                        </div>
+                        <TextBorder label="Họ" value={employee?.lastname ?? ''} />
+                        <TextBorder label="Tên" value={employee?.firstname ?? ''} />
+                        <TextBorder label="Căn Cước Công Dân" value={employee?.identityCard ?? ''} />
+                        <TextBorder label="Email" value={employee?.email ?? ''} />
+                        <TextBorder label="Điện thoại" value={employee?.phone ?? ''} />
+                        <TextBorder
+                          label="Ngày sinh"
+                          value={employee?.birthday ? new Date(employee.birthday).toLocaleDateString('vi-VN') : ''}
+                        />
+                        <TextBorder label="Giới tính" value={getGenderLabel(employee?.gender)} />
+                        <TextBorder label="Quốc gia" value={employee?.country ?? ''} />
+                        <TextBorder label="Tình trạng hôn nhân" value={getMartialLabel(employee?.marital)} />
+                        <TextBorder label="Địa chỉ thường trú" value={employee?.address ?? ''} />
                       </div>
                     </TabsContent>
-
                     {/* Professional-info */}
                     <TabsContent value="professional-information">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Mã nhân viên</Label>
-                          <Input value={employee?.employeeCode ?? ''} placeholder="--/--" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Username</Label>
-                          <Input value={employee?.username ?? ''} placeholder="--/--" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Chức vụ</Label>
-                          <Input value={getTypeLabel(employee?.type)} placeholder="--/--" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Vị trí hiện tại</Label>
-                          <Input value={employee?.designation ?? ''} placeholder="--/--" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Phòng ban</Label>
-                          <Input value={employee?.departmentId?.name ?? ''} placeholder="--/--" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Ngày tham gia công ty</Label>
-                          <Input
-                            value={employee?.joinDate ? new Date(employee.joinDate).toLocaleDateString('vi-VN') : '--/--'}
-                            readOnly
-                            className="h-12"
-                          />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Ngày bắt đầu làm việc</Label>
-                          <Input
-                            value={employee?.workingDate ? new Date(employee.workingDate).toLocaleDateString('vi-VN') : '--/--'}
-                            readOnly
-                            className="h-12"
-                          />
-                        </div>
+                        <TextBorder label="Mã nhân viên" value={employee?.employeeCode ?? ''} />
+                        <TextBorder label="Username" value={employee?.username ?? ''} />
+                        <TextBorder label="Chức vụ" value={getTypeLabel(employee?.type)} />
+                        <TextBorder label="Vị trí hiện tại" value={employee?.designation ?? ''} />
+                        <TextBorder label="Phòng ban" value={employee?.departmentId?.name ?? ''} />
+                        <TextBorder
+                          label="Ngày tham gia công ty"
+                          value={employee?.joinDate ? new Date(employee.joinDate).toLocaleDateString('vi-VN') : '--/--'}
+                        />
+                        <TextBorder
+                          label="Ngày bắt đầu làm việc"
+                          value={employee?.workingDate ? new Date(employee.workingDate).toLocaleDateString('vi-VN') : '--/--'}
+                        />
                       </div>
                     </TabsContent>
-
                     {/* Documents */}
                     <TabsContent value="documents">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
@@ -296,22 +235,10 @@ const ProfilePage = () => {
                     {/* Account-access */}
                     <TabsContent value="account-access">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>Email / Tài khoản đăng nhập</Label>
-                          <Input value={employee?.email ?? ''} placeholder="--/--" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>ID tài khoản Github</Label>
-                          <Input value={employee?.githubId ?? ''} placeholder="--/--" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>ID tài khoản Microsoft Teams</Label>
-                          <Input value={employee?.microsoftTeamId ?? ''} placeholder="--/--" readOnly className="h-12" />
-                        </div>
-                        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-                          <Label>ID tài khoản Slack</Label>
-                          <Input value={employee?.slackId ?? ''} placeholder="--/--" readOnly className="h-12" />
-                        </div>
+                        <TextBorder label="Email / Tài khoản đăng nhập" value={employee?.email ?? ''} />
+                        <TextBorder label="ID tài khoản Github" value={employee?.githubId ?? ''} />
+                        <TextBorder label="ID tài khoản Microsoft Teams" value={employee?.microsoftTeamId ?? ''} />
+                        <TextBorder label="ID tài khoản Slack" value={employee?.slackId ?? ''} />
                       </div>
                     </TabsContent>
                   </Tabs>
