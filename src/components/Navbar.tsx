@@ -49,16 +49,6 @@ const Navbar = () => {
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
   const [fullname, setFullname] = useState<string>('');
 
-  const [currentTime, setCurrentTime] = useState<string>('');
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      setCurrentTime(now.toLocaleTimeString('vi-VN', { hour12: false }));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
   useEffect(() => {
     const fetchEmployeeDetail = async () => {
       if (userAccount) {
@@ -82,12 +72,7 @@ const Navbar = () => {
     <nav className="p-4 flex items-center justify-between sticky top-0 bg-background z-10">
       {/* LEFT */}
       <SidebarTrigger />
-
       {/* CENTER */}
-      <motion.div className="flex items-center bg-custom-cyan/60 text-white p-2 rounded-md">
-        <Clock />
-        <p className="text-lg">{currentTime}</p>
-      </motion.div>
 
       {/* RIGHT */}
       <div className="flex items-center gap-3">

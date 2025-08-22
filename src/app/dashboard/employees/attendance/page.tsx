@@ -26,6 +26,16 @@ const AttendancePage = () => {
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
   const [employeeId, setEmployeeId] = useState<string>(userAccount?.employeeId ?? '');
 
+  const [currentTime, setCurrentTime] = useState<string>('');
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString('vi-VN', { hour12: false }));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     getEmployeeDetail();
     fetchAttendanceHistory();
@@ -115,7 +125,10 @@ const AttendancePage = () => {
 
         <CardContent className="space-y-6">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center">
-            <Clock className="w-10 h-10 text-primary mb-2" />
+            <div className="flex flex-col gap-2 items-center mb-3">
+              <Clock className="w-10 h-10 text-primary" />
+              <p className="text-lg">{currentTime}</p>
+            </div>
             {status === 'NONE' && <p className="text-muted-foreground">Bạn chưa check in hôm nay</p>}
             {status === 'CHECKED_IN' && <p className="text-primary font-medium">Đã check in lúc {checkInTime}</p>}
             {status === 'CHECKED_OUT' && <p className="text-primary font-medium">Đã check out lúc {checkOutTime}</p>}
