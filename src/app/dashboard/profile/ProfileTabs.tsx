@@ -109,7 +109,7 @@ const ProfileTabsPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <TextBorder label="Mã nhân viên" value={employee?.employeeCode ?? ''} />
                 <TextBorder label="Username" value={employee?.username ?? ''} />
-                <TextBorder label="Chức vụ" value={getTypeLabel(employee?.type)} />
+                <TextBorder label="Nơi làm việc" value={getTypeLabel(employee?.type)} />
                 <TextBorder label="Vị trí hiện tại" value={employee?.designation ?? ''} />
                 <TextBorder label="Phòng ban" value={employee?.departmentId?.name ?? ''} />
                 <TextBorder
