@@ -78,7 +78,7 @@ const ProfileTabsPage = () => {
             hover:text-foreground hover:bg-accent/30
             data-[state=active]:text-primary
             data-[state=active]:bg-transparent
-            after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:scale-x-0 after:bg-primary after:transition-transform after:duration-200
+            after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-full after:scale-x-0 after:bg-primary after:transition-transform after:duration-200
             data-[state=active]:after:scale-x-100
           `}
                 >
