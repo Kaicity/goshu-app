@@ -22,7 +22,7 @@ const humanManageitems = [
     url: '/dashboard',
     icon: Home,
     children: [],
-    roles: [UserRole.ADMIN, UserRole.HR],
+    roles: [UserRole.ADMIN, UserRole.HR, UserRole.EMPLOYEE],
   },
   {
     title: 'Chat',

@@ -12,6 +12,7 @@ import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { motion } from 'framer-motion';
 import { Clock, LogIn, LogOut, PackageOpen, User } from 'lucide-react';
+import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -24,7 +25,9 @@ const AttendancePage = () => {
   const [checkOutTime, setCheckOutTime] = useState<string | null>(null);
   const [attendanceHistories, setAttendanceHistories] = useState<AttendanceDto[]>([]);
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
-  const [employeeId, setEmployeeId] = useState<string>(userAccount?.employeeId ?? '');
+  const [employeeId, setEmployeeId] = useState<string>(userAccount?.employeeId as string);
+
+  if (!employeeId) redirect('/dashboard'); // Tránh refesh page khi component render không kịp :)))
 
   const [currentTime, setCurrentTime] = useState<string>('');
 
@@ -50,7 +53,7 @@ const AttendancePage = () => {
       const today = new Date().toISOString().split('T')[0];
 
       const todayRecord = res.attendances.find((item) => {
-        const recordDate = item.attendance.date?.split('T')[0];
+        const recordDate = item.attendance.date ? format(new Date(item.attendance.date), 'yyyy-MM-dd') : '';
         return recordDate === today;
       });
 
@@ -93,6 +96,7 @@ const AttendancePage = () => {
       toast.success('Check-In hôm nay', { description: 'Bạn đã Check-In thành công' });
       fetchAttendanceHistory();
     } catch (error: any) {
+      setStatus('NONE');
       toast.error(error.message);
     }
   };
