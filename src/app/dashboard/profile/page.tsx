@@ -55,23 +55,22 @@ const ProfilePage = () => {
                 <CardTitle className="text-xl">
                   {employee?.firstname || employee?.lastname
                     ? `${employee?.lastname ?? ''} ${employee?.firstname ?? ''}`.trim()
-                    : '--/--'}
+                    : 'Họ tên: --/--'}
                 </CardTitle>
 
                 <CardDescription className="flex items-center text-sm mt-1">
                   <Briefcase className="w-4 h-4 mr-2" />
-                  {employee?.designation ?? '--/--'}
+                  {employee?.designation || '--/--'}
                 </CardDescription>
                 <CardDescription className="flex items-center text-sm mt-1">
                   <Mail className="w-4 h-4 mr-2" />
-                  {employee?.internalEmail ?? '--/--'}
+                  {employee?.internalEmail || '--/--'}
                 </CardDescription>
               </div>
             </div>
 
             {/* Edit Button */}
             <Button
-              className="w-full md:w-auto lg:w-auto"
               onClick={() => {
                 router.push(`/dashboard/employees/info-update/${userAccount?.employeeId}`);
               }}
@@ -80,19 +79,16 @@ const ProfilePage = () => {
               Edit Profile
             </Button>
           </div>
-          
-            {/* Profile Menu */}
-           
-              <div className="mt-2">
-                <ProfileMenuItem />
-              </div>
-            
-            {/* Tabs */}
 
-         
+          {/* Profile Menu */}
+          <div className="mt-5">
+            <ProfileMenuItem />
+          </div>
+
+          {/* Tabs */}
         </div>
       </Card>
     </>
   );
-}
+};
 export default ProtectPage(ProfilePage, { allowedRoles: [UserRole.ADMIN, UserRole.HR, UserRole.EMPLOYEE] });

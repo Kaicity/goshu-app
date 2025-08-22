@@ -2,12 +2,8 @@
 
 import { getEmployee } from '@/api/employee/employee';
 import ProtectPage from '@/components/auth/ProtectPage';
-import { HeaderTitle } from '@/components/HeaderTitle';
-import ProfileMenuItem from '@/components/ProfileMenuItem';
-import { Button } from '@/components/ui/button';
-import { Card, CardDescription, CardTitle } from '@/components/ui/card';
+import { TextBorder } from '@/components/BoderText';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useApp } from '@/contexts/AppContext';
 import { Gender, GENDER_LABELS } from '@/enums/genderEnum';
@@ -15,11 +11,27 @@ import { Marital, MARITAL_LABELS } from '@/enums/maritalEnum';
 import { TypeWork, TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
 import { UserRole } from '@/enums/userRolesEnum';
 import type { EmployeeDto } from '@/models/dto/employeeDto';
-import { Briefcase, Mail, Paperclip, Pencil } from 'lucide-react';
-import Image from 'next/image';
+import { FaGithub, FaMicrosoft, FaSlack } from 'react-icons/fa';
+
+import {
+  Calendar,
+  Globe,
+  Heart,
+  IdCard,
+  Mail,
+  MapPin,
+  Paperclip,
+  Phone,
+  User,
+  BadgeCheck,
+  UserCircle,
+  Briefcase,
+  Building2,
+  CalendarCheck,
+  CalendarDays,
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { TextBorder } from '@/components/BoderText';
 
 interface TabsInformation {
   value: string;
@@ -78,7 +90,7 @@ const ProfileTabsPage = () => {
           <div className=" justify-between items-start gap-3">
             <div className="">
               <Tabs defaultValue="personal-info" value={tab} onValueChange={(value) => setTab(value)}>
-                <TabsList className="mb-3 w-[350px] md:w-full flex justify-start overflow-x-auto ">
+                <TabsList className="mb-3 w-[290px] md:w-full flex justify-start overflow-x-auto ">
                   {tabsInformation.map((tab) => (
                     <TabsTrigger
                       key={tab.value}
@@ -101,36 +113,43 @@ const ProfileTabsPage = () => {
                 {/* Personal-info */}
                 <TabsContent value="personal-info">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <TextBorder label="Họ" value={employee?.lastname ?? ''} />
-                    <TextBorder label="Tên" value={employee?.firstname ?? ''} />
-                    <TextBorder label="Căn Cước Công Dân" value={employee?.identityCard ?? ''} />
-                    <TextBorder label="Email" value={employee?.email ?? ''} />
-                    <TextBorder label="Điện thoại" value={employee?.phone ?? ''} />
+                    <TextBorder label="Họ" value={employee?.lastname ?? ''} icon={<User size={16} />} />
+                    <TextBorder label="Tên" value={employee?.firstname ?? ''} icon={<User size={16} />} />
+                    <TextBorder label="Căn Cước Công Dân" value={employee?.identityCard ?? ''} icon={<IdCard size={16} />} />
+                    <TextBorder label="Email" value={employee?.email ?? ''} icon={<Mail size={16} />} />
+                    <TextBorder label="Điện thoại" value={employee?.phone ?? ''} icon={<Phone size={16} />} />
                     <TextBorder
                       label="Ngày sinh"
                       value={employee?.birthday ? new Date(employee.birthday).toLocaleDateString('vi-VN') : ''}
+                      icon={<Calendar size={16} />}
                     />
-                    <TextBorder label="Giới tính" value={getGenderLabel(employee?.gender)} />
-                    <TextBorder label="Quốc gia" value={employee?.country ?? ''} />
-                    <TextBorder label="Tình trạng hôn nhân" value={getMartialLabel(employee?.marital)} />
-                    <TextBorder label="Địa chỉ thường trú" value={employee?.address ?? ''} />
+                    <TextBorder label="Giới tính" value={getGenderLabel(employee?.gender)} icon={<User size={16} />} />
+                    <TextBorder label="Quốc gia" value={employee?.country ?? ''} icon={<Globe size={16} />} />
+                    <TextBorder
+                      label="Tình trạng hôn nhân"
+                      value={getMartialLabel(employee?.marital)}
+                      icon={<Heart size={16} />}
+                    />
+                    <TextBorder label="Địa chỉ thường trú" value={employee?.address ?? ''} icon={<MapPin size={16} />} />
                   </div>
                 </TabsContent>
                 {/* Professional-info */}
                 <TabsContent value="professional-information">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <TextBorder label="Mã nhân viên" value={employee?.employeeCode ?? ''} />
-                    <TextBorder label="Username" value={employee?.username ?? ''} />
-                    <TextBorder label="Chức vụ" value={getTypeLabel(employee?.type)} />
-                    <TextBorder label="Vị trí hiện tại" value={employee?.designation ?? ''} />
-                    <TextBorder label="Phòng ban" value={employee?.departmentId?.name ?? ''} />
+                    <TextBorder label="Mã nhân viên" value={employee?.employeeCode ?? ''} icon={<BadgeCheck size={16} />} />
+                    <TextBorder label="Username" value={employee?.username ?? ''} icon={<UserCircle size={16} />} />
+                    <TextBorder label="Chức vụ" value={getTypeLabel(employee?.type)} icon={<Briefcase size={16} />} />
+                    <TextBorder label="Vị trí hiện tại" value={employee?.designation ?? ''} icon={<MapPin size={16} />} />
+                    <TextBorder label="Phòng ban" value={employee?.departmentId?.name ?? ''} icon={<Building2 size={16} />} />
                     <TextBorder
                       label="Ngày tham gia công ty"
                       value={employee?.joinDate ? new Date(employee.joinDate).toLocaleDateString('vi-VN') : '--/--'}
+                      icon={<CalendarCheck size={16} />}
                     />
                     <TextBorder
                       label="Ngày bắt đầu làm việc"
                       value={employee?.workingDate ? new Date(employee.workingDate).toLocaleDateString('vi-VN') : '--/--'}
+                      icon={<CalendarDays size={16} />}
                     />
                   </div>
                 </TabsContent>
@@ -177,10 +196,14 @@ const ProfileTabsPage = () => {
                 {/* Account-access */}
                 <TabsContent value="account-access">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <TextBorder label="Email / Tài khoản đăng nhập" value={employee?.email ?? ''} />
-                    <TextBorder label="ID tài khoản Github" value={employee?.githubId ?? ''} />
-                    <TextBorder label="ID tài khoản Microsoft Teams" value={employee?.microsoftTeamId ?? ''} />
-                    <TextBorder label="ID tài khoản Slack" value={employee?.slackId ?? ''} />
+                    <TextBorder label="Email / Tài khoản đăng nhập" value={employee?.email ?? ''} icon={<Mail size={16} />} />
+                    <TextBorder label="ID tài khoản Github" value={employee?.githubId ?? ''} icon={<FaGithub size={16} />} />
+                    <TextBorder
+                      label="ID tài khoản Microsoft Teams"
+                      value={employee?.microsoftTeamId ?? ''}
+                      icon={<FaMicrosoft size={16} />}
+                    />
+                    <TextBorder label="ID tài khoản Slack" value={employee?.slackId ?? ''} icon={<FaSlack size={16} />} />
                   </div>
                 </TabsContent>
               </Tabs>

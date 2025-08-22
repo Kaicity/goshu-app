@@ -43,7 +43,7 @@ const ProfileMenuItem = () => {
       </ToggleGroup>
 
       {/* Content */}
-      <div className="flex-1   ">
+      <div className="flex-1">
         {selectedTab === 'profile' && <ProfileTabs />}
         {selectedTab === 'attendance' && <div>Attendance Content</div>}
         {selectedTab === 'project' && <div>Project Content</div>}
