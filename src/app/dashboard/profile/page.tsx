@@ -1,35 +1,30 @@
 'use client';
 
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import ProfileTabs from './ProfileTabs';
-import { HeaderTitle } from '@/components/HeaderTitle';
-import { Card, CardDescription, CardTitle } from '@/components/ui/card';
-import Image from 'next/image';
 import { getEmployee } from '@/api/employee/employee';
-import { useEffect, useState } from 'react';
-import { EmployeeDto } from '@/models/dto/employeeDto';
-import { useRouter } from 'next/navigation';
-import { useApp } from '@/contexts/AppContext';
-import { Briefcase, Mail, Pencil } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import ProfileMenuItem from '@/components/ProfileMenuItem';
-import { UserRole } from '@/enums/userRolesEnum';
 import ProtectPage from '@/components/auth/ProtectPage';
+import { HeaderTitle } from '@/components/HeaderTitle';
+import ProfileMenuItem from '@/components/ProfileMenuItem';
+import { Button } from '@/components/ui/button';
+import { Card, CardDescription, CardTitle } from '@/components/ui/card';
+import { useApp } from '@/contexts/AppContext';
+import { UserRole } from '@/enums/userRolesEnum';
+import { EmployeeDto } from '@/models/dto/employeeDto';
+import { Briefcase, Mail, Pencil } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 const ProfilePage = () => {
   const { userAccount } = useApp();
   const router = useRouter();
-
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
+
   useEffect(() => {
     const fetchEmployeeDetail = async () => {
       if (userAccount) {
         const res = await getEmployee(userAccount.employeeId as string);
-        console.log('res', res);
-        console.log('resss', userAccount?.employeeId);
         setEmployee(res);
       }
     };
-
     fetchEmployeeDetail();
   }, [userAccount]);
 
@@ -49,7 +44,6 @@ const ProfilePage = () => {
                 height={100}
                 className="rounded-md object-cover w-24 h-24"
               />
-
               {/* Info */}
               <div className="space-y-2">
                 <CardTitle className="text-xl">
@@ -57,7 +51,6 @@ const ProfilePage = () => {
                     ? `${employee?.lastname ?? ''} ${employee?.firstname ?? ''}`.trim()
                     : 'Họ tên: --/--'}
                 </CardTitle>
-
                 <CardDescription className="flex items-center text-sm mt-1">
                   <Briefcase className="w-4 h-4 mr-2" />
                   {employee?.designation || '--/--'}
@@ -68,9 +61,9 @@ const ProfilePage = () => {
                 </CardDescription>
               </div>
             </div>
-
             {/* Edit Button */}
             <Button
+              className="w-full md:w-auto"
               onClick={() => {
                 router.push(`/dashboard/employees/info-update/${userAccount?.employeeId}`);
               }}

@@ -11,6 +11,8 @@ import { Marital, MARITAL_LABELS } from '@/enums/maritalEnum';
 import { TypeWork, TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
 import { UserRole } from '@/enums/userRolesEnum';
 import type { EmployeeDto } from '@/models/dto/employeeDto';
+import { Paperclip } from 'lucide-react';
+
 import { FaGithub, FaMicrosoft, FaSlack } from 'react-icons/fa';
 
 import {
@@ -49,8 +51,6 @@ const documentsList = ['Tải hồ sơ CV', 'Tải hồ sơ học vấn', 'Tải
 
 const ProfileTabsPage = () => {
   const { userAccount } = useApp();
-  const router = useRouter();
-
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
   const [tab, setTab] = useState<string>(tabsInformation[0].value);
   const [documents, setDocuments] = useState<string[]>(Array(documentsList.length).fill(''));
@@ -85,24 +85,21 @@ const ProfileTabsPage = () => {
 
   return (
     <>
-      <div className="">
-        <div className="">
-          <div className=" justify-between items-start gap-3">
-            <div className="">
-              <Tabs defaultValue="personal-info" value={tab} onValueChange={(value) => setTab(value)}>
-                <TabsList className="mb-3 w-[290px] md:w-full flex justify-start overflow-x-auto ">
-                  {tabsInformation.map((tab) => (
-                    <TabsTrigger
-                      key={tab.value}
-                      value={tab.value}
-                      className={`
+      <div className=" justify-between items-start gap-3">
+          <Tabs defaultValue="personal-info" className="w-full" value={tab} onValueChange={(value) => setTab(value)}>
+            <TabsList className="mb-3 w-full flex justify-start overflow-x-auto">
+              {tabsInformation.map((tab) => (
+                <TabsTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  className={`
             relative px-6 py-2 text-sm font-medium text-muted-foreground
             rounded-none bg-transparent
             transition-all duration-200 ease-in-out
             hover:text-foreground hover:bg-accent/30
             data-[state=active]:text-primary
             data-[state=active]:bg-transparent
-            after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:scale-x-0 after:bg-primary after:transition-transform after:duration-200
+            after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-full after:scale-x-0 after:bg-primary after:transition-transform after:duration-200
             data-[state=active]:after:scale-x-100
           `}
                     >
@@ -165,30 +162,28 @@ const ProfileTabsPage = () => {
                             const fileUrl = strUrl.split('*')[1];
                             const fileName = strUrl.split('*')[0];
 
-                            return (
-                              <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
-                                <div className="flex gap-2">
-                                  <Paperclip size={20} className="text-primary" />
-                                  <a
-                                    href={fileUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-sm text-blue-600 dark:text-blue-400 hover:underline truncate"
-                                  >
-                                    {fileName}
-                                  </a>
-                                </div>
-                              </div>
-                            );
-                          })()
-                        ) : (
+                        return (
                           <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
                             <div className="flex gap-2">
                               <Paperclip size={20} className="text-primary" />
-                              <span className="text-sm text-gray-500 dark:text-gray-400">Chưa có tài liệu</span>
+                              <a
+                                href={fileUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm text-blue-600 dark:text-blue-400 hover:underline truncate"
+                              >
+                                {fileName}
+                              </a>
                             </div>
                           </div>
-                        )}
+                        );
+                      })()
+                    ) : (
+                      <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
+                        <div className="flex gap-2">
+                          <Paperclip size={20} className="text-primary" />
+                          <span className="text-sm text-gray-500 dark:text-gray-400">Chưa có tài liệu</span>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -205,12 +200,20 @@ const ProfileTabsPage = () => {
                     />
                     <TextBorder label="ID tài khoản Slack" value={employee?.slackId ?? ''} icon={<FaSlack size={16} />} />
                   </div>
-                </TabsContent>
-              </Tabs>
-            </div>
-          </div>
+                ))}
+              </div>
+            </TabsContent>
+            {/* Account-access */}
+            <TabsContent value="account-access">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <TextBorder label="Email / Tài khoản đăng nhập" value={employee?.email ?? ''} />
+                <TextBorder label="ID tài khoản Github" value={employee?.githubId ?? ''} />
+                <TextBorder label="ID tài khoản Microsoft Teams" value={employee?.microsoftTeamId ?? ''} />
+                <TextBorder label="ID tài khoản Slack" value={employee?.slackId ?? ''} />
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
-      </div>
     </>
   );
 };
