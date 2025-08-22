@@ -28,10 +28,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { ArrowLeft, Camera, Loader2, Paperclip } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { set } from 'nprogress';
-import { startTransition, use, useActionState, useEffect, useState } from 'react';
+import { startTransition, useActionState, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
@@ -224,7 +222,7 @@ export default function UpdateEmployeePage() {
 
   return (
     <>
-      <div className="flex gap-1 items-center" onClick={handleBackRole}>
+      <div className="flex gap-1 items-center cursor-pointer" onClick={handleBackRole}>
         <ArrowLeft size={20} />
         <span className="text-sm hover:text-gray-400">Trở lại</span>
       </div>

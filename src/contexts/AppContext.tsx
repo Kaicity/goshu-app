@@ -19,7 +19,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   const [authToken, setAuthToken] = useState<string | null>(Cookies.get('authToken') || null);
-
   const [userAccount, setUserAccount] = useState<UserAccountDto | null>(null);
 
   useEffect(() => {
@@ -45,11 +44,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   return (
     <AppContext.Provider
       value={{
-        userAccount: userAccount,
-        setUserAccount: setUserAccount,
-        authToken: authToken,
-        setAuthToken: setAuthToken,
-        logout: logout,
+        userAccount,
+        setUserAccount,
+        authToken,
+        setAuthToken,
+        logout,
       }}
     >
       {children}
@@ -61,7 +60,7 @@ export const useApp = () => {
   const context = useContext(AppContext);
 
   if (!context) {
-    throw new Error('App must be used within a AppProvider');
+    throw new Error('App must be used within an AppProvider');
   }
   return context;
 };
