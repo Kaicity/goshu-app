@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { CalendarCheck, FolderKanban, PlaneTakeoff, User } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
 import ProfileTabs from '@/app/dashboard/profile/profile-tab/page';
+import AttendanceTabs from '@/app/dashboard/profile/attendance-tab/page';
 
 const ProfileMenuItem = () => {
   const [selectedTab, setSelectedTab] = useState('profile');
@@ -45,7 +46,7 @@ const ProfileMenuItem = () => {
       {/* Content */}
       <div className="flex-1">
         {selectedTab === 'profile' && <ProfileTabs />}
-        {selectedTab === 'attendance' && <div>Attendance Content</div>}
+        {selectedTab === 'attendance' && <AttendanceTabs />}
         {selectedTab === 'project' && <div>Project Content</div>}
         {selectedTab === 'leave' && <div>Leave Content</div>}
       </div>
