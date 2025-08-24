@@ -8,6 +8,7 @@ import {
   Bell,
   ChevronsUpDown,
   CircleOff,
+  Clock,
   CreditCard,
   Eye,
   LogOut,
@@ -35,9 +36,12 @@ import Link from 'next/link';
 import { getEmployee } from '@/api/employee/employee';
 import type { EmployeeDto } from '@/models/dto/employeeDto';
 import { Input } from './ui/input';
+import { motion } from 'framer-motion';
 
 const Navbar = () => {
   const { logout } = useApp();
+  const { isMobile } = useSidebar();
+  const { userAccount } = useApp();
 
   const { notifications, setNotifications, unreadCount } = useNotification();
   const [readCount, setReadCount] = useState(unreadCount);
@@ -45,9 +49,6 @@ const Navbar = () => {
   const [employee, setEmployee] = useState<EmployeeDto | null>(null);
   const [fullname, setFullname] = useState<string>('');
 
-  const { isMobile } = useSidebar();
-
-  const { userAccount } = useApp();
   useEffect(() => {
     const fetchEmployeeDetail = async () => {
       if (userAccount) {
@@ -71,12 +72,14 @@ const Navbar = () => {
     <nav className="p-4 flex items-center justify-between sticky top-0 bg-background z-10">
       {/* LEFT */}
       <SidebarTrigger />
+      {/* CENTER */}
+
       {/* RIGHT */}
       <div className="flex items-center gap-3">
-        <div className="relative max-w-sm sm:w-full">
+        <div className="hidden md:block relative max-w-sm sm:w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
           {/* Input có padding-left để tránh icon chồng lên chữ */}
-          <Input placeholder="Tìm kiếm theo email..." className="pl-10" />
+          <Input placeholder="Tìm kiếm" className="pl-10" />
         </div>
 
         <div className="relative">
@@ -153,7 +156,6 @@ const Navbar = () => {
         </div>
 
         {/* USER MENU */}
-
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
@@ -172,7 +174,7 @@ const Navbar = () => {
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{fullname ? fullname : 'Alexander Rio'}</span>
+                <span className="truncate font-semibold">{fullname ? fullname : 'Chưa cập nhật'}</span>
                 <span className="truncate text-xs">{employee?.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
@@ -198,7 +200,7 @@ const Navbar = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{fullname ? fullname : 'Alexander Rio'}</span>
+                  <span className="truncate font-semibold">{fullname ? fullname : 'Chưa cập nhật'}</span>
                   <span className="truncate text-xs">{employee?.email}</span>
                 </div>
               </div>

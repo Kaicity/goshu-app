@@ -49,15 +49,15 @@ const ProfilePage = () => {
                 <CardTitle className="text-xl">
                   {employee?.firstname || employee?.lastname
                     ? `${employee?.lastname ?? ''} ${employee?.firstname ?? ''}`.trim()
-                    : '--/--'}
+                    : 'Họ tên: --/--'}
                 </CardTitle>
                 <CardDescription className="flex items-center text-sm mt-1">
                   <Briefcase className="w-4 h-4 mr-2" />
-                  {employee?.designation ?? '--/--'}
+                  {employee?.designation || '--/--'}
                 </CardDescription>
                 <CardDescription className="flex items-center text-sm mt-1">
                   <Mail className="w-4 h-4 mr-2" />
-                  {employee?.internalEmail ?? '--/--'}
+                  {employee?.internalEmail || '--/--'}
                 </CardDescription>
               </div>
             </div>
@@ -72,10 +72,13 @@ const ProfilePage = () => {
               Edit Profile
             </Button>
           </div>
+
           {/* Profile Menu */}
-          <div className="mt-4">
+          <div className="mt-5">
             <ProfileMenuItem />
           </div>
+
+          {/* Tabs */}
         </div>
       </Card>
     </>

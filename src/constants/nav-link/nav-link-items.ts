@@ -15,13 +15,14 @@ import {
   Users2,
   Workflow,
 } from 'lucide-react';
+
 const humanManageitems = [
   {
     title: 'Dashboard',
     url: '/dashboard',
     icon: Home,
     children: [],
-    roles: [UserRole.ADMIN, UserRole.HR],
+    roles: [UserRole.ADMIN, UserRole.HR, UserRole.EMPLOYEE],
   },
   {
     title: 'Chat',
@@ -50,10 +51,9 @@ const humanManageitems = [
         ],
         roles: [UserRole.ADMIN, UserRole.HR],
       },
-
       {
         title: 'Chấm công',
-        url: '/dashboard/attendances',
+        url: `/dashboard/employees/attendance`,
         icon: Inbox,
         roles: [UserRole.ADMIN, UserRole.HR, UserRole.EMPLOYEE],
       },

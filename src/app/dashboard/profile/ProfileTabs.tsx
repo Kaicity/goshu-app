@@ -11,7 +11,27 @@ import { Marital, MARITAL_LABELS } from '@/enums/maritalEnum';
 import { TypeWork, TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
 import { UserRole } from '@/enums/userRolesEnum';
 import type { EmployeeDto } from '@/models/dto/employeeDto';
-import { Paperclip } from 'lucide-react';
+
+import { FaGithub, FaMicrosoft, FaSlack } from 'react-icons/fa';
+
+import {
+  Calendar,
+  Globe,
+  Heart,
+  IdCard,
+  Mail,
+  MapPin,
+  Paperclip,
+  Phone,
+  User,
+  BadgeCheck,
+  UserCircle,
+  Briefcase,
+  Building2,
+  CalendarCheck,
+  CalendarDays,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface TabsInformation {
@@ -65,13 +85,13 @@ const ProfileTabsPage = () => {
   return (
     <>
       <div className=" justify-between items-start gap-3">
-          <Tabs defaultValue="personal-info" className="w-full" value={tab} onValueChange={(value) => setTab(value)}>
-            <TabsList className="mb-3 w-full flex justify-start overflow-x-auto">
-              {tabsInformation.map((tab) => (
-                <TabsTrigger
-                  key={tab.value}
-                  value={tab.value}
-                  className={`
+        <Tabs defaultValue="personal-info" className="w-full" value={tab} onValueChange={(value) => setTab(value)}>
+          <TabsList className="mb-3 w-full flex justify-start overflow-x-auto">
+            {tabsInformation.map((tab) => (
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className={`
             relative px-6 py-2 text-sm font-medium text-muted-foreground
             rounded-none bg-transparent
             transition-all duration-200 ease-in-out
@@ -109,7 +129,7 @@ const ProfileTabsPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <TextBorder label="Mã nhân viên" value={employee?.employeeCode ?? ''} />
                 <TextBorder label="Username" value={employee?.username ?? ''} />
-                <TextBorder label="Nơi làm việc" value={getTypeLabel(employee?.type)} />
+                <TextBorder label="Chức vụ" value={getTypeLabel(employee?.type)} />
                 <TextBorder label="Vị trí hiện tại" value={employee?.designation ?? ''} />
                 <TextBorder label="Phòng ban" value={employee?.departmentId?.name ?? ''} />
                 <TextBorder
@@ -134,45 +154,50 @@ const ProfileTabsPage = () => {
                         const fileUrl = strUrl.split('*')[1];
                         const fileName = strUrl.split('*')[0];
 
-                        return (
-                          <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
-                            <div className="flex gap-2">
-                              <Paperclip size={20} className="text-primary" />
-                              <a
-                                href={fileUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm text-blue-600 dark:text-blue-400 hover:underline truncate"
-                              >
-                                {fileName}
-                              </a>
-                            </div>
+                      return (
+                        <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
+                          <div className="flex gap-2">
+                            <Paperclip size={20} className="text-primary" />
+                            <a
+                              href={fileUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm text-blue-600 dark:text-blue-400 hover:underline truncate"
+                            >
+                              {fileName}
+                            </a>
                           </div>
-                        );
-                      })()
-                    ) : (
-                      <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
-                        <div className="flex gap-2">
-                          <Paperclip size={20} className="text-primary" />
-                          <span className="text-sm text-gray-500 dark:text-gray-400">Chưa có tài liệu</span>
                         </div>
+                      );
+                    })()
+                  ) : (
+                    <div className="flex items-center justify-between bg-muted px-3 py-2 rounded mt-2">
+                      <div className="flex gap-2">
+                        <Paperclip size={20} className="text-primary" />
+                        <span className="text-sm text-gray-500 dark:text-gray-400">Chưa có tài liệu</span>
                       </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-            {/* Account-access */}
-            <TabsContent value="account-access">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <TextBorder label="Email / Tài khoản đăng nhập" value={employee?.email ?? ''} />
-                <TextBorder label="ID tài khoản Github" value={employee?.githubId ?? ''} />
-                <TextBorder label="ID tài khoản Microsoft Teams" value={employee?.microsoftTeamId ?? ''} />
-                <TextBorder label="ID tài khoản Slack" value={employee?.slackId ?? ''} />
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* Account-access */}
+          <TabsContent value="account-access">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <TextBorder label="Email / Tài khoản đăng nhập" value={employee?.email ?? ''} icon={<Mail size={16} />} />
+              <TextBorder label="ID tài khoản Github" value={employee?.githubId ?? ''} icon={<FaGithub size={16} />} />
+              <TextBorder
+                label="ID tài khoản Microsoft Teams"
+                value={employee?.microsoftTeamId ?? ''}
+                icon={<FaMicrosoft size={16} />}
+              />
+              <TextBorder label="ID tài khoản Slack" value={employee?.slackId ?? ''} icon={<FaSlack size={16} />} />
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
     </>
   );
 };
