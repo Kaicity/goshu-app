@@ -10,7 +10,7 @@ const ProfileMenuItem = () => {
   const [selectedTab, setSelectedTab] = useState('profile');
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 max-w-full">
+    <div className="flex flex-col md:flex-row gap-4">
       {/* Menu */}
       <ToggleGroup
         type="single"
@@ -20,11 +20,11 @@ const ProfileMenuItem = () => {
             setSelectedTab(val);
           }
         }}
-        className="flex flex-col items-start w-full md:w-auto h-60 border rounded-lg overflow-hidden"
+        className="flex flex-col items-start w-full md:w-auto h-60 border rounded-lg"
       >
         <ToggleGroupItem value="profile" aria-label="Profile" className="px-4 justify-start gap-2 w-full">
           <User className="!h-5 !w-5 " />
-          <span className="md:inline">Profile</span>
+          <span>Profile</span>
         </ToggleGroupItem>
 
         <ToggleGroupItem value="attendance" aria-label="Attendance" className="px-4 justify-start gap-2 w-full">

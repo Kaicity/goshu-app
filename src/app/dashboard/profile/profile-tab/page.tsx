@@ -31,7 +31,6 @@ import {
   CalendarCheck,
   CalendarDays,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface TabsInformation {
@@ -84,7 +83,7 @@ const ProfileTabsPage = () => {
 
   return (
     <>
-      <div className=" justify-between items-start gap-3">
+      <div className="grid grid-cols-1">
         <Tabs defaultValue="personal-info" className="w-full" value={tab} onValueChange={(value) => setTab(value)}>
           <TabsList className="mb-3 w-full flex justify-start overflow-x-auto">
             {tabsInformation.map((tab) => (
