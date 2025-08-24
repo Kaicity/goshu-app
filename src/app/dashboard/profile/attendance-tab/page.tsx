@@ -1,34 +1,48 @@
 import ProtectPage from '@/components/auth/ProtectPage';
 import { DataTable } from '@/components/DataTable';
 import { UserRole } from '@/enums/userRolesEnum';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { columns } from './columns';
+import { AttendanceDto } from '@/models/dto/attendanceDto';
+import { toast } from 'sonner';
+import { getAttendances } from '@/api/attendance/attendance';
+import { useApp } from '@/contexts/AppContext';
+
 const AttendanceTabsPage = () => {
-  const data = [""]; // Replace with actual data
-   const [page, setPage] = useState<number>(1);
-   const [limit, setLimit] = useState<number>(10);
-  const [total, setTotal] = useState<number>(0);
-  const loading = false; // Replace with actual loading state
-    const handlePaginationChange = (newPage: number, newLimit: number) => {
-    setPage(newPage);
-    setLimit(newLimit);
-  };
+  const { userAccount } = useApp();
+
+  const [attendances, setAttendances] = useState<AttendanceDto[]>([]); // Replace with actual data
+  const [employeeId, setEmployeeId] = useState<string>(userAccount?.employeeId as string);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() =>{
+    fetchAttendances();
+  }, [1, 10, employeeId]);
+
+  const fetchAttendances = async () => {
+    setLoading(true);
+    try {
+      const res = await getAttendances(1, 10, employeeId);
+      console.log(res);
+      setAttendances(res.attendances);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div>
       <DataTable
-        columns={columns}
-        data={data}
+        columns={columns()}
+        data={attendances}
         loading={loading}
-        page={page}
-        limit={limit}
-        total={total}
-        onPaginationChange={handlePaginationChange}
+        page={1}
+        limit={10}
+        total={0}
       />
-  
-      {loading && <p>Loading...</p>}
     </div>
-    
   );
 };
 
