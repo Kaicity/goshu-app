@@ -56,8 +56,6 @@ const ProfileTabsPage = () => {
     const fetchEmployeeDetail = async () => {
       if (userAccount) {
         const res = await getEmployee(userAccount.employeeId as string);
-        console.log('res', res);
-        console.log('resss', userAccount?.employeeId);
         setEmployee(res);
         setDocuments(res.document);
       }
