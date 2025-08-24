@@ -1,42 +1,36 @@
-import axios from "axios";
-import Cookies from "js-cookie";
-import qs from "qs";
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import qs from 'qs';
 
 let isLoggingOut = false;
-
-const bc = new BroadcastChannel("auth");
 
 export const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 
   paramsSerializer: (params) =>
     qs.stringify(params, {
-      arrayFormat: "repeat",
+      arrayFormat: 'repeat',
     }),
 });
 
 // Gắn token từ cookie
 instance.interceptors.request.use(
   (config) => {
-    const token = Cookies.get("authToken");
+    const token = Cookies.get('authToken');
     if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 instance.interceptors.response.use(
   (response) => {
-    if (
-      response?.data?.data &&
-      response.status >= 200 &&
-      response.status < 300
-    ) {
+    if (response?.data?.data && response.status >= 200 && response.status < 300) {
       return response.data;
     }
     throw response;
@@ -44,11 +38,11 @@ instance.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401 && !isLoggingOut) {
       isLoggingOut = true;
-      alert("Phiên đăng nhập đã hết hạn");
-      Cookies.remove("authToken");
-      localStorage.removeItem("user");
-      window.location.href = "/";
+      alert('Phiên đăng nhập đã hết hạn');
+      Cookies.remove('authToken');
+      localStorage.removeItem('user');
+      window.location.href = '/';
     }
     return Promise.reject(error);
-  }
+  },
 );

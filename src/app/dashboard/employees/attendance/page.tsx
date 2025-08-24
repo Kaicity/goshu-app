@@ -50,7 +50,7 @@ const AttendancePage = () => {
       setAttendanceHistories(res.attendances);
 
       // lấy record hôm nay
-      const today = new Date().toISOString().split('T')[0];
+      const today = format(new Date(), 'yyyy-MM-dd');
 
       const todayRecord = res.attendances.find((item) => {
         const recordDate = item.attendance.date ? format(new Date(item.attendance.date), 'yyyy-MM-dd') : '';
