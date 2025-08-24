@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { CalendarCheck, FolderKanban, PlaneTakeoff, User } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
-import ProfileTabs from '@/app/dashboard/profile/profile-tab/ProfileTabs';
+import ProfileTabs from '@/app/dashboard/profile/profile-tab/page';
 
 const ProfileMenuItem = () => {
   const [selectedTab, setSelectedTab] = useState('profile');
