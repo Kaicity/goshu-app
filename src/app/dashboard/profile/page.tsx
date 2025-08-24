@@ -32,10 +32,10 @@ const ProfilePage = () => {
     <>
       <HeaderTitle text="Thông tin nhân viên" subText="Thông tin chi tiết của nhân viên" />
       <Card>
-        <div className="px-6 py-0 ">
+        <div className="px-6 py-0">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             {/* Left Content */}
-            <div className="flex md:flex-row md:items-start space-x-4">
+            <div className="flex space-x-4">
               {/* Profile Image */}
               <Image
                 src={(employee?.avatarUrl as string) ?? '/assets/default-avatar.png'}
@@ -77,8 +77,6 @@ const ProfilePage = () => {
           <div className="mt-5">
             <ProfileMenuItem />
           </div>
-
-          {/* Tabs */}
         </div>
       </Card>
     </>

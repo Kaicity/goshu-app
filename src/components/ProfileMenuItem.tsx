@@ -3,13 +3,14 @@
 import { useState } from 'react';
 import { CalendarCheck, FolderKanban, PlaneTakeoff, User } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
-import ProfileTabs from '@/app/dashboard/profile/ProfileTabs';
+import ProfileTabs from '@/app/dashboard/profile/profile-tab/page';
+import AttendanceTabs from '@/app/dashboard/profile/attendance-tab/page';
 
 const ProfileMenuItem = () => {
   const [selectedTab, setSelectedTab] = useState('profile');
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 max-w-full">
+    <div className="flex flex-col md:flex-row gap-4">
       {/* Menu */}
       <ToggleGroup
         type="single"
@@ -19,11 +20,11 @@ const ProfileMenuItem = () => {
             setSelectedTab(val);
           }
         }}
-        className="flex flex-col items-start w-full md:w-auto h-60 border rounded-lg overflow-hidden"
+        className="flex flex-col items-start w-full md:w-auto h-60 border rounded-lg"
       >
         <ToggleGroupItem value="profile" aria-label="Profile" className="px-4 justify-start gap-2 w-full">
           <User className="!h-5 !w-5 " />
-          <span className="md:inline">Profile</span>
+          <span>Profile</span>
         </ToggleGroupItem>
 
         <ToggleGroupItem value="attendance" aria-label="Attendance" className="px-4 justify-start gap-2 w-full">
@@ -45,7 +46,7 @@ const ProfileMenuItem = () => {
       {/* Content */}
       <div className="flex-1">
         {selectedTab === 'profile' && <ProfileTabs />}
-        {selectedTab === 'attendance' && <div>Attendance Content</div>}
+        {selectedTab === 'attendance' && <AttendanceTabs />}
         {selectedTab === 'project' && <div>Project Content</div>}
         {selectedTab === 'leave' && <div>Leave Content</div>}
       </div>
