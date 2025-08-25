@@ -6,10 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useApp } from '@/contexts/AppContext';
 import { ATTENDANCE_COLOR, ATTENDANCE_LABELS, AttendanceStatus } from '@/enums/attendanceEnum';
+import { formatUTC } from '@/helpers/date.helper';
 import type { AttendanceDto } from '@/models/dto/attendanceDto';
 import { EmployeeDto } from '@/models/dto/employeeDto';
 import { format } from 'date-fns';
-import { vi } from 'date-fns/locale';
 import { motion } from 'framer-motion';
 import { Clock, LogIn, LogOut, PackageOpen, User } from 'lucide-react';
 import { redirect } from 'next/navigation';
@@ -60,11 +60,11 @@ const AttendancePage = () => {
       if (todayRecord) {
         if (todayRecord.attendance.checkIn && !todayRecord.attendance.checkOut) {
           setStatus('CHECKED_IN');
-          setCheckInTime(format(new Date(todayRecord.attendance.checkIn), 'HH:mm', { locale: vi }));
+          setCheckInTime(formatUTC(new Date(todayRecord.attendance.checkIn)));
         } else if (todayRecord.attendance.checkIn && todayRecord.attendance.checkOut) {
           setStatus('CHECKED_OUT');
-          setCheckInTime(format(new Date(todayRecord.attendance.checkIn), 'HH:mm', { locale: vi }));
-          setCheckOutTime(format(new Date(todayRecord.attendance.checkOut), 'HH:mm', { locale: vi }));
+          setCheckInTime(formatUTC(new Date(todayRecord.attendance.checkIn)));
+          setCheckOutTime(formatUTC(new Date(todayRecord.attendance.checkOut)));
         } else {
           setStatus('NONE');
         }
@@ -159,7 +159,7 @@ const AttendancePage = () => {
         <div className="border rounded-lg divide-y text-sm overflow-y-auto max-h-72">
           {attendanceHistories.map((item, idx) => (
             <div key={idx} className="flex justify-between items-center p-2 text-foreground">
-              <span>{item.attendance.date ? format(new Date(item.attendance.date), 'dd/MM/yyyy', { locale: vi }) : '--'}</span>
+              <span>{item.attendance.date ? formatUTC(new Date(item.attendance.date), 'dd/MM/yyyy') : '--'}</span>
               {item.attendance.status === AttendanceStatus.ABSENT ? (
                 <span className={`${ATTENDANCE_COLOR[item.attendance.status as AttendanceStatus]} font-medium`}>
                   {ATTENDANCE_LABELS[item.attendance.status as AttendanceStatus]}
@@ -167,10 +167,10 @@ const AttendancePage = () => {
               ) : (
                 <div className="flex gap-4">
                   <span className="text-primary">
-                    In: {item.attendance.checkIn ? format(new Date(item.attendance.checkIn), 'HH:mm', { locale: vi }) : '--'}
+                    In: {item.attendance.checkIn ? formatUTC(new Date(item.attendance.checkIn)) : '--'}
                   </span>
                   <span className="text-foreground">
-                    Out: {item.attendance.checkOut ? format(new Date(item.attendance.checkOut), 'HH:mm', { locale: vi }) : '--'}
+                    Out: {item.attendance.checkOut ? formatUTC(new Date(item.attendance.checkOut)) : '--'}
                   </span>
                   <span className={`${ATTENDANCE_COLOR[item.attendance.status as AttendanceStatus]} font-medium`}>
                     {ATTENDANCE_LABELS[item.attendance.status as AttendanceStatus]}
