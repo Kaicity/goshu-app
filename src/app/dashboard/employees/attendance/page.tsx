@@ -46,7 +46,7 @@ const AttendancePage = () => {
 
   const fetchAttendanceHistory = async () => {
     try {
-      const res = await getAttendances(1, 10, employeeId);
+      const res = await getAttendances(1, 10, { employeeId });
       setAttendanceHistories(res.attendances);
 
       // lấy record hôm nay

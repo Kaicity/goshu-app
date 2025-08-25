@@ -1,4 +1,3 @@
-import type { EmployeeDto } from './employeeDto';
 import type PaginationDto from './pagination';
 
 interface AttendanceDto {
@@ -13,8 +12,11 @@ interface AttendanceDto {
   employee: {
     id: string;
     employeeCode: string;
-    firstname: string;
-    lastname: string;
+    firstname?: string;
+    lastname?: string;
+    avatarUrl?: string;
+    type?: string;
+    designation?: string;
   };
   updatedAt?: string;
 }
@@ -24,4 +26,11 @@ interface AttendancePaginationDto {
   pagination: PaginationDto;
 }
 
-export type { AttendanceDto, AttendancePaginationDto };
+interface AttendanceFilters {
+  employeeId?: string;
+  search?: string;
+  date?: string;
+  status?: string;
+}
+
+export type { AttendanceDto, AttendancePaginationDto, AttendanceFilters };

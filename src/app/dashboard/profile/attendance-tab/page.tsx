@@ -15,14 +15,14 @@ const AttendanceTabsPage = () => {
   const [employeeId, setEmployeeId] = useState<string>(userAccount?.employeeId as string);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() =>{
+  useEffect(() => {
     fetchAttendances();
   }, [1, 10, employeeId]);
 
   const fetchAttendances = async () => {
     setLoading(true);
     try {
-      const res = await getAttendances(1, 10, employeeId);
+      const res = await getAttendances(1, 10, { employeeId });
       console.log(res);
       setAttendances(res.attendances);
     } catch (error: any) {
@@ -30,19 +30,11 @@ const AttendanceTabsPage = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div>
-      <DataTable
-        columns={columns()}
-        data={attendances}
-        loading={loading}
-        page={1}
-        limit={10}
-        total={0}
-        showPagination={false}
-      />
+      <DataTable columns={columns()} data={attendances} loading={loading} page={1} limit={10} total={0} showPagination={false} />
     </div>
   );
 };

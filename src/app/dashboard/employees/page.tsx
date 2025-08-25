@@ -44,7 +44,6 @@ const EmployeesPage = () => {
     setLoading(true);
     try {
       const res = await getEmployees(page, limit, { search, departments: departmentSelected, typeWorks: typeWorkSelected });
-      console.log('res', res);
       setEmployees(res.employees);
       setTotal(res.pagination.total);
       setLimit(res.pagination.limit);

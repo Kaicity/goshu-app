@@ -3,7 +3,6 @@ import { ATTENDANCE_COLOR, ATTENDANCE_LABELS, AttendanceStatus } from '@/enums/a
 import { formatUTC } from '@/helpers/date.helper';
 import { AttendanceDto } from '@/models/dto/attendanceDto';
 import { ColumnDef } from '@tanstack/react-table';
-import { format } from 'date-fns';
 export const columns = (): ColumnDef<AttendanceDto>[] => [
   {
     accessorKey: 'date',

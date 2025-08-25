@@ -1,6 +1,7 @@
 import { UserRole } from '@/enums/userRolesEnum';
 import {
   Calendar,
+  CalendarCheck,
   CoinsIcon,
   FolderCheck,
   Home,
@@ -65,6 +66,13 @@ const humanManageitems = [
         roles: [UserRole.ADMIN, UserRole.HR],
       },
     ],
+  },
+  {
+    title: 'Bảng Ngày Công',
+    url: '/dashboard/attendances',
+    icon: CalendarCheck,
+    children: [],
+    roles: [UserRole.ADMIN, UserRole.HR],
   },
   {
     title: 'Cuộc Họp Nội Bộ',

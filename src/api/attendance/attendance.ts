@@ -1,4 +1,4 @@
-import type { AttendancePaginationDto } from '@/models/dto/attendanceDto';
+import type { AttendanceFilters, AttendancePaginationDto } from '@/models/dto/attendanceDto';
 import { instance } from '../axiosClient';
 
 export const checkIn = async (employeeId: string): Promise<any> => {
@@ -21,10 +21,21 @@ export const checkOut = async (employeeId: string): Promise<any> => {
   }
 };
 
-export const getAttendances = async (page: number, limit: number, employeeId: string): Promise<AttendancePaginationDto> => {
+export const getAttendances = async (
+  page: number,
+  limit: number,
+  filters: AttendanceFilters,
+): Promise<AttendancePaginationDto> => {
   try {
     const response: any = await instance.get('/attendances/getAll', {
-      params: { page, limit, employeeId },
+      params: {
+        page,
+        limit,
+        employeeId: filters?.employeeId,
+        search: filters?.search,
+        date: filters?.date,
+        status: filters.status,
+      },
     });
     return {
       attendances: response.data,

@@ -16,12 +16,14 @@ interface isAppProps {
   endYear?: number;
   dateValue?: Date;
   onDateChange: (date: Date | undefined) => void;
+  className?: string;
 }
 export function DatePicker({
   startYear = getYear(new Date()) - 100,
   endYear = getYear(new Date()) + 100,
   dateValue,
   onDateChange,
+  className,
 }: isAppProps) {
   const [date, setDate] = React.useState<Date>(new Date());
 
@@ -71,7 +73,7 @@ export function DatePicker({
       <PopoverTrigger asChild>
         <Button
           variant={'outline'}
-          className={cn('w-full justify-start text-left font-normal h-12', !date && 'text-muted-foreground')}
+          className={cn('w-full justify-start text-left font-normal h-12', className, !date && 'text-muted-foreground')}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? format(date, 'dd-MM-yyyy', { locale: vi }) : <span>Chọn ngày</span>}
