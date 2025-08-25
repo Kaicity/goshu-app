@@ -14,6 +14,7 @@ interface DataTableProps<TData, TValue> {
   total: number;
   onPaginationChange?: (page: number, limit: number) => void;
   loading?: boolean;
+  showPagination? : boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -24,6 +25,7 @@ export function DataTable<TData, TValue>({
   total,
   loading,
   onPaginationChange,
+  showPagination=true,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -100,7 +102,7 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      <DataTablePagination table={table} />
+      {showPagination && <DataTablePagination table={table} />}
     </div>
   );
 }

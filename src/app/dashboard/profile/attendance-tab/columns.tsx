@@ -1,9 +1,8 @@
 'use client';
-import { ColumnDef } from '@tanstack/react-table';
-import { AttendanceDto } from '@/models/dto/attendanceDto';
-import { format } from 'date-fns';
-import { ro } from 'date-fns/locale';
 import { ATTENDANCE_COLOR, ATTENDANCE_LABELS, AttendanceStatus } from '@/enums/attendanceEnum';
+import { AttendanceDto } from '@/models/dto/attendanceDto';
+import { ColumnDef } from '@tanstack/react-table';
+import { format } from 'date-fns';
 export const columns = (): ColumnDef<AttendanceDto>[] => [
   {
     accessorKey: 'date',
@@ -30,8 +29,12 @@ export const columns = (): ColumnDef<AttendanceDto>[] => [
     },
   },
   {
-    accessorKey: 'workinghours',
-    header: 'Working Hours',
+    accessorKey: 'workingHour',
+    header: 'SỐ GIỜ LÀM VIỆC',
+    cell: ({row}) => {
+      const workingHour = row.original.attendance.workingHour;
+      return <div>{workingHour !== undefined ? workingHour : '--/--'}</div>
+    }
   },
   {
     accessorKey: 'updatedAt',

@@ -7,6 +7,7 @@ interface AttendanceDto {
     date?: string;
     checkIn?: string;
     checkOut?: string;
+    workingHour?: number;
     status: string;
   };
   employee: {
