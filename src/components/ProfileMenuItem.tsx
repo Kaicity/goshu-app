@@ -24,22 +24,22 @@ const ProfileMenuItem = () => {
       >
         <ToggleGroupItem value="profile" aria-label="Profile" className="px-4 justify-start gap-2 w-full">
           <User className="!h-5 !w-5 " />
-          <span>Profile</span>
+          <span>Thông tin cá nhân</span>
         </ToggleGroupItem>
 
         <ToggleGroupItem value="attendance" aria-label="Attendance" className="px-4 justify-start gap-2 w-full">
           <CalendarCheck className="!h-5 !w-5" />
-          <span>Attendance</span>
+          <span>Chấm công</span>
         </ToggleGroupItem>
 
         <ToggleGroupItem value="project" aria-label="Project" className="px-4 justify-start gap-2 w-full">
           <FolderKanban className="!h-5 !w-5" />
-          <span>Project</span>
+          <span>Dự án</span>
         </ToggleGroupItem>
 
         <ToggleGroupItem value="leave" aria-label="Leave" className="px-4 justify-start gap-2 w-full">
           <PlaneTakeoff className="!h-5 !w-5" />
-          <span>Leave</span>
+          <span>Đơn nghỉ phép</span>
         </ToggleGroupItem>
       </ToggleGroup>
 

@@ -69,7 +69,7 @@ const ProfilePage = () => {
               }}
             >
               <Pencil className="w-4 h-4 mr-2" />
-              Edit Profile
+              Sửa thông tin
             </Button>
           </div>
 
