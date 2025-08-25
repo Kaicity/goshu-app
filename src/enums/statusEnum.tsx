@@ -12,7 +12,7 @@ export const STATUS_LABELS: Record<Status, string> = {
 };
 export const STATUS_STYLES: Record<Status, string> = {
   [Status.ACTIVE]:
-    "border text-xs font-medium bg-teal-100/30 border-teal-200 text-teal-900 rounded-md dark:text-teal-200 ",
+    "border text-xs font-medium bg-teal-100/30 border-teal-200 text-teal-900 rounded-md dark:text-teal-200",
   [Status.INACTIVE]:
     "border text-xs font-medium bg-neutral-300/40 border-neutral-300 text-sky-900 rounded-md dark:text-sky-100",
   [Status.SUSPENDED]:
