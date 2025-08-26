@@ -13,6 +13,8 @@ import { columns } from './columns';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { DatePicker } from '@/components/date-picker';
 import { format } from 'date-fns';
+import { MultiSelect } from '@/components/MultiSelect';
+import { ATTENDANCE_LABELS, AttendanceStatus } from '@/enums/attendanceEnum';
 
 const AttendancesPage = () => {
   const searchParams = useSearchParams();
@@ -30,7 +32,8 @@ const AttendancesPage = () => {
   const [dateSelected, setDateSelected] = useState<Date>(
     searchParams.get('date') ? new Date(searchParams.get('date') as string) : new Date(),
   );
-  const [statusSelected, setStatusSelected] = useState<string>(searchParams.get('status') || '');
+  // const [statusSelected, setStatusSelected] = useState<string>(searchParams.get('status') || '');
+  const [statusSelected, setStatusSelected] = useState<string[]>((searchParams.get('status') ?? '').split(',').filter(Boolean));
 
   console.log(dateSelected);
 
@@ -61,7 +64,7 @@ const AttendancesPage = () => {
     setPage(1);
     setLimit(10);
     setDateSelected(new Date());
-    setStatusSelected('');
+    setStatusSelected([]);
   };
 
   const handleBirthdayChange = (date: Date | undefined) => {
@@ -75,7 +78,7 @@ const AttendancesPage = () => {
     if (limit) params.set('limit', String(limit));
     if (search) params.set('search', String(search));
     if (dateSelected) params.set('date', format(dateSelected, 'yyyy-MM-dd'));
-    if (statusSelected) params.set('status', String(statusSelected));
+    if (statusSelected) params.set('status', statusSelected.join(','));
     router.push(`/dashboard/attendances?${params.toString()}`);
   };
 
@@ -95,6 +98,19 @@ const AttendancesPage = () => {
             }}
           />
         </div>
+        <MultiSelect
+          options={Object.entries(AttendanceStatus).map(([__, value]) => ({
+            label: ATTENDANCE_LABELS[value],
+            value,
+          }))}
+          value={statusSelected}
+          onValueChange={(values) => {
+            setStatusSelected(values);
+            setPage(1);
+          }}
+          placeholder="Chọn trạng thái"
+          className="relative justify-start px-4 w-full md:w-auto"
+        />
 
         <DatePicker onDateChange={handleBirthdayChange} dateValue={dateSelected} className="h-9 w-full md:w-max" />
 
