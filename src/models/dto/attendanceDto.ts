@@ -30,7 +30,7 @@ interface AttendanceFilters {
   employeeId?: string;
   search?: string;
   date?: string;
-  status?: string;
+  status?: string[];
 }
 
 export type { AttendanceDto, AttendancePaginationDto, AttendanceFilters };
