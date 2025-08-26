@@ -59,6 +59,12 @@ const humanManageitems = [
         roles: [UserRole.ADMIN, UserRole.HR, UserRole.EMPLOYEE],
       },
       {
+        title: 'Nghỉ Phép',
+        url: `/dashboard/employees/leave-request`,
+        icon: Inbox,
+        roles: [UserRole.ADMIN, UserRole.HR, UserRole.EMPLOYEE],
+      },
+      {
         title: 'Lương',
         url: '/dashboard/payrolls',
         icon: CoinsIcon,
