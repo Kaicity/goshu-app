@@ -54,7 +54,6 @@ const AttendancesPage = () => {
     }
   };
 
-  // 🔹 lắng nghe socket và refetch khi có update
   useEffect(() => {
     const socket: Socket = io(SOCKET_URL);
 

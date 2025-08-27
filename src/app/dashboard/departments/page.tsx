@@ -134,4 +134,4 @@ const DepartmentsPage = () => {
     </div>
   );
 };
-export default ProtectPage(DepartmentsPage, { allowedRoles: [UserRole.ADMIN, UserRole.HR] });
+export default ProtectPage(DepartmentsPage, { allowedRoles: [UserRole.HR] });

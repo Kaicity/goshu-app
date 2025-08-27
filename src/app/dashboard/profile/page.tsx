@@ -82,4 +82,4 @@ const ProfilePage = () => {
     </>
   );
 };
-export default ProtectPage(ProfilePage, { allowedRoles: [UserRole.ADMIN, UserRole.HR, UserRole.EMPLOYEE] });
+export default ProtectPage(ProfilePage, { allowedRoles: [UserRole.HR, UserRole.EMPLOYEE] });
