@@ -129,7 +129,7 @@ const LoginPage = () => {
                   </div>
                   <div className="grid gap-3">
                     <div className="flex items-center">
-                      <Label className={getValidateInput(errors.password, 'text')}>Password</Label>
+                      <Label className={getValidateInput(errors.password, 'text')}>Mật khẩu</Label>
                       <Link href="/forgot-password" className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
                         Quên mật khẩu
                       </Link>
