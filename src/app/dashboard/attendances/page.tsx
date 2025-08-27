@@ -32,10 +32,7 @@ const AttendancesPage = () => {
   const [dateSelected, setDateSelected] = useState<Date>(
     searchParams.get('date') ? new Date(searchParams.get('date') as string) : new Date(),
   );
-  // const [statusSelected, setStatusSelected] = useState<string>(searchParams.get('status') || '');
   const [statusSelected, setStatusSelected] = useState<string[]>((searchParams.get('status') ?? '').split(',').filter(Boolean));
-
-  console.log(dateSelected);
 
   useEffect(() => {
     updateSearchParams();

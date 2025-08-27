@@ -23,7 +23,7 @@ const AttendanceTabsPage = () => {
     setLoading(true);
     try {
       const res = await getAttendances(1, 10, { employeeId });
-      console.log(res);
+      console.log('hello em iu',res.attendances);
       setAttendances(res.attendances);
     } catch (error: any) {
       toast.error(error.message);
