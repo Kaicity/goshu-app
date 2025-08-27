@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { LeaveRequestDto } from '@/models/dto/leaverequestDto';
 import { format } from 'date-fns';
+import { LeaveRequest, LEAVEREQUEST_LABELS, LEAVEREQUEST_STYLES } from '@/enums/leaveRequestEnum';
 
 export const columns = (): ColumnDef<LeaveRequestDto>[] => [
   {
@@ -31,8 +32,8 @@ export const columns = (): ColumnDef<LeaveRequestDto>[] => [
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      const status = row.original.leaveRequest.status;
-      return <div>{status}</div>;
+      const status = row.original.leaveRequest.status as LeaveRequest;
+      return <div className={`${LEAVEREQUEST_STYLES[status]}`}>{LEAVEREQUEST_LABELS[status]} </div>;
     },
   },
   {
