@@ -15,6 +15,9 @@ import { DatePicker } from '@/components/date-picker';
 import { format } from 'date-fns';
 import { MultiSelect } from '@/components/MultiSelect';
 import { ATTENDANCE_LABELS, AttendanceStatus } from '@/enums/attendanceEnum';
+import { io, type Socket } from 'socket.io-client';
+
+const SOCKET_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
 
 const AttendancesPage = () => {
   const searchParams = useSearchParams();
@@ -50,6 +53,33 @@ const AttendancesPage = () => {
       setLoading(false);
     }
   };
+
+  // 🔹 lắng nghe socket và refetch khi có update
+  useEffect(() => {
+    const socket: Socket = io(SOCKET_URL);
+
+    socket.on('connect', () => {
+      console.log('Socket connected:', socket.id);
+    });
+
+    socket.on('attendance:update', (payload) => {
+      console.log('Attendance updated:', payload);
+
+      // Callback lại Api getall attendance
+      fetchAttendances();
+      toast.info(`Nhân viên: ${payload.employeeCode}-${payload.fullname}`, {
+        description: `đã ${payload.type} lúc ${format(new Date(), 'hh:mm a')}`,
+      });
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Socket disconnected');
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [page, limit, search, statusSelected, dateSelected]);
 
   const handlePaginationChange = (newPage: number, newLimit: number) => {
     setPage(newPage);

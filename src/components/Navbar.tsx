@@ -1,24 +1,12 @@
 'use client';
 
+import { getEmployee } from '@/api/employee/employee';
 import { useApp } from '@/contexts/AppContext';
 import useNotification from '@/hooks/useNotification';
+import type { EmployeeDto } from '@/models/dto/employeeDto';
 import { formatTimeAgo } from '@/utils/formatTimeAgo';
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CircleOff,
-  Clock,
-  CreditCard,
-  Eye,
-  LogOut,
-  Moon,
-  Search,
-  Settings,
-  Sun,
-  User,
-} from 'lucide-react';
-import { useTheme } from 'next-themes';
+import { BadgeCheck, Bell, ChevronsUpDown, CircleOff, CreditCard, Eye, LogOut, Search } from 'lucide-react';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Button } from './ui/button';
@@ -31,12 +19,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import { SidebarMenuButton, SidebarTrigger, useSidebar } from './ui/sidebar';
-import Link from 'next/link';
-import { getEmployee } from '@/api/employee/employee';
-import type { EmployeeDto } from '@/models/dto/employeeDto';
 import { Input } from './ui/input';
-import { motion } from 'framer-motion';
+import { SidebarMenuButton, SidebarTrigger, useSidebar } from './ui/sidebar';
+import { UserRole } from '@/enums/userRolesEnum';
 
 const Navbar = () => {
   const { logout } = useApp();
@@ -52,11 +37,15 @@ const Navbar = () => {
   useEffect(() => {
     const fetchEmployeeDetail = async () => {
       if (userAccount) {
-        const res = await getEmployee(userAccount.employeeId as string);
-        setEmployee(res);
+        if (userAccount.employeeId) {
+          const res = await getEmployee(userAccount.employeeId as string);
+          setEmployee(res);
 
-        if (res.firstname || res.lastname) {
-          setFullname(res.lastname + ' ' + res.firstname);
+          if (res.firstname || res.lastname) {
+            setFullname(res.lastname + ' ' + res.firstname);
+          }
+        } else {
+          setFullname(UserRole.ADMIN);
         }
       }
     };
