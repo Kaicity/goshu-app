@@ -1,46 +1,41 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-
+import { Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { CalendarIcon, ClockIcon, CheckIcon } from 'lucide-react';
 type StatusCardProps = {
-  value: number | string
-  unit: string
-  description: string
-  buttonLabel?: string
-  onButtonClick?: () => void
-  color?: "green" | "red" | "blue" | "yellow"
-}
+  value: number | string;
+  unit: string;
+  description: string;
+  buttonLabel?: string;
+  onButtonClick?: () => void;
+  icon?: React.ReactNode;
+  color?: 'green' | 'red' | 'blue' | 'yellow';
+};
 
 export default function StatusCard({
   value,
   unit,
   description,
   buttonLabel,
+  icon,
   onButtonClick,
-  color = "green"
+  color = 'green',
 }: StatusCardProps) {
   const colorClasses: Record<string, string> = {
-    green: "border-green-300 text-green-600",
-    red: "border-red-300 text-red-600",
-    blue: "border-blue-300 text-blue-600",
-    yellow: "border-yellow-300 text-yellow-600"
-  }
+    green: 'border-green-300 text-green-600',
+    red: 'border-red-300 text-red-600',
+    blue: 'border-blue-300 text-blue-600',
+    yellow: 'border-yellow-300 text-yellow-600',
+  };
 
   return (
-    <Card className={colorClasses[color]}>
-      <CardHeader>
-        <CardTitle className={`text-3xl ${colorClasses[color].split(" ")[1]}`}>
-          {value}
-        </CardTitle>
-        <CardDescription>{unit}</CardDescription>
-        <CardAction>
-            {/* <Button variant="outline" size="sm" onClick={onButtonClick} disabled={!buttonLabel}>
-                {buttonLabel || "N/A"}
-          </Button> */}
-        </CardAction>
-      </CardHeader>
-      <CardContent>
-        <p className="text-sm">{description}</p>
-      </CardContent>
+    <Card className="p-2">
+      <div className="flex items-center">
+        <div className={`w-auto ${colorClasses[color]}`}>{icon}</div>
+        <CardContent className="ml-4">
+          <p className="text-sm text-gray-500">{description}</p>
+          <p className="text-2xl font-bold">{value}</p>
+        </CardContent>
+      </div>
     </Card>
-  )
+  );
 }
