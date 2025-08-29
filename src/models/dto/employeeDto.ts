@@ -1,7 +1,7 @@
+import type { EmployeeStatus } from '@/enums/employeeEnum';
 import { TypeWork } from '@/enums/typeWorkEnum';
-import { PaginationDto } from './userAccountDto';
 import { DepartmentDto } from './departmentDto';
-import { Status } from '@/enums/statusEnum';
+import { PaginationDto } from './userAccountDto';
 
 interface EmployeeDto {
   id: string;
@@ -25,7 +25,7 @@ interface EmployeeDto {
   avatarUrl?: string;
   document?: string[];
   departmentId?: DepartmentDto;
-  status?: Status;
+  status?: EmployeeStatus;
   marital?: string;
   country?: string;
   identityCard?: string;
@@ -33,9 +33,10 @@ interface EmployeeDto {
   updatedAt?: Date;
 }
 
-type EmployeeFormDto = Omit<EmployeeDto, 'departmentId' | 'type'> & {
+type EmployeeFormDto = Omit<EmployeeDto, 'departmentId' | 'type' | 'status'> & {
   type?: string;
   departmentId?: string;
+  status?: string;
 };
 
 interface EmployeePaginationDto {
@@ -49,4 +50,4 @@ interface EmployeeFilterDto {
   departments?: string[];
 }
 
-export type { EmployeeDto, EmployeePaginationDto, EmployeeFilterDto, EmployeeFormDto };
+export type { EmployeeDto, EmployeeFilterDto, EmployeeFormDto, EmployeePaginationDto };

@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { TypeWork, TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
 import { vi } from 'date-fns/locale';
+import { EMPLOYEE_STATUS_COLOR, EMPLOYEE_STATUS_LABELS, type EmployeeStatus } from '@/enums/employeeEnum';
 
 export const columns: ColumnDef<EmployeeDto>[] = [
   {
@@ -88,6 +89,15 @@ export const columns: ColumnDef<EmployeeDto>[] = [
       return <div>{department || '--/--'}</div>;
     },
   },
+  {
+    accessorKey: 'status',
+    header: 'TRẠNG THÁI',
+    cell: ({ row }) => {
+      const status = row.original.status as EmployeeStatus;
+      return <div className={EMPLOYEE_STATUS_COLOR[status]}>{EMPLOYEE_STATUS_LABELS[status] || '--/--'}</div>;
+    },
+  },
+
   {
     accessorKey: 'updatedAt',
     header: () => <div className="text-center">CẬP NHẬT LÚC</div>,

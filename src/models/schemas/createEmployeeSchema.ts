@@ -22,6 +22,7 @@ export const createEmployeeSchema = z.object({
   marital: z.string().optional(),
   internalEmail: z.string().optional(),
   identityCard: z.string().optional(),
+  status: z.string().optional(),
 });
 
 export type CreateEmployeeFormData = z.infer<typeof createEmployeeSchema>;

@@ -13,9 +13,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Spinner } from '@/components/ui/spinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useApp } from '@/contexts/AppContext';
+import { EMPLOYEE_STATUS_LABELS } from '@/enums/employeeEnum';
 import { GENDER_LABELS } from '@/enums/genderEnum';
 import { MARITAL_LABELS } from '@/enums/maritalEnum';
-import { STATUS_LABELS } from '@/enums/statusEnum';
 import { TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
 import { useActionWithLoading } from '@/hooks/useExecute';
 import { UploadButton, UploadDropzone } from '@/lib/uploadthing';
@@ -72,6 +72,7 @@ export default function UpdateEmployeePage() {
   const [workDateSelected, setWorkDateSelected] = useState<Date>(new Date());
   const [typeWorkSelected, setTypeWorkSelected] = useState<string>('');
   const [departmentSelected, setDepartmentSelected] = useState<string>('');
+  const [statusSelected, setStatusSelected] = useState<string>('');
 
   const [documents, setDocuments] = useState<string[]>(Array(documentsList.length).fill(''));
   const { userAccount } = useApp();
@@ -136,6 +137,7 @@ export default function UpdateEmployeePage() {
       employee.document && employee.document.length > 0 && setDocuments(employee.document);
       employee.marital && setMaritalSelected(employee.marital);
       employee.country && setCountrySelected(employee.country);
+      employee.status && setStatusSelected(employee.status);
     }
   }, [employee, reset, setValue]);
 
@@ -566,12 +568,18 @@ export default function UpdateEmployeePage() {
 
                 <div className="flex flex-col gap-2">
                   <Label>Trạng thái</Label>
-                  <Select disabled>
+                  <Select
+                    value={statusSelected}
+                    onValueChange={(value) => {
+                      setStatusSelected(value);
+                      setValue('status', value);
+                    }}
+                  >
                     <SelectTrigger className="w-full !h-12">
                       <SelectValue placeholder="Trạng thái nhân viên" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.entries(STATUS_LABELS).map(([key, label]) => (
+                      {Object.entries(EMPLOYEE_STATUS_LABELS).map(([key, label]) => (
                         <SelectItem key={key} value={key}>
                           <div className="flex items-center gap-2">{label}</div>
                         </SelectItem>
