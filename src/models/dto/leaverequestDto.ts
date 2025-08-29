@@ -4,7 +4,7 @@ interface LeaveRequestDto {
   leaveRequest: {
     id: string;
     startDate?: string;
-    endDate?: Date;
+    endDate?: string;
     reason?: string;
     status: string;
     approvedBy: string;
@@ -19,12 +19,12 @@ interface LeaveRequestDto {
     type?: string;
     designation?: string;
   };
-  createdAt: string;
+  createdAt?: string;
 }
 
 interface LeaveRequestPaginationDto {
-    leaveRequest: LeaveRequestDto[];
-    pagination: PaginationDto;
+  leaveRequest: LeaveRequestDto[];
+  pagination: PaginationDto;
 }
 
 interface FiltersLeaveRequest {
@@ -33,4 +33,4 @@ interface FiltersLeaveRequest {
   startDate?: string;
   endDate?: string;
 }
-export type {LeaveRequestDto, LeaveRequestPaginationDto, FiltersLeaveRequest};
+export type { LeaveRequestDto, LeaveRequestPaginationDto, FiltersLeaveRequest };

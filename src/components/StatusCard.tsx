@@ -33,9 +33,9 @@ export default function StatusCard({
         </CardTitle>
         <CardDescription>{unit}</CardDescription>
         <CardAction>
-            <Button variant="outline" size="sm" onClick={onButtonClick} disabled={!buttonLabel}>
+            {/* <Button variant="outline" size="sm" onClick={onButtonClick} disabled={!buttonLabel}>
                 {buttonLabel || "N/A"}
-          </Button>
+          </Button> */}
         </CardAction>
       </CardHeader>
       <CardContent>
