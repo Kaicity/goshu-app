@@ -3,21 +3,15 @@ import { Button } from '@/components/ui/button';
 import { CalendarIcon, ClockIcon, CheckIcon } from 'lucide-react';
 type StatusCardProps = {
   value: number | string;
-  unit: string;
   description: string;
-  buttonLabel?: string;
-  onButtonClick?: () => void;
   icon?: React.ReactNode;
   color?: 'green' | 'red' | 'blue' | 'yellow';
 };
 
 export default function StatusCard({
   value,
-  unit,
   description,
-  buttonLabel,
   icon,
-  onButtonClick,
   color = 'green',
 }: StatusCardProps) {
   const colorClasses: Record<string, string> = {
@@ -29,9 +23,9 @@ export default function StatusCard({
 
   return (
     <Card className="p-2">
-      <div className="flex items-center">
+      <div className="flex space-x-0 items-center">
         <div className={`w-auto ${colorClasses[color]}`}>{icon}</div>
-        <CardContent className="ml-4">
+        <CardContent className="">
           <p className="text-sm text-gray-500">{description}</p>
           <p className="text-2xl font-bold">{value}</p>
         </CardContent>

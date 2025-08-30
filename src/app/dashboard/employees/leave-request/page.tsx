@@ -10,21 +10,23 @@ import { toast } from 'sonner';
 import { resolve } from 'node:dns';
 import { HeaderTitle } from '@/components/HeaderTitle';
 import StatusCard from '@/components/StatusCard';
-import { CalendarIcon, CheckIcon, Search, XIcon } from 'lucide-react';
+import { CalendarIcon, CheckIcon, Search, TimerIcon, XIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { LeaveCard } from '@/components/LeaveCard';
+import { Button } from '@/components/ui/button';
+import { LeaveRequestDialog } from './LeaveRequestDialog';
+import { Label } from '@/components/ui/label';
 
 const LeaveRequestPage = () => {
   const [leaverequests, setLeaveRequests] = useState<LeaveRequestDto[]>([]);
   const { userAccount } = useApp();
-  const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
-  const [total, setTotal] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [employeeId, setEmployeeId] = useState<string>(userAccount?.employeeId as string);
   const approvedCount = leaverequests.filter((request) => request.leaveRequest.status === 'approved').length;
   const rejectedCount = leaverequests.filter((request) => request.leaveRequest.status === 'rejected').length;
   const pendingCount = leaverequests.filter((request) => request.leaveRequest.status === 'PENDING').length;
+
+  const [open, setOpen] = useState<boolean>(false);
   useEffect(() => {
     if (userAccount?.employeeId) {
       setEmployeeId(userAccount.employeeId);
@@ -33,14 +35,12 @@ const LeaveRequestPage = () => {
     if (employeeId) {
       fetchLeaveRequest();
     }
-  }, [page, limit, employeeId, userAccount]);
+  }, [employeeId, userAccount]);
 
   const fetchLeaveRequest = async () => {
     setLoading(true);
     try {
-      const res = await getLeaveRequests(page, limit, { employeeId });
-      console.log('cuu tcccoi voi', res);
-      console.log('cuu tcccoi voi', res.leaveRequest);
+      const res = await getLeaveRequests(1, 10, { employeeId });
       setLeaveRequests(res.leaveRequest);
       setEmployeeId(userAccount?.employeeId as string);
     } catch (error: any) {
@@ -50,30 +50,36 @@ const LeaveRequestPage = () => {
     }
   };
 
-  const handlePaginationChange = (newPage: number, newLimit: number) => {
-    setPage(newPage);
-    setLimit(newLimit);
-  };
-
   return (
     <div className="space-y-5">
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3 ">
-        <StatusCard value={pendingCount} unit="Yêu cầu"  icon={<CalendarIcon className="w-5 h-5" />} description="Số lượng yêu cầu nghỉ" color="yellow" />
-        <StatusCard value={approvedCount} unit="Yêu cầu" icon={<CheckIcon className="w-5 h-5" />} description="Số lượng yêu cầu đã duyệt" color="green" />
-        <StatusCard value={rejectedCount} unit="Yêu cầu" icon={<XIcon className="w-5 h-5" />} description="Số lượng yêu cầu đã từ chối" color="red" />
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 space-x-3">
+        <StatusCard
+          value={pendingCount}
+          icon={<CalendarIcon className="w-8 h-8" />}
+          description="Số lượng yêu cầu nghỉ"
+          color="yellow"
+        />
+        <StatusCard
+          value={approvedCount}
+          icon={<TimerIcon className="w-8 h-8" />}
+          description="Số lượng yêu cầu đã duyệt"
+          color="green"
+        />
+        <StatusCard
+          value={rejectedCount}
+          icon={<XIcon className="w-8 h-8" />}
+          description="Số lượng yêu cầu đã từ chối"
+          color="red"
+        />
       </div>
       <div className="border rounded-md">
         <div className="p-3">
-          <HeaderTitle text="Thông tin lịch nghỉ của nhân viên" subText="Thông tin chi tiết về lịch nghỉ của nhân viên" />
-          {/* <DataTable
-        columns={columns()}
-        data={leaverequests}
-        page={page}
-        limit={limit}
-        total={total}
-        onPaginationChange={handlePaginationChange}
-        loading={loading}
-      /> */}
+          <div className="flex items-center justify-between">
+            <HeaderTitle text="Thông tin lịch nghỉ của nhân viên" subText="Thông tin chi tiết về lịch nghỉ của nhân viên" />
+            <Button onClick={() => setOpen(true)}>Tạo đơn nghỉ phép</Button>
+          </div>
+          <LeaveRequestDialog open={open} setOpen={setOpen} />
+
           <LeaveCard data={leaverequests} />
         </div>
       </div>
