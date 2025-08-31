@@ -29,19 +29,25 @@ export function LeaveRequestDialog({ open, setOpen }: LeaveRequestDialogProps) {
           <DialogTitle>Đơn xin nghỉ phép</DialogTitle>
           <DialogDescription>Điền thông tin nghỉ phép</DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-2 space-x-2">
-          <div className="flex flex-col col-span-3 md:col-span-1 gap-2">
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-2">
             <Label>Ngày bắt đầu</Label>
             <DatePicker onDateChange={handleStartDateChange} dateValue={startDateSelected} />
           </div>
-          <div className="flex flex-col col-span-3 md:col-span-1 gap-2">
+          <div className="flex flex-col gap-2">
             <Label>Ngày kết thúc</Label>
             <DatePicker onDateChange={handleEndDateChange} dateValue={endDateSelected} />
           </div>
-        </div>
-        <div className="flex flex-col gap-2 col-span-3 md:col-span-1">
-          <Label>Lí do</Label>
-          <Input placeholder="Lí do " className="h-12"  />
+
+          <div className="flex flex-col gap-2 col-span-2">
+            <Label>Lí do</Label>
+            <Input placeholder="Lí do " className="h-12" />
+          </div>
+          <div className="flex flex-col gap-2 col-span-2">
+            <Label>Ghi chú</Label>
+            <Input placeholder="Ghi chú" className="h-12" />
+          </div>
         </div>
       </DialogContent>
     </Dialog>

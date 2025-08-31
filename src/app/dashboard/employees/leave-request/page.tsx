@@ -1,21 +1,15 @@
 'use client';
-import { DataTable } from '@/components/DataTable';
+import { getLeaveRequests } from '@/api/leaverequest/leaverequest';
+import { HeaderTitle } from '@/components/HeaderTitle';
+import { LeaveCard } from '@/components/LeaveCard';
+import StatusCard from '@/components/StatusCard';
+import { Button } from '@/components/ui/button';
 import { useApp } from '@/contexts/AppContext';
 import { LeaveRequestDto } from '@/models/dto/leaverequestDto';
+import { CalendarIcon, TimerIcon, XIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { columns } from './columns';
-import { set } from 'nprogress';
-import { getLeaveRequests } from '@/api/leaverequest/leaverequest';
 import { toast } from 'sonner';
-import { resolve } from 'node:dns';
-import { HeaderTitle } from '@/components/HeaderTitle';
-import StatusCard from '@/components/StatusCard';
-import { CalendarIcon, CheckIcon, Search, TimerIcon, XIcon } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { LeaveCard } from '@/components/LeaveCard';
-import { Button } from '@/components/ui/button';
 import { LeaveRequestDialog } from './LeaveRequestDialog';
-import { Label } from '@/components/ui/label';
 
 const LeaveRequestPage = () => {
   const [leaverequests, setLeaveRequests] = useState<LeaveRequestDto[]>([]);

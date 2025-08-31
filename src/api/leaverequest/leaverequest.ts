@@ -40,4 +40,3 @@ export const getLeaveRequestDetail = async (id: string): Promise<any> => {
     throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
   }
 };
-
