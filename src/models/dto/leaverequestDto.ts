@@ -1,5 +1,14 @@
 import type PaginationDto from './pagination';
 
+interface CreateLeaveRequestDto {
+  employeeId?: string;
+  startDate?: Date;
+  endDate?: Date;
+  reason?: string;
+  note?: string;
+  status?: string;
+}
+
 interface LeaveRequestDto {
   leaveRequest: {
     id: string;
@@ -33,4 +42,4 @@ interface FiltersLeaveRequest {
   startDate?: string;
   endDate?: string;
 }
-export type { LeaveRequestDto, LeaveRequestPaginationDto, FiltersLeaveRequest };
+export type { CreateLeaveRequestDto, LeaveRequestDto, LeaveRequestPaginationDto, FiltersLeaveRequest };

@@ -72,7 +72,7 @@ const LeaveRequestPage = () => {
             <HeaderTitle text="Thông tin lịch nghỉ của nhân viên" subText="Thông tin chi tiết về lịch nghỉ của nhân viên" />
             <Button onClick={() => setOpen(true)}>Tạo đơn nghỉ phép</Button>
           </div>
-          <LeaveRequestDialog open={open} setOpen={setOpen} />
+          <LeaveRequestDialog open={open} setOpen={setOpen} reloadData={fetchLeaveRequest} leaveRequest={null} />
 
           <LeaveCard data={leaverequests} />
         </div>
