@@ -39,19 +39,26 @@ export const columns = (): ColumnDef<LeaveRequestDto>[] => [
     },
   },
   {
-    accessorKey: 'startDate',
-    header: 'Start Date',
+    id: 'dates',
+    header: 'Dates',
     cell: ({ row }) => {
-      const startDate = row.original.leaveRequest.startDate;
-      return startDate ? format(new Date(startDate), 'dd/MM/yyyy HH:mm:ss') : '--/--';
-    },
-  },
-  {
-    accessorKey: 'endDate',
-    header: 'End Date',
-    cell: ({ row }) => {
-      const endDate = row.original.leaveRequest.endDate;
-      return endDate ? format(new Date(endDate), 'dd/MM/yyyy HH:mm:ss') : '--/--';
+      const startDateObj = row.original.leaveRequest.startDate ? new Date(row.original.leaveRequest.startDate) : null;
+      const endDateObj = row.original.leaveRequest.endDate ? new Date(row.original.leaveRequest.endDate) : null;
+
+      const startDate = row.original.leaveRequest.startDate
+        ? format(new Date(row.original.leaveRequest.startDate), 'dd/MM/yyyy')
+        : '--/--';
+      const endDate = row.original.leaveRequest.endDate
+        ? format(new Date(row.original.leaveRequest.endDate), 'dd/MM/yyyy')
+        : '--/--';
+      const dates = `${startDate} - ${endDate}`;
+      const days = startDateObj && endDateObj ? Math.round((endDateObj.getTime() - startDateObj.getTime()) / (1000 * 60 * 60 * 24)) + 1 : 0;
+      return (
+        <div className="">
+          {dates ? dates : '--/--'}
+          <div className="text-muted-foreground">{days ? `${days} days` : '--/--'}</div>
+        </div>
+      );
     },
   },
   {
