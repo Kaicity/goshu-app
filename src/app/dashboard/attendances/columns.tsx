@@ -56,14 +56,6 @@ export const columns: ColumnDef<AttendanceDto>[] = [
       return <>{TYPEWORK_LABELS[employee] || '--/--'}</>;
     },
   },
-  // {
-  //   accessorKey: 'date',
-  //   header: () => <div className="">NGÀY</div>,
-  //   cell: ({ row }) => {
-  //     const date = row.original.attendance.date;
-  //     return <div>{date ? formatUTC(new Date(date), 'dd/MM/yyyy') : '--/--'}</div>;
-  //   },
-  // },
   {
     accessorKey: 'checkIn',
     header: () => <div className="">CHECK IN</div>,

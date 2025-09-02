@@ -1,7 +1,16 @@
 import type PaginationDto from './pagination';
 
+interface CreateLeaveRequestDto {
+  employeeId?: string;
+  startDate?: Date;
+  endDate?: Date;
+  reason?: string;
+  note?: string;
+  status?: string;
+}
+
 interface LeaveRequestDto {
-  leaverequest: {
+  leaveRequest: {
     id: string;
     startDate?: string;
     endDate?: string;
@@ -19,10 +28,18 @@ interface LeaveRequestDto {
     type?: string;
     designation?: string;
   };
-  createdAt: string;
+  createdAt?: string;
 }
 
 interface LeaveRequestPaginationDto {
-    leaverequests: LeaveRequestDto[];
-    pagination: PaginationDto;
+  leaveRequest: LeaveRequestDto[];
+  pagination: PaginationDto;
 }
+
+interface FiltersLeaveRequest {
+  employeeId?: string;
+  status?: string;
+  startDate?: string;
+  endDate?: string;
+}
+export type { CreateLeaveRequestDto, LeaveRequestDto, LeaveRequestPaginationDto, FiltersLeaveRequest };
