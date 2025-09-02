@@ -1,22 +1,21 @@
 'use client';
-import { startTransition, useActionState, useEffect, useState } from 'react';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { DialogDescription } from '@radix-ui/react-dialog';
-import { Label } from '@/components/ui/label';
+import { createLeaveRequest } from '@/api/leaverequest/leaverequest';
 import { DatePicker } from '@/components/date-picker';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { SubmitButton } from '@/components/SummitButton';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useApp } from '@/contexts/AppContext';
+import { LeaveRequest } from '@/enums/leaveRequestEnum';
 import { cn } from '@/lib/utils';
-import { useForm } from 'react-hook-form';
+import { LeaveRequestDto } from '@/models/dto/leaverequestDto';
 import { createLeaveRequestFormData, createLeaveRequestSchema } from '@/models/schemas/createLeaveRequestSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { DialogDescription } from '@radix-ui/react-dialog';
+import { startTransition, useActionState, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { LeaveRequest } from '@/enums/leaveRequestEnum';
-import { createLeaveRequest } from '@/api/leaverequest/leaverequest';
-import { set } from 'nprogress';
-import { LeaveRequestDto } from '@/models/dto/leaverequestDto';
-import { useApp } from '@/contexts/AppContext';
 
 interface LeaveRequestDialogProps {
   open: boolean;
@@ -29,7 +28,7 @@ export function LeaveRequestDialog({ open, setOpen, leaveRequest, reloadData: lo
   const [startDateSelected, setStartDateSelected] = useState<Date>(new Date());
   const [endDateSelected, setEndDateSelected] = useState<Date>(new Date());
   const { userAccount } = useApp();
-  const [employeeId, setEmployeeId] = useState<string>(userAccount?.employeeId as string);
+  const [employeeId] = useState<string>(userAccount?.employeeId as string);
   const {
     register,
     handleSubmit,
@@ -71,32 +70,9 @@ export function LeaveRequestDialog({ open, setOpen, leaveRequest, reloadData: lo
       status: LeaveRequest.PENDING,
     });
   };
-  // const [state, submitAction, isPending] = useActionState(async (prevState: any, formData: createLeaveRequestFormData) => {
-  //   console.log('Dữ liệu gửi đi từ submitAction:', formData);
-  //   try {
-  //     const res = await createLeaveRequest(formData);
-
-  //     console.log('Dữ liệu trả về từ API:', res);
-  //     if (res) {
-  //       toast.success('Tạo đơn xin nghỉ phép thành công');
-  //       setOpen(false);
-  //       initialFormData();
-  //       loadData();
-  //     }
-  //   } catch (error: any) {
-  //     toast.error('Tạo phòng ban thất bại', {
-  //       description: error.message,
-  //     });
-  //   }
-  // }, undefined);
-
-  const [isPending, setIsPending] = useState(false);
-
-  const onSubmit = async (data: createLeaveRequestFormData) => {
-    console.log('Submit dữ liệu:', data);
-    setIsPending(true);
+  const [state, submitAction, isPending] = useActionState(async (prevState: any, formData: createLeaveRequestFormData) => {
     try {
-      const res = await createLeaveRequest(data);
+      const res = await createLeaveRequest(formData);
       if (res) {
         toast.success('Tạo đơn xin nghỉ phép thành công');
         setOpen(false);
@@ -104,10 +80,16 @@ export function LeaveRequestDialog({ open, setOpen, leaveRequest, reloadData: lo
         loadData();
       }
     } catch (error: any) {
-      toast.error('Tạo đơn thất bại', { description: error.message });
-    } finally {
-      setIsPending(false);
+      toast.error('Tạo đơn nghỉ phép thất bại', {
+        description: error.message,
+      });
     }
+  }, undefined);
+
+  const onSubmit = async (data: createLeaveRequestFormData) => {
+    startTransition(() => {
+      submitAction(data);
+    });
   };
 
   const handleStartDateChange = (date: Date | undefined) => {

@@ -1,6 +1,4 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { CalendarIcon, ClockIcon, CheckIcon } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 type StatusCardProps = {
   value: number | string;
   description: string;

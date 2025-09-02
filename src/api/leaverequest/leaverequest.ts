@@ -1,6 +1,5 @@
-import { LeaveRequestDto, FiltersLeaveRequest, LeaveRequestPaginationDto, CreateLeaveRequestDto } from '@/models/dto/leaverequestDto';
+import { CreateLeaveRequestDto, FiltersLeaveRequest, LeaveRequestPaginationDto } from '@/models/dto/leaverequestDto';
 import { instance } from '../axiosClient';
-import { LeaveRequest } from '@/enums/leaveRequestEnum';
 
 export const getLeaveRequests = async (
   page: number,
@@ -44,11 +43,11 @@ export const getLeaveRequestDetail = async (id: string): Promise<any> => {
 
 export const createLeaveRequest = async (LeaveRequest: CreateLeaveRequestDto): Promise<any> => {
   try {
-    console.log("Payload gửi lên API:", LeaveRequest);
+    // console.log("Payload gửi lên API:", LeaveRequest);
     const response = await instance.post('/leaveRequests/createLeaveRequest', LeaveRequest);
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
     throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
   }
-}
+};
