@@ -3,9 +3,12 @@ import { LeaveRequestDto } from '@/models/dto/leaverequestDto';
 import { format } from 'date-fns';
 import { LeaveRequest, LEAVEREQUEST_LABELS, LEAVEREQUEST_STYLES } from '@/enums/leaveRequestEnum';
 import { Button } from '@/components/ui/button';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, Edit, MoreHorizontal, Trash } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
-export const columns = (): ColumnDef<LeaveRequestDto>[] => [
+export const columns = (
+  handleDelete: (leaveRequest: LeaveRequestDto) => void,
+): ColumnDef<LeaveRequestDto>[] => [
   {
     id: 'fullname',
     accessorFn: (row) => `${row.employee.lastname || ''} ${row.employee.firstname || ''}`.trim(),
@@ -52,7 +55,8 @@ export const columns = (): ColumnDef<LeaveRequestDto>[] => [
         ? format(new Date(row.original.leaveRequest.endDate), 'dd/MM/yyyy')
         : '--/--';
       const dates = `${startDate} - ${endDate}`;
-      const days = startDateObj && endDateObj ? Math.round((endDateObj.getTime() - startDateObj.getTime()) / (1000 * 60 * 60 * 24)) + 1 : 0;
+      const days =
+        startDateObj && endDateObj ? Math.round((endDateObj.getTime() - startDateObj.getTime()) / (1000 * 60 * 60 * 24)) + 1 : 0;
       return (
         <div className="">
           {dates ? dates : '--/--'}
@@ -88,6 +92,34 @@ export const columns = (): ColumnDef<LeaveRequestDto>[] => [
     cell: ({ row }) => {
       const note = row.original.leaveRequest.note;
       return <div>{note}</div>;
+    },
+  },
+  {
+    accessorKey: 'actions',
+    header: () => <div className="text-center ">HÀNH ĐỘNG</div>,
+    cell: ({ row }) => {
+      const resource = row.original;
+      return (
+        <div className="flex justify-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => (resource)}>
+                <Edit className="w-4 h-4 mr-2" />
+                Chấp nhận
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDelete(resource)} className="text-red-500 focus:text-red-500">
+                <Trash className="w-4 h-4 mr-2" />
+                Xoá
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
     },
   },
 ];

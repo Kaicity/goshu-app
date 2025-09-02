@@ -51,3 +51,13 @@ export const createLeaveRequest = async (LeaveRequest: CreateLeaveRequestDto): P
     throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
   }
 };
+
+export const deleteLeaveRequest = async (id: string): Promise<any> => {
+  try {
+    const response = await instance.delete(`/leaveRequests/deleteLeaveRequest/${id}`);
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message;
+    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+  }
+};
