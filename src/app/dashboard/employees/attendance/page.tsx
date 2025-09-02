@@ -11,7 +11,7 @@ import type { AttendanceDto } from '@/models/dto/attendanceDto';
 import { EmployeeDto } from '@/models/dto/employeeDto';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
-import { Clock, LogIn, LogOut, PackageOpen, User } from 'lucide-react';
+import { Clock, Dot, LogIn, LogOut, PackageOpen, User } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -46,8 +46,14 @@ const AttendancePage = () => {
 
   const fetchAttendanceHistory = async () => {
     try {
-      const res = await getAttendances(1, 10, { employeeId });
-      setAttendanceHistories(res.attendances);
+      const res = await getAttendances(1, 31, { employeeId });
+      setAttendanceHistories(
+        res.attendances.sort((a, b) => {
+          const dateA = a.attendance.date ? new Date(a.attendance.date).getTime() : 0;
+          const dateB = b.attendance.date ? new Date(b.attendance.date).getTime() : 0;
+          return dateA - dateB;
+        }),
+      );
 
       // lấy record hôm nay
       const today = format(new Date(), 'yyyy-MM-dd');
@@ -159,7 +165,14 @@ const AttendancePage = () => {
         <div className="border rounded-lg divide-y text-sm overflow-y-auto max-h-72">
           {attendanceHistories.map((item, idx) => (
             <div key={idx} className="flex justify-between items-center p-2 text-foreground">
-              <span>{item.attendance.date ? formatUTC(new Date(item.attendance.date), 'dd/MM/yyyy') : '--'}</span>
+              <div className="flex items-center">
+                <span>{item.attendance.date ? formatUTC(new Date(item.attendance.date), 'dd/MM/yyyy') : '--'}</span>
+                {formatUTC(new Date(item.attendance.date as string), 'dd/MM/yyyy') === format(new Date(), 'dd/MM/yyyy') ? (
+                  <Dot size={26} />
+                ) : (
+                  <></>
+                )}
+              </div>
               {item.attendance.status === AttendanceStatus.ABSENT ? (
                 <span className={`${ATTENDANCE_COLOR[item.attendance.status as AttendanceStatus]} font-medium`}>
                   {ATTENDANCE_LABELS[item.attendance.status as AttendanceStatus]}
