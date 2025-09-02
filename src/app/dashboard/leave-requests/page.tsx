@@ -8,7 +8,7 @@ import { columns } from './columns';
 import { useSearchParams } from 'next/navigation';
 import { LeaveRequestDto } from '@/models/dto/leaverequestDto';
 import { toast } from 'sonner';
-import { getLeaveRequests } from '@/api/leaverequest/leaverequest';
+import { deleteLeaveRequest, getLeaveRequests } from '@/api/leaverequest/leaverequest';
 import { set } from 'nprogress';
 import { useApp } from '@/contexts/AppContext';
 
@@ -29,7 +29,7 @@ const LeaveRequestPage = () => {
   const fetchLeaveRequests = async () => {
     setLoading(true);
     try {
-      const res = await getLeaveRequests(page, limit,{});
+      const res = await getLeaveRequests(page, limit, {});
       console.log('hello', res.leaveRequest);
       setTotal(res.pagination.total);
       setLimit(res.pagination.limit);
@@ -40,11 +40,25 @@ const LeaveRequestPage = () => {
       setLoading(false);
     }
   };
+  const handleDelete = async (leaveRequest: LeaveRequestDto) => {
+    try {
+      const res = await deleteLeaveRequest(leaveRequest.leaveRequest.id);
+      if (!res) {
+        toast.success('Xoá yêu cầu nghỉ phép thành công');
+        fetchLeaveRequests();
+      }
+    } catch (error: any) {
+      toast.error('Xóa yêu cầu nghỉ phép thất bại', {
+        description: error.message,
+      });
+    }
+  };
+
   return (
     <div>
       <HeaderTitle text="Quản Lý Tài Khoản" subText="Quản lý tài khoản người dùng truy cập" />
       <DataTable
-        columns={columns()}
+        columns={columns(handleDelete)}
         data={leaveRequests}
         total={total}
         page={page}
