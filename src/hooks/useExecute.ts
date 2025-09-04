@@ -15,8 +15,8 @@ export function useActionWithLoading() {
     try {
       await action();
       toast.success(options?.successMessage || 'Thành công');
-    } catch (error) {
-      toast.error(options?.errorMessage || 'Đã xảy ra lỗi');
+    } catch (error: any) {
+      toast.error(options?.errorMessage || error.message);
     } finally {
       setIsLoadingAction(false);
     }

@@ -7,7 +7,7 @@ export const checkIn = async (employeeId: string): Promise<any> => {
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };
 
@@ -17,7 +17,7 @@ export const checkOut = async (employeeId: string): Promise<any> => {
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };
 
@@ -47,6 +47,16 @@ export const getAttendances = async (
     };
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
+  }
+};
+
+export const generateAttendanceForAllEmployees = async (year: number, month: number) => {
+  try {
+    const response = await instance.post('/attendances/generateAttendances', { year, month });
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message;
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };

@@ -1,12 +1,12 @@
 'use client';
 
-import { getAttendances } from '@/api/attendance/attendance';
+import { generateAttendanceForAllEmployees, getAttendances } from '@/api/attendance/attendance';
 import { DataTable } from '@/components/DataTable';
 import { HeaderTitle } from '@/components/HeaderTitle';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import type { AttendanceDto } from '@/models/dto/attendanceDto';
-import { RotateCcwIcon, Search } from 'lucide-react';
+import { CalendarClock, RotateCcwIcon, Search } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { columns } from './columns';
@@ -16,10 +16,14 @@ import { format } from 'date-fns';
 import { MultiSelect } from '@/components/MultiSelect';
 import { ATTENDANCE_LABELS, AttendanceStatus } from '@/enums/attendanceEnum';
 import { io, type Socket } from 'socket.io-client';
+import { useActionWithLoading } from '@/hooks/useExecute';
+import LoadingActionPage from '@/components/LoadingActionPage';
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
 
 const AttendancesPage = () => {
+  const { isLoadingAction, execute } = useActionWithLoading();
+
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -108,8 +112,28 @@ const AttendancesPage = () => {
     router.push(`/dashboard/attendances?${params.toString()}`);
   };
 
+  const handleGenerateAttendance = async () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+
+    execute(
+      async () => {
+        if (year && month) {
+          await generateAttendanceForAllEmployees(year, month);
+          fetchAttendances();
+        }
+      },
+      {
+        successMessage: 'Lịch chấm công đã tạo thành công',
+      },
+    );
+  };
+
   return (
     <>
+      {isLoadingAction && <LoadingActionPage />}
+
       <HeaderTitle text="BẢNG NGÀY CÔNG" subText="Tất cả ngày công của nhân viên" />
       <div className="flex flex-wrap items-center gap-1 mb-6 mt-2">
         <div className="hidden md:block relative max-w-sm sm:w-full">
@@ -142,6 +166,11 @@ const AttendancesPage = () => {
 
         <Button variant="outline" onClick={resetFilters}>
           <RotateCcwIcon className="w-6 h-6" />
+        </Button>
+
+        <Button className="w-full md:w-max ml-auto" onClick={handleGenerateAttendance}>
+          <CalendarClock className="w-4 h-4 mr-2" />
+          Tạo lịch chấm công
         </Button>
       </div>
 
