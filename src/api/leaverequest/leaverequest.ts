@@ -61,3 +61,14 @@ export const deleteLeaveRequest = async (id: string): Promise<any> => {
     throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
   }
 };
+
+export const approvedByLeaveRequest = async (id: string, data: any): Promise<any> => {
+  try {
+    const response = await instance.put(`/leaveRequests/approveLeaveRequest/${id}`, data);
+    console.log('Response from approveLeaveRequest:', response);
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message;
+    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+  }
+};
