@@ -37,8 +37,9 @@ interface LeaveRequestPaginationDto {
 }
 
 interface FiltersLeaveRequest {
+  search?: string;
   employeeId?: string;
-  status?: string;
+  status?: string[];
   startDate?: string;
   endDate?: string;
 }

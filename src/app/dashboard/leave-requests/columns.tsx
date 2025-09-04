@@ -8,6 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 export const columns = (
   handleDelete: (leaveRequest: LeaveRequestDto) => void,
+  handleApprove: (leaveRequest: LeaveRequestDto) => void,
 ): ColumnDef<LeaveRequestDto>[] => [
   {
     id: 'fullname',
@@ -108,7 +109,7 @@ export const columns = (
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => (resource)}>
+              <DropdownMenuItem onClick={() =>handleApprove(resource)}>
                 <Edit className="w-4 h-4 mr-2" />
                 Chấp nhận
               </DropdownMenuItem>

@@ -16,8 +16,8 @@ const LeaveRequestPage = () => {
   const { userAccount } = useApp();
   const [loading, setLoading] = useState(true);
   const [employeeId, setEmployeeId] = useState<string>(userAccount?.employeeId as string);
-  const approvedCount = leaverequests.filter((request) => request.leaveRequest.status === 'approved').length;
-  const rejectedCount = leaverequests.filter((request) => request.leaveRequest.status === 'rejected').length;
+  const approvedCount = leaverequests.filter((request) => request.leaveRequest.status === 'APPROVED').length;
+  const rejectedCount = leaverequests.filter((request) => request.leaveRequest.status === 'REJECTED').length;
   const pendingCount = leaverequests.filter((request) => request.leaveRequest.status === 'PENDING').length;
 
   const [open, setOpen] = useState<boolean>(false);
