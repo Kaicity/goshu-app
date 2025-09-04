@@ -27,7 +27,7 @@ export const getLeaveRequests = async (
     };
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };
 
@@ -37,7 +37,7 @@ export const getLeaveRequestDetail = async (id: string): Promise<any> => {
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };
 
@@ -48,7 +48,7 @@ export const createLeaveRequest = async (LeaveRequest: CreateLeaveRequestDto): P
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };
 
@@ -58,6 +58,6 @@ export const deleteLeaveRequest = async (id: string): Promise<any> => {
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };

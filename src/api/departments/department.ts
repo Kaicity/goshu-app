@@ -20,7 +20,7 @@ export const getDepartments = async (
     };
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };
 
@@ -30,7 +30,7 @@ export const createDepartment = async (department: DepartmentDto): Promise<any> 
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };
 
@@ -57,5 +57,4 @@ export const updateDepartment = async (id: string, department: DepartmentDto): P
     const errorMessage = error.response?.data?.message;
     throw new Error(errorMessage || 'Mất kết nối với hệ thống máy chủ');
   }
-  
-}
+};

@@ -8,7 +8,7 @@ export const forgotPassword = async (email: string): Promise<any> => {
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };
 
@@ -18,7 +18,7 @@ export const changePassword = async (account: LoginDto): Promise<any> => {
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };
 
@@ -44,7 +44,7 @@ export const getUsers = async (page: number, limit: number, filters: UserAccount
     };
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };
 
@@ -54,7 +54,7 @@ export const createAccountUser = async (user: UserAccountDto): Promise<any> => {
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };
 
@@ -67,7 +67,7 @@ export const getUser = async (email: string): Promise<any> => {
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };
 
@@ -91,7 +91,7 @@ export const updateAccountUser = async (id: string, user: UserAccountDto): Promi
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };
 
@@ -104,6 +104,6 @@ export const changePasswordUser = async (email: string, password: string): Promi
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data?.message;
-    throw new Error(errorMessage || 'Mất kết nối đến hệ thống máy chủ');
+    throw new Error(errorMessage || 'Đã có lỗi xảy ra');
   }
 };

@@ -11,7 +11,7 @@ import type { AttendanceDto } from '@/models/dto/attendanceDto';
 import { EmployeeDto } from '@/models/dto/employeeDto';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
-import { Clock, Dot, LogIn, LogOut, PackageOpen, User } from 'lucide-react';
+import { CheckCheck, Clock, LogIn, LogOut, PackageOpen, User } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -161,14 +161,14 @@ const AttendancePage = () => {
       </Card>
 
       <div className="w-full max-w-md mt-8">
-        <h2 className="text-lg font-semibold mb-3">Lịch sử trong tuần</h2>
+        <h2 className="text-lg font-semibold mb-3">Lịch sử chấm công</h2>
         <div className="border rounded-lg divide-y text-sm overflow-y-auto max-h-72">
           {attendanceHistories.map((item, idx) => (
             <div key={idx} className="flex justify-between items-center p-2 text-foreground">
               <div className="flex items-center">
                 <span>{item.attendance.date ? formatUTC(new Date(item.attendance.date), 'dd/MM/yyyy') : '--'}</span>
                 {formatUTC(new Date(item.attendance.date as string), 'dd/MM/yyyy') === format(new Date(), 'dd/MM/yyyy') ? (
-                  <Dot size={26} />
+                  <CheckCheck size={20} className="ml-2" />
                 ) : (
                   <></>
                 )}
