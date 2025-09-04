@@ -111,7 +111,7 @@ export function LeaveRequestDialog({ open, setOpen, leaveRequest, reloadData: lo
             <DialogDescription>Điền thông tin nghỉ phép</DialogDescription>
           </DialogHeader>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 my-5">
             <div className="flex flex-col gap-2">
               <Label>Ngày bắt đầu</Label>
               <DatePicker onDateChange={handleStartDateChange} dateValue={startDateSelected} />
@@ -130,6 +130,7 @@ export function LeaveRequestDialog({ open, setOpen, leaveRequest, reloadData: lo
               <Input {...register('note')} placeholder="Ghi chú" className="h-12" />
             </div>
           </div>
+
           <DialogFooter className="flex justify-end gap-2">
             <Button
               type="button"
