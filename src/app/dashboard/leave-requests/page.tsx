@@ -1,23 +1,24 @@
 'use client';
+import { approvedByLeaveRequest, deleteLeaveRequest, getLeaveRequests } from '@/api/leaverequest/leaverequest';
 import ProtectPage from '@/components/auth/ProtectPage';
 import { DataTable } from '@/components/DataTable';
 import { HeaderTitle } from '@/components/HeaderTitle';
-import { UserRole } from '@/enums/userRolesEnum';
-import React, { useEffect, useState } from 'react';
-import { columns } from './columns';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { LeaveRequestDto } from '@/models/dto/leaverequestDto';
-import { toast } from 'sonner';
-import { approvedByLeaveRequest, deleteLeaveRequest, getLeaveRequests } from '@/api/leaverequest/leaverequest';
-import { set } from 'nprogress';
-import { useApp } from '@/contexts/AppContext';
-import { CalendarIcon, Search, TimerIcon, XIcon } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import { MultiSelect } from '@/components/MultiSelect';
-import { LeaveRequest, LEAVEREQUEST_LABELS } from '@/enums/leaveRequestEnum';
 import StatusCard from '@/components/StatusCard';
+import { Input } from '@/components/ui/input';
+import { LeaveRequest, LEAVEREQUEST_LABELS } from '@/enums/leaveRequestEnum';
+import { UserRole } from '@/enums/userRolesEnum';
+import { LeaveRequestDto } from '@/models/dto/leaverequestDto';
+import { CalendarIcon, Search, TimerIcon, XIcon } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { columns } from './columns';
+import { useApp } from '@/contexts/AppContext';
 
 const LeaveRequestPage = () => {
+  const { userAccount } = useApp();
+
   const searchParams = useSearchParams();
   const [search, setSearch] = useState<string>(searchParams.get('search') || '');
 
@@ -72,7 +73,27 @@ const LeaveRequestPage = () => {
     try {
       const updatedRequest = {
         ...leaveRequest.leaveRequest,
-        status: 'APPROVED',
+        approvedBy: userAccount?.employeeId,
+        status: LeaveRequest.APPROVED,
+      };
+      const res = await approvedByLeaveRequest(leaveRequest.leaveRequest.id, updatedRequest);
+      if (res) {
+        toast.success('Phê duyệt yêu cầu nghỉ phép thành công');
+        fetchLeaveRequests();
+      }
+    } catch (error: any) {
+      toast.error('Phê duyệt yêu cầu nghỉ phép thất bại', {
+        description: error.message,
+      });
+    }
+  };
+
+  const handleReject = async (leaveRequest: LeaveRequestDto) => {
+    try {
+      const updatedRequest = {
+        ...leaveRequest.leaveRequest,
+        approvedBy: userAccount?.employeeId,
+        status: LeaveRequest.REJECTED,
       };
       const res = await approvedByLeaveRequest(leaveRequest.leaveRequest.id, updatedRequest);
       if (res) {
@@ -96,7 +117,7 @@ const LeaveRequestPage = () => {
   };
 
   return (
-    <div className='space-y-5'>
+    <div className="space-y-5">
       <HeaderTitle text="Quản Lý Yêu Cầu Nghỉ Phép" subText="Quản lý yêu cầu nghỉ phép của nhân viên" />
       <div className="mt-4 grid grid-cols-1 md:grid-cols-3 space-x-3">
         <StatusCard
@@ -118,7 +139,7 @@ const LeaveRequestPage = () => {
           color="red"
         />
       </div>
-      <div className="flex flex-wrap items-center gap-1 mb-6 mt-2">
+      <div className="flex flex-wrap items-center gap-2 mb-6 mt-2">
         <div className="hidden md:block relative max-w-sm sm:w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
           <Input
@@ -146,7 +167,7 @@ const LeaveRequestPage = () => {
         />
       </div>
       <DataTable
-        columns={columns(handleDelete, handleApprove)}
+        columns={columns(handleDelete, handleApprove, handleReject)}
         data={leaveRequests}
         total={total}
         page={page}

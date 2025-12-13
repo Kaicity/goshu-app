@@ -4,8 +4,8 @@ import { DatePicker } from '@/components/date-picker';
 import { SubmitButton } from '@/components/SummitButton';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { useApp } from '@/contexts/AppContext';
 import { LeaveRequest } from '@/enums/leaveRequestEnum';
 import { cn } from '@/lib/utils';
@@ -13,6 +13,7 @@ import { LeaveRequestDto } from '@/models/dto/leaverequestDto';
 import { createLeaveRequestFormData, createLeaveRequestSchema } from '@/models/schemas/createLeaveRequestSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogDescription } from '@radix-ui/react-dialog';
+import { format } from 'date-fns';
 import { startTransition, useActionState, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -28,6 +29,7 @@ export function LeaveRequestDialog({ open, setOpen, leaveRequest, reloadData: lo
   const [startDateSelected, setStartDateSelected] = useState<Date>(new Date());
   const [endDateSelected, setEndDateSelected] = useState<Date>(new Date());
   const { userAccount } = useApp();
+
   const [employeeId] = useState<string>(userAccount?.employeeId as string);
   const {
     register,
@@ -46,30 +48,16 @@ export function LeaveRequestDialog({ open, setOpen, leaveRequest, reloadData: lo
     }
   }, [userAccount, setValue]);
 
-  useEffect(() => {
-    if (leaveRequest) {
-      reset({
-        startDate: new Date(startDateSelected),
-        endDate: new Date(endDateSelected),
-        reason: leaveRequest.leaveRequest.reason,
-        note: leaveRequest.leaveRequest.note,
-        status: leaveRequest.leaveRequest.status,
-      });
-    } else {
-      initialFormData();
-    }
-  }, [leaveRequest]);
-
   const initialFormData = () => {
     reset({
       employeeId: employeeId,
-      startDate: startDateSelected,
-      endDate: endDateSelected,
+      startDate: '',
+      endDate: '',
       reason: '',
       note: '',
-      status: LeaveRequest.PENDING,
     });
   };
+
   const [state, submitAction, isPending] = useActionState(async (prevState: any, formData: createLeaveRequestFormData) => {
     try {
       const res = await createLeaveRequest(formData);
@@ -95,12 +83,14 @@ export function LeaveRequestDialog({ open, setOpen, leaveRequest, reloadData: lo
   const handleStartDateChange = (date: Date | undefined) => {
     if (!date) return;
     setStartDateSelected(date);
-    setValue('startDate', date);
+    const startDateStr = format(date, 'yyyy-MM-dd');
+    setValue('startDate', startDateStr);
   };
   const handleEndDateChange = (date: Date | undefined) => {
     if (!date) return;
     setEndDateSelected(date);
-    setValue('endDate', date);
+    const endDateStr = format(date, 'yyyy-MM-dd');
+    setValue('endDate', endDateStr);
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -114,20 +104,40 @@ export function LeaveRequestDialog({ open, setOpen, leaveRequest, reloadData: lo
           <div className="grid grid-cols-2 gap-4 my-5">
             <div className="flex flex-col gap-2">
               <Label>Ngày bắt đầu</Label>
-              <DatePicker onDateChange={handleStartDateChange} dateValue={startDateSelected} />
+              <DatePicker
+                onDateChange={handleStartDateChange}
+                dateValue={startDateSelected}
+                className={cn(errors.startDate && 'border border-red-500 rounded-md')}
+              />
+              {errors.startDate && <p className="text-sm text-red-500">{errors.startDate.message}</p>}
             </div>
             <div className="flex flex-col gap-2">
               <Label>Ngày kết thúc</Label>
-              <DatePicker onDateChange={handleEndDateChange} dateValue={endDateSelected} />
+              <DatePicker
+                onDateChange={handleEndDateChange}
+                dateValue={endDateSelected}
+                className={cn(errors.endDate && 'border border-red-500 rounded-md')}
+              />
+              {errors.startDate && <p className="text-sm text-red-500">{errors.startDate.message}</p>}
             </div>
 
             <div className="flex flex-col gap-2 col-span-2">
-              <Label>Lí do</Label>
-              <Input {...register('reason')} placeholder="Lí do " className="h-12" />
+              <Label className={cn(errors.reason && 'text-red-500')}>Lí do</Label>
+              <Textarea
+                {...register('reason')}
+                placeholder="Lí do "
+                className={cn('max-h-[150px] h-28', errors.reason && 'border-red-500 focus-visible:ring-red-500')}
+              />
+              {errors.reason && <p className="text-sm text-red-500">{errors.reason.message}</p>}
             </div>
             <div className="flex flex-col gap-2 col-span-2">
-              <Label>Ghi chú</Label>
-              <Input {...register('note')} placeholder="Ghi chú" className="h-12" />
+              <Label className={cn(errors.note && 'text-red-500')}>Ghi chú</Label>
+              <Textarea
+                {...register('note')}
+                placeholder="Ghi chú"
+                className={cn('max-h-[150px] h-28', errors.note && 'border-red-500 focus-visible:ring-red-500')}
+              />
+              {errors.note && <p className="text-sm text-red-500">{errors.note.message}</p>}
             </div>
           </div>
 

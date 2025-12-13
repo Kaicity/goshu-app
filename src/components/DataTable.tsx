@@ -5,6 +5,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { DataTablePagination } from '@/components/TablePagination';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useState } from 'react';
+import { PackageOpen } from 'lucide-react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -14,7 +15,7 @@ interface DataTableProps<TData, TValue> {
   total: number;
   onPaginationChange?: (page: number, limit: number) => void;
   loading?: boolean;
-  showPagination? : boolean;
+  showPagination?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -25,7 +26,7 @@ export function DataTable<TData, TValue>({
   total,
   loading,
   onPaginationChange,
-  showPagination=true,
+  showPagination = true,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -96,7 +97,10 @@ export function DataTable<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                <div className="flex flex-col gap-2 items-center text-muted-foreground">
+                  <PackageOpen />
+                  <span className="text-xs">Không có dữ liệu</span>
+                </div>
               </TableCell>
             </TableRow>
           )}

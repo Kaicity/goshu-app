@@ -71,7 +71,7 @@ const LeaveRequestPage = () => {
           <div className="flex items-center justify-between">
             <HeaderTitle text="Thông tin lịch nghỉ của nhân viên" subText="Thông tin chi tiết về lịch nghỉ của nhân viên" />
             <Button onClick={() => setOpen(true)}>Tạo đơn nghỉ phép</Button>
-          </div> 
+          </div>
           <LeaveRequestDialog open={open} setOpen={setOpen} reloadData={fetchLeaveRequest} leaveRequest={null} />
 
           <LeaveCard data={leaverequests} />

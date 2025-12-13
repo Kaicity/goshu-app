@@ -10,7 +10,7 @@ import { TypeWork, TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
 import { cn } from '@/lib/utils';
 import { DepartmentDto } from '@/models/dto/departmentDto';
 import { DialogDescription } from '@radix-ui/react-dialog';
-import { RotateCcwIcon } from 'lucide-react';
+import { PackageOpen, RotateCcwIcon } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -92,15 +92,23 @@ export function FilterDialog({ open, setOpen, onFilter, resetTrigger }: FilterDe
           {/* Deparment select */}
           <div className="flex flex-col gap-2">
             <Label>CHỌN PHÒNG BAN</Label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {departments.map((dep) => (
-                <label key={dep.id} className="flex items-center gap-2 cursor-pointer text-xs">
-                  <Checkbox checked={departmentSelected.includes(dep.id!)} onCheckedChange={() => toggleDepartment(dep.id!)} />
-                  <span>{dep.name}</span>
-                </label>
-              ))}
-            </div>
-
+            {departments.length == 0 ? (
+              <div className="flex items-center justify-center min-h-20">
+                <div className="flex flex-col gap-2 items-center text-muted-foreground">
+                  <PackageOpen />
+                  <span className="text-xs">Không có dữ liệu</span>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {departments.map((dep) => (
+                  <label key={dep.id} className="flex items-center gap-2 cursor-pointer text-xs">
+                    <Checkbox checked={departmentSelected.includes(dep.id!)} onCheckedChange={() => toggleDepartment(dep.id!)} />
+                    <span>{dep.name}</span>
+                  </label>
+                ))}
+              </div>
+            )}
             <Label>CHỌN NƠI LÀM VIỆC</Label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {Object.entries(TypeWork).map(([key, __]) => (

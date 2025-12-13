@@ -27,7 +27,7 @@ export const columns: ColumnDef<EmployeeDto>[] = [
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            HỌ VÀ TÊN
+            NHÂN VIÊN
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         </div>
@@ -41,7 +41,7 @@ export const columns: ColumnDef<EmployeeDto>[] = [
           <img
             src={employee?.avatarUrl?.trim() ? employee.avatarUrl : '/assets/default-avatar.png'}
             alt={fullName}
-            className="w-8 h-8 rounded-full object-cover"
+            className="w-10 h-10 rounded-full object-cover"
           />
           <span>{fullName}</span>
         </div>

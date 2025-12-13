@@ -2,8 +2,8 @@ import type PaginationDto from './pagination';
 
 interface CreateLeaveRequestDto {
   employeeId?: string;
-  startDate?: Date;
-  endDate?: Date;
+  startDate?: string;
+  endDate?: string;
   reason?: string;
   note?: string;
   status?: string;
@@ -16,7 +16,12 @@ interface LeaveRequestDto {
     endDate?: string;
     reason?: string;
     status: string;
-    approvedBy: string;
+    approvedBy: {
+      id: string;
+      employeeCode: string;
+      firstname?: string;
+      lastname?: string;
+    };
     note?: string;
   };
   employee: {
