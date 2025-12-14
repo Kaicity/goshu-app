@@ -2,7 +2,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardAction } from '@/componen
 import { LEAVEREQUEST_LABELS, LEAVEREQUEST_STYLES } from '@/enums/leaveRequestEnum';
 import { LeaveRequestDto } from '@/models/dto/leaverequestDto';
 import { format } from 'date-fns';
-import { PackageOpen } from 'lucide-react';
+import { PackageOpen, Pin } from 'lucide-react';
 
 interface LeaveCardProps {
   data: LeaveRequestDto[];
@@ -13,60 +13,63 @@ export function LeaveCard({ data }: LeaveCardProps) {
   // Tính số ngày chênh lệch
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {data.length > 0 ? (
-        <>
-          {data.map((item) => {
-            console.log('Item in LeaveCard:', item.createdAt);
+        data.map((item) => {
+          const startDateObj = item.leaveRequest.startDate ? new Date(item.leaveRequest.startDate) : null;
+          const endDateObj = item.leaveRequest.endDate ? new Date(item.leaveRequest.endDate) : null;
 
-            const startDateObj = item.leaveRequest.startDate ? new Date(item.leaveRequest.startDate) : null;
-            const endDateObj = item.leaveRequest.endDate ? new Date(item.leaveRequest.endDate) : null;
+          const durationDays =
+            startDateObj && endDateObj
+              ? Math.round((endDateObj.getTime() - startDateObj.getTime()) / (1000 * 60 * 60 * 24)) + 1
+              : 0;
 
-            const durationDays =
-              startDateObj && endDateObj
-                ? Math.round((endDateObj.getTime() - startDateObj.getTime()) / (1000 * 60 * 60 * 24)) + 1
-                : 0;
+          const startDate = startDateObj ? format(startDateObj, 'dd/MM/yyyy') : 'N/A';
+          const endDate = endDateObj ? format(endDateObj, 'dd/MM/yyyy') : 'N/A';
+          const createdAt = item.createdAt ? format(new Date(item.createdAt), 'dd/MM/yyyy') : 'N/A';
 
-            // Khi hiển thị:
-            const startDate = startDateObj ? format(startDateObj, 'dd/MM/yyyy') : 'N/A';
-            const endDate = endDateObj ? format(endDateObj, 'dd/MM/yyyy') : 'N/A';
+          return (
+            <Card key={item.leaveRequest.id} className="relative hover:shadow-lg transition-shadow">
+              <Pin className="absolute -top-2 -left-1 w-5 h-5 text-red-400 -rotate-12" />
 
-            const createdAt = item.createdAt ? format(new Date(item.createdAt), 'dd/MM/yyyy') : 'N/A';
-            return (
-              <Card key={item.leaveRequest.id} className="flex justify-between items-start shadow-md rounded-lg p-4">
-                {/* Left side */}
-                <div className="flex flex-col gap-2 w-full ">
-                  <div className=" flex justify-between items-start">
-                    <CardTitle className="text-lg font-semibold">{item.leaveRequest.reason || 'Không có lý do'}</CardTitle>
-                    <p className="text-right text-sm text-gray-500">Ngày tạo đơn: {createdAt}</p>
+              <CardHeader className="pb-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <CardTitle className="text-base font-semibold">{item.leaveRequest.reason || 'Không có lý do'}</CardTitle>
+                    <p className="text-xs text-muted-foreground mt-1">Ngày tạo đơn: {createdAt}</p>
                   </div>
 
-                  <CardContent className="px-0 py-0">
-                    {item.leaveRequest.note && <p className="text-md">{item.leaveRequest.note}</p>}
-                    <p className="text-sm text-gray-500 mt-1">
-                      Thời gian nghỉ phép:{' '}
-                      <span className="font-medium">
-                        {startDate} - {endDate} ({durationDays} ngày)
-                      </span>
-                    </p>
-                  </CardContent>
-                </div>
-
-                {/* Right side */}
-                <CardAction>
-                  <div className={`${LEAVEREQUEST_STYLES[item.leaveRequest.status as LeaveRequestStatus]} px-4 py-1`}>
+                  {/* Status */}
+                  <div
+                    className={`
+                  px-3 py-1 rounded-full text-xs font-medium
+                  ${LEAVEREQUEST_STYLES[item.leaveRequest.status as LeaveRequestStatus]}
+                `}
+                  >
                     {LEAVEREQUEST_LABELS[item.leaveRequest.status as LeaveRequestStatus]}
                   </div>
-                </CardAction>
-              </Card>
-            );
-          })}
-        </>
+                </div>
+              </CardHeader>
+
+              <CardContent className="pt-2 space-y-2">
+                {item.leaveRequest.note && <p className="text-sm text-foreground">{item.leaveRequest.note}</p>}
+
+                <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                  <div>
+                    <span className="font-medium text-foreground">{startDate}</span> →{' '}
+                    <span className="font-medium text-foreground">{endDate}</span>
+                  </div>
+                  <div>({durationDays} ngày)</div>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })
       ) : (
-        <div className="flex items-center justify-center min-h-20">
+        <div className="flex items-center justify-center min-h-[120px]">
           <div className="flex flex-col gap-2 items-center text-muted-foreground">
-            <PackageOpen size={30} />
-            <span className="text-xs">Không có dữ liệu</span>
+            <PackageOpen size={28} />
+            <span className="text-sm">Không có đơn xin nghỉ</span>
           </div>
         </div>
       )}

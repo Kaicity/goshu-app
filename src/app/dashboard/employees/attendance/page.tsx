@@ -11,7 +11,7 @@ import type { AttendanceDto } from '@/models/dto/attendanceDto';
 import { EmployeeDto } from '@/models/dto/employeeDto';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
-import { CheckCheck, Clock, LogIn, LogOut, PackageOpen, User } from 'lucide-react';
+import { Clock, LogIn, LogOut, PackageOpen, User } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -47,12 +47,21 @@ const AttendancePage = () => {
   const fetchAttendanceHistory = async () => {
     try {
       const res = await getAttendances(1, 31, { employeeId });
+
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+
       setAttendanceHistories(
-        res.attendances.sort((a, b) => {
-          const dateA = a.attendance.date ? new Date(a.attendance.date).getTime() : 0;
-          const dateB = b.attendance.date ? new Date(b.attendance.date).getTime() : 0;
-          return dateA - dateB;
-        }),
+        res.attendances
+          .filter((item) => {
+            if (!item.attendance.date) return false;
+            return new Date(item.attendance.date) >= now;
+          })
+          .sort((a, b) => {
+            const dateA = a.attendance.date ? new Date(a.attendance.date).getTime() : 0;
+            const dateB = b.attendance.date ? new Date(b.attendance.date).getTime() : 0;
+            return dateA - dateB;
+          }),
       );
 
       // lấy record hôm nay
@@ -110,6 +119,7 @@ const AttendancePage = () => {
   const handleCheckOut = async () => {
     setCheckOutTime(format(new Date(), 'HH:mm'));
     setStatus('CHECKED_OUT');
+
     try {
       await checkOut(employeeId);
       toast.success('Check-Out hôm nay', { description: 'Bạn đã Check-Out thành công' });
@@ -129,7 +139,7 @@ const AttendancePage = () => {
             <CardTitle className="text-xl font-semibold">Goshu chấm công</CardTitle>
           </div>
           <p className="text-sm text-muted-foreground mt-2">
-            Xin chào, {`${employee?.lastname} ${employee?.firstname}`} (Mã NV: {employee?.employeeCode})
+            Xin chào, {`${employee?.lastname ?? '--'} ${employee?.firstname ?? '--'}`} (Mã NV: {employee?.employeeCode})
           </p>
         </CardHeader>
 
@@ -161,14 +171,14 @@ const AttendancePage = () => {
       </Card>
 
       <div className="w-full max-w-md mt-8">
-        <h2 className="text-lg font-semibold mb-3">Lịch sử chấm công</h2>
+        <h2 className="text-lg font-semibold mb-3">Lịch chấm công</h2>
         <div className="border rounded-lg divide-y text-sm overflow-y-auto max-h-72">
           {attendanceHistories.map((item, idx) => (
             <div key={idx} className="flex justify-between items-center p-2 text-foreground">
               <div className="flex items-center">
                 <span>{item.attendance.date ? formatUTC(new Date(item.attendance.date), 'dd/MM/yyyy') : '--'}</span>
                 {formatUTC(new Date(item.attendance.date as string), 'dd/MM/yyyy') === format(new Date(), 'dd/MM/yyyy') ? (
-                  <CheckCheck size={20} className="ml-2" />
+                  <div className="ml-2 w-2 h-2 bg-green-500 rounded-full" />
                 ) : (
                   <></>
                 )}

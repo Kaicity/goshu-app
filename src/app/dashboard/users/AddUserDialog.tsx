@@ -32,7 +32,7 @@ interface AddUserDialogProps {
 
 export function AddUserDialog({ open, setOpen, user, reloadData: loadData }: AddUserDialogProps) {
   const [roleSelected, setRoleSelected] = useState<string>(UserRole.ADMIN);
-  const [statusSelected, setStatusSelected] = useState<string>(Status.PENDING);
+  const [statusSelected, setStatusSelected] = useState<string>(Status.ACTIVE);
   const isEdit = !!user; // Kiểm tra nếu có user thì là chỉnh sửa, ngược lại là tạo mới
   const formSchema = isEdit ? updateAccountSchema : createAccountSchema;
 
@@ -78,7 +78,7 @@ export function AddUserDialog({ open, setOpen, user, reloadData: loadData }: Add
       email: '',
       password: '',
       role: UserRole.ADMIN,
-      status: Status.PENDING,
+      status: Status.ACTIVE,
     });
     setRoleSelected(UserRole.ADMIN);
   };

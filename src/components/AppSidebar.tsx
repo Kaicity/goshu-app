@@ -1,31 +1,17 @@
 'use client';
 
 import { humanManageitems, systemsManageItems } from '@/constants/nav-link/nav-link-items';
-import {
-  BadgeCheck,
-  Bell,
-  ChevronRight,
-  ChevronsUpDown,
-  ChevronUp,
-  CreditCard,
-  LogOut,
-  Moon,
-  Sparkles,
-  Sun,
-  User2,
-} from 'lucide-react';
+import { useApp } from '@/contexts/AppContext';
+import { UserRole } from '@/enums/userRolesEnum';
+import { cn } from '@/lib/utils';
+import { ChevronRight, Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import Image from 'next/image';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Button } from './ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from './ui/dropdown-menu';
 import {
   Sidebar,
   SidebarContent,
@@ -35,38 +21,57 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  useSidebar,
 } from './ui/sidebar';
-import { useApp } from '@/contexts/AppContext';
-import { cn } from '@/lib/utils';
-import { UserRole } from '@/enums/userRolesEnum';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { getEmployee } from '@/api/employee/employee';
-import { Button } from './ui/button';
-import { useTheme } from 'next-themes';
+import { io, type Socket } from 'socket.io-client';
+
+const SOCKET_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
 
 const AppSidebar = () => {
   const { userAccount } = useApp();
-  const { isMobile } = useSidebar();
   const path = usePathname();
 
   const [mounted, setMounted] = useState(false);
 
   const { theme, setTheme } = useTheme();
 
+  const [numberNotification, setNumberNotification] = useState<number>(0);
+
+  useEffect(() => {
+    const socket: Socket = io(SOCKET_URL);
+
+    socket.on('connect', () => {
+      console.log('Socket connected:', socket.id);
+    });
+
+    socket.on('leave-request:added', (payload) => {
+      console.log('vo chua');
+      console.log(payload);
+
+      if (payload) {
+        setNumberNotification((prev) => prev + 1);
+      }
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Socket disconnected');
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) return null;
-
-  const isDark = theme === 'dark';
 
   return (
     <Sidebar collapsible="icon">
@@ -121,6 +126,7 @@ const AppSidebar = () => {
                             </SidebarMenuButton>
                           )}
                         </CollapsibleTrigger>
+
                         {children && children.length > 0 && (
                           <CollapsibleContent>
                             <SidebarMenuSub>
@@ -141,6 +147,15 @@ const AppSidebar = () => {
                               ))}
                             </SidebarMenuSub>
                           </CollapsibleContent>
+                        )}
+
+                        {/* BADGET TAG MESSAGE */}
+                        {item.tag && numberNotification > 0 && (
+                          <SidebarMenuBadge>
+                            <div className="bg-red-500 w-5 h-5 rounded-full flex items-center justify-center text-white font-bold text-md">
+                              {numberNotification}
+                            </div>
+                          </SidebarMenuBadge>
                         )}
                       </SidebarMenuItem>
                     </Collapsible>

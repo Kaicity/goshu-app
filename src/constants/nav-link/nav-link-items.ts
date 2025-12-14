@@ -81,7 +81,7 @@ const humanManageitems = [
     roles: [UserRole.HR],
   },
   {
-    title: 'Cuộc Họp Nội Bộ',
+    title: 'Cuộc Họp',
     url: '/dashboard/meetings',
     icon: Workflow,
     children: [],
@@ -100,6 +100,7 @@ const humanManageitems = [
     icon: Calendar,
     children: [],
     roles: [UserRole.HR],
+    tag: Number,
   },
   {
     title: 'Đang Chờ Duyệt',

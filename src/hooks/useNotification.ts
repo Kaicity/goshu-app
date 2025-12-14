@@ -44,6 +44,8 @@ export default function useNotification() {
       ]);
     });
 
+    // Đơn nghỉ phép
+
     return () => {
       socket.disconnect();
     };

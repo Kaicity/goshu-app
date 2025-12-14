@@ -76,7 +76,7 @@ export function FilterDialog({ open, setOpen, onFilter, resetTrigger }: FilterDe
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-md w-[350px] px-6 py-8">
+      <DialogContent className="max-w-md w-[550px] px-6 py-8">
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle className="text-xl">{'Sắp Xếp'}</DialogTitle>
@@ -84,7 +84,7 @@ export function FilterDialog({ open, setOpen, onFilter, resetTrigger }: FilterDe
           </DialogHeader>
 
           <div className="flex w-full">
-            <Button type="button" className="w-full" variant="outline" onClick={resetFilters}>
+            <Button type="button" className="w-full" onClick={resetFilters}>
               <RotateCcwIcon className="w-6 h-6" />
               làm mới
             </Button>
@@ -102,7 +102,7 @@ export function FilterDialog({ open, setOpen, onFilter, resetTrigger }: FilterDe
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {departments.map((dep) => (
-                  <label key={dep.id} className="flex items-center gap-2 cursor-pointer text-xs">
+                  <label key={dep.id} className="flex items-center gap-2 cursor-pointer text-sm">
                     <Checkbox checked={departmentSelected.includes(dep.id!)} onCheckedChange={() => toggleDepartment(dep.id!)} />
                     <span>{dep.name}</span>
                   </label>
@@ -112,7 +112,7 @@ export function FilterDialog({ open, setOpen, onFilter, resetTrigger }: FilterDe
             <Label>CHỌN NƠI LÀM VIỆC</Label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {Object.entries(TypeWork).map(([key, __]) => (
-                <label key={key} className="flex items-center gap-2 cursor-pointer text-xs">
+                <label key={key} className="flex items-center gap-2 cursor-pointer text-sm">
                   <Checkbox
                     checked={typeWorkSelected.includes(key as TypeWork)}
                     onCheckedChange={() => toggleTypeWork(key as TypeWork)}

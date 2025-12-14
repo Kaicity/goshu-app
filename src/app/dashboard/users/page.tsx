@@ -149,8 +149,9 @@ const UsersPage = () => {
           placeholder="Chọn trạng thái"
           className="relative justify-start px-4"
         />
-        <Button variant="outline" onClick={resetFilters}>
+        <Button onClick={resetFilters}>
           <RotateCcwIcon className="w-6 h-6" />
+          Làm mới
         </Button>
         <Button
           className="w-full md:w-[100px] ml-auto"

@@ -6,7 +6,7 @@ import StatusCard from '@/components/StatusCard';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/contexts/AppContext';
 import { LeaveRequestDto } from '@/models/dto/leaverequestDto';
-import { CalendarIcon, TimerIcon, XIcon } from 'lucide-react';
+import { CalendarIcon, RotateCcwIcon, TimerIcon, XIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { LeaveRequestDialog } from './LeaveRequestDialog';
@@ -47,30 +47,21 @@ const LeaveRequestPage = () => {
   return (
     <div className="space-y-5">
       <div className="mt-4 grid grid-cols-1 md:grid-cols-3 space-x-3">
-        <StatusCard
-          value={pendingCount}
-          icon={<CalendarIcon className="w-8 h-8" />}
-          description="Số lượng yêu cầu nghỉ"
-          color="yellow"
-        />
-        <StatusCard
-          value={approvedCount}
-          icon={<TimerIcon className="w-8 h-8" />}
-          description="Số lượng yêu cầu đã duyệt"
-          color="green"
-        />
-        <StatusCard
-          value={rejectedCount}
-          icon={<XIcon className="w-8 h-8" />}
-          description="Số lượng yêu cầu đã từ chối"
-          color="red"
-        />
+        <StatusCard value={pendingCount} icon={<CalendarIcon className="w-8 h-8" />} description="Yêu cầu nghỉ" color="yellow" />
+        <StatusCard value={approvedCount} icon={<TimerIcon className="w-8 h-8" />} description="Yêu cầu đã duyệt" color="green" />
+        <StatusCard value={rejectedCount} icon={<XIcon className="w-8 h-8" />} description="Yêu cầu đã từ chối" color="red" />
       </div>
       <div className="border rounded-md">
         <div className="p-3">
           <div className="flex items-center justify-between">
             <HeaderTitle text="Thông tin lịch nghỉ của nhân viên" subText="Thông tin chi tiết về lịch nghỉ của nhân viên" />
-            <Button onClick={() => setOpen(true)}>Tạo đơn nghỉ phép</Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" type="button" className="w-max" onClick={fetchLeaveRequest}>
+                <RotateCcwIcon className="w-6 h-6" />
+                làm mới
+              </Button>
+              <Button onClick={() => setOpen(true)}>Tạo đơn nghỉ phép</Button>
+            </div>
           </div>
           <LeaveRequestDialog open={open} setOpen={setOpen} reloadData={fetchLeaveRequest} leaveRequest={null} />
 

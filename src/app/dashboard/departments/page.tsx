@@ -90,9 +90,9 @@ const DepartmentsPage = () => {
   };
 
   return (
-    <div className="">
+    <>
       <HeaderTitle text="PHÒNG BAN" subText="Quản lý các phòng ban trong công ty" />
-      <div className="flex flex-wrap items-center gap-1 mb-6 *:mt-2">
+      <div className="flex flex-wrap items-center gap-2 mb-6 *:mt-2">
         <Input
           placeholder="Tìm kiếm phòng ban..."
           className="max-w-sm sm:w-full"
@@ -102,8 +102,9 @@ const DepartmentsPage = () => {
             setPage(1);
           }}
         />
-        <Button variant="outline" onClick={resetFilters}>
+        <Button onClick={resetFilters}>
           <RotateCcwIcon className="w-6 h-6" />
+          Làm mới
         </Button>
         <Button
           className="w-full md:w-[100px] ml-auto"
@@ -131,7 +132,7 @@ const DepartmentsPage = () => {
         onPaginationChange={handlePaginationChange}
         loading={loading}
       />
-    </div>
+    </>
   );
 };
 export default ProtectPage(DepartmentsPage, { allowedRoles: [UserRole.HR] });

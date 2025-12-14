@@ -9,12 +9,13 @@ import { Input } from '@/components/ui/input';
 import { LeaveRequest, LEAVEREQUEST_LABELS } from '@/enums/leaveRequestEnum';
 import { UserRole } from '@/enums/userRolesEnum';
 import { LeaveRequestDto } from '@/models/dto/leaverequestDto';
-import { CalendarIcon, Search, TimerIcon, XIcon } from 'lucide-react';
+import { CalendarIcon, RotateCcwIcon, Search, TimerIcon, XIcon } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { columns } from './columns';
 import { useApp } from '@/contexts/AppContext';
+import { Button } from '@/components/ui/button';
 
 const LeaveRequestPage = () => {
   const { userAccount } = useApp();
@@ -45,7 +46,6 @@ const LeaveRequestPage = () => {
     setLoading(true);
     try {
       const res = await getLeaveRequests(page, limit, { search, status: statusSelected });
-      console.log('hello', res.leaveRequest);
       setTotal(res.pagination.total);
       setLimit(res.pagination.limit);
       setLeaveRequests(res.leaveRequest);
@@ -55,10 +55,11 @@ const LeaveRequestPage = () => {
       setLoading(false);
     }
   };
+
   const handleDelete = async (leaveRequest: LeaveRequestDto) => {
     try {
       const res = await deleteLeaveRequest(leaveRequest.leaveRequest.id);
-      if (!res) {
+      if (res) {
         toast.success('Xoá yêu cầu nghỉ phép thành công');
         fetchLeaveRequests();
       }
@@ -120,24 +121,9 @@ const LeaveRequestPage = () => {
     <div className="space-y-5">
       <HeaderTitle text="Quản Lý Yêu Cầu Nghỉ Phép" subText="Quản lý yêu cầu nghỉ phép của nhân viên" />
       <div className="mt-4 grid grid-cols-1 md:grid-cols-3 space-x-3">
-        <StatusCard
-          value={pendingCount}
-          icon={<CalendarIcon className="w-8 h-8" />}
-          description="Số lượng yêu cầu nghỉ"
-          color="yellow"
-        />
-        <StatusCard
-          value={approvedCount}
-          icon={<TimerIcon className="w-8 h-8" />}
-          description="Số lượng yêu cầu đã duyệt"
-          color="green"
-        />
-        <StatusCard
-          value={rejectedCount}
-          icon={<XIcon className="w-8 h-8" />}
-          description="Số lượng yêu cầu đã từ chối"
-          color="red"
-        />
+        <StatusCard value={pendingCount} icon={<CalendarIcon className="w-8 h-8" />} description="Yêu cầu nghỉ" color="yellow" />
+        <StatusCard value={approvedCount} icon={<TimerIcon className="w-8 h-8" />} description="Yêu cầu đã duyệt" color="green" />
+        <StatusCard value={rejectedCount} icon={<XIcon className="w-8 h-8" />} description="Yêu cầu đã từ chối" color="red" />
       </div>
       <div className="flex flex-wrap items-center gap-2 mb-6 mt-2">
         <div className="hidden md:block relative max-w-sm sm:w-full">
@@ -165,7 +151,12 @@ const LeaveRequestPage = () => {
           placeholder="Chọn trạng thái"
           className="relative justify-start px-4 w-full md:w-auto"
         />
+        <Button onClick={fetchLeaveRequests}>
+          <RotateCcwIcon className="w-6 h-6" />
+          Làm mới
+        </Button>
       </div>
+
       <DataTable
         columns={columns(handleDelete, handleApprove, handleReject)}
         data={leaveRequests}

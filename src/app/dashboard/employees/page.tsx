@@ -85,7 +85,7 @@ const EmployeesPage = () => {
   return (
     <>
       <HeaderTitle text="NHÂN VIÊN" subText="Quản lý nhân viên trong công ty" />
-      <div className="flex flex-wrap items-center gap-1 mb-6 *:mt-2">
+      <div className="flex flex-wrap items-center gap-2 mb-6 *:mt-2">
         <div className="relative max-w-sm sm:w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
           <Input
@@ -98,9 +98,12 @@ const EmployeesPage = () => {
             }}
           />
         </div>
-        <Button variant="outline" onClick={resetFilters}>
+
+        <Button onClick={resetFilters}>
           <RotateCcwIcon className="w-6 h-6" />
+          Làm mới
         </Button>
+
         <Button
           onClick={() => {}}
           className="w-full md:w-[130px] ml-auto bg-green-600 hover:bg-green-700 text-white font-medium shadow-sm transition-all duration-200"
@@ -116,6 +119,7 @@ const EmployeesPage = () => {
         >
           Sắp Xếp
         </Button>
+
         <FilterDialog
           open={open}
           setOpen={setOpen}

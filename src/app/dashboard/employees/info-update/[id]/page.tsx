@@ -188,20 +188,17 @@ export default function UpdateEmployeePage() {
 
   const handleBirthdayChange = (date: Date | undefined) => {
     if (!date) return;
-    setBirthdaySelected(date);
-    setValue('birthday', birthdaySelected);
+    setValue('birthday', date);
   };
 
   const handleJoinDateSelected = (date: Date | undefined) => {
     if (!date) return;
-    setJoinDateSelected(date);
-    setValue('joinDate', joinDateSelected);
+    setValue('joinDate', date);
   };
 
   const handleWorkingDateSelected = (date: Date | undefined) => {
     if (!date) return;
-    setWorkDateSelected(date);
-    setValue('workingDate', workDateSelected);
+    setValue('workingDate', date);
   };
 
   const handleDeleteFileUpload = async (fileUrl: string) => {
@@ -232,7 +229,7 @@ export default function UpdateEmployeePage() {
         <ArrowLeft size={20} />
         <span className="text-sm hover:text-gray-400">Trở lại</span>
       </div>
-      <HeaderTitle text="Cập Nhật Thông Tin" subText="Quản lý thông tin cơ bản của nhân viên" />
+      <HeaderTitle text="Cập nhật thông tin" subText="Quản lý thông tin hồ sơ của của nhân viên" />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-4 bg-card border rounded-lg shadow-sm">
           <Tabs defaultValue="personal-info" className="w-full mr-auto" value={tab} onValueChange={(value) => setTab(value)}>
@@ -263,8 +260,8 @@ export default function UpdateEmployeePage() {
                 <div className="flex flex-col col-span-3 gap-2">
                   <Label>Hình ảnh nhân viên</Label>
                   {currentProfileImage ? (
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-full max-w-[250px] aspect-square">
+                    <div className="flex flex-col md:flex-row items-center gap-3">
+                      <div className="relative w-full lg:max-w-[250px] aspect-square">
                         <Image
                           src={currentProfileImage}
                           alt="Ảnh nhân viên"

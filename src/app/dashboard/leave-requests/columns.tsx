@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { LeaveRequest, LEAVEREQUEST_LABELS, LEAVEREQUEST_STYLES } from '@/enums/leaveRequestEnum';
 import { LeaveRequestDto } from '@/models/dto/leaverequestDto';
 import { ColumnDef } from '@tanstack/react-table';
@@ -76,9 +77,20 @@ export const columns = (
     header: 'LÝ DO',
     cell: ({ row }) => {
       const reason = row.original.leaveRequest.reason;
-      return <div>{reason}</div>;
+
+      if (!reason) return <span>—</span>;
+
+      return (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="max-w-[220px] truncate cursor-pointer">{reason}</div>
+          </TooltipTrigger>
+          <TooltipContent className="max-w-xs">{reason}</TooltipContent>
+        </Tooltip>
+      );
     },
   },
+
   {
     accessorKey: 'status',
     header: 'TRẠNG THÁI',
@@ -92,9 +104,20 @@ export const columns = (
     header: 'GHI CHÚ',
     cell: ({ row }) => {
       const note = row.original.leaveRequest.note;
-      return <div>{note}</div>;
+
+      if (!note) return <span>—</span>;
+
+      return (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="max-w-[280px] line-clamp-2 cursor-pointer text-muted-foreground">{note}</div>
+          </TooltipTrigger>
+          <TooltipContent className="max-w-sm">{note}</TooltipContent>
+        </Tooltip>
+      );
     },
   },
+
   {
     accessorKey: 'approvedBy',
     header: 'NGƯỜI DUYỆT ĐƠN',
@@ -127,15 +150,15 @@ export const columns = (
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => handleApprove(resource)} className="text-green-500 focus:text-green-500">
+              <DropdownMenuItem onClick={() => handleApprove(resource)} className="text-green-600 focus:text-green-400">
                 <CheckCircle className="w-4 h-4 text-green-500" />
                 Chấp nhận
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleReject(resource)} className="text-orange-500 focus:text-orange-500">
+              <DropdownMenuItem onClick={() => handleReject(resource)} className="text-orange-600 focus:text-orange-400">
                 <CheckCircle className="w-4 h-4 text-orange-500" />
                 Từ chối
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDelete(resource)} className="text-red-500 focus:text-red-500">
+              <DropdownMenuItem onClick={() => handleDelete(resource)} className="text-red-600 focus:text-red-400">
                 <Trash className="w-4 h-4 text-red-500" />
                 Xoá
               </DropdownMenuItem>

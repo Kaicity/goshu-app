@@ -7,13 +7,12 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useApp } from '@/contexts/AppContext';
-import { LeaveRequest } from '@/enums/leaveRequestEnum';
 import { cn } from '@/lib/utils';
 import { LeaveRequestDto } from '@/models/dto/leaverequestDto';
 import { createLeaveRequestFormData, createLeaveRequestSchema } from '@/models/schemas/createLeaveRequestSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogDescription } from '@radix-ui/react-dialog';
-import { format } from 'date-fns';
+import { format, addDays } from 'date-fns';
 import { startTransition, useActionState, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -26,21 +25,27 @@ interface LeaveRequestDialogProps {
 }
 
 export function LeaveRequestDialog({ open, setOpen, leaveRequest, reloadData: loadData }: LeaveRequestDialogProps) {
-  const [startDateSelected, setStartDateSelected] = useState<Date>(new Date());
-  const [endDateSelected, setEndDateSelected] = useState<Date>(new Date());
+  const [startDateSelected, setStartDateSelected] = useState<Date>(addDays(new Date(), 1));
+
+  const [endDateSelected, setEndDateSelected] = useState<Date>(addDays(new Date(), 1));
   const { userAccount } = useApp();
 
-  const [employeeId] = useState<string>(userAccount?.employeeId as string);
   const {
     register,
     handleSubmit,
     reset,
     setValue,
     formState: { errors },
-  } = useForm<createLeaveRequestFormData>({ resolver: zodResolver(createLeaveRequestSchema) });
-  useEffect(() => {
-    console.log('Form errors:', errors);
-  }, [errors]);
+  } = useForm<createLeaveRequestFormData>({
+    resolver: zodResolver(createLeaveRequestSchema),
+    defaultValues: {
+      employeeId: userAccount?.employeeId,
+      startDate: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+      endDate: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+      reason: '',
+      note: '',
+    },
+  });
 
   useEffect(() => {
     if (userAccount?.employeeId) {
@@ -50,9 +55,9 @@ export function LeaveRequestDialog({ open, setOpen, leaveRequest, reloadData: lo
 
   const initialFormData = () => {
     reset({
-      employeeId: employeeId,
-      startDate: '',
-      endDate: '',
+      employeeId: userAccount?.employeeId,
+      startDate: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
+      endDate: format(addDays(new Date(), 1), 'yyyy-MM-dd'),
       reason: '',
       note: '',
     });
@@ -118,7 +123,7 @@ export function LeaveRequestDialog({ open, setOpen, leaveRequest, reloadData: lo
                 dateValue={endDateSelected}
                 className={cn(errors.endDate && 'border border-red-500 rounded-md')}
               />
-              {errors.startDate && <p className="text-sm text-red-500">{errors.startDate.message}</p>}
+              {errors.endDate && <p className="text-sm text-red-500">{errors.endDate.message}</p>}
             </div>
 
             <div className="flex flex-col gap-2 col-span-2">
