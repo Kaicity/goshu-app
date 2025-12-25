@@ -1,11 +1,11 @@
 'use client';
 
-import { ColumnDef, flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table';
-import { Spinner } from '@/components/ui/spinner';
 import { DataTablePagination } from '@/components/TablePagination';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useState } from 'react';
+import { Spinner } from '@/components/ui/spinner';
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { ColumnDef, flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table';
 import { PackageOpen } from 'lucide-react';
+import { useState } from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -17,6 +17,9 @@ interface DataTableProps<TData, TValue> {
   loading?: boolean;
   showPagination?: boolean;
   showTable?: boolean;
+  showFooter?: boolean;
+  titleFooter?: string;
+  totalValueFooter?: number;
 }
 
 export function DataTable<TData, TValue>({
@@ -29,6 +32,9 @@ export function DataTable<TData, TValue>({
   onPaginationChange,
   showPagination = true,
   showTable = true,
+  showFooter = false,
+  titleFooter,
+  totalValueFooter = 0,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -108,6 +114,17 @@ export function DataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
+          {showFooter && (
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={columns.length - 1}>Tổng cộng:</TableCell>
+                <TableCell className="text-right">
+                  {totalValueFooter}
+                  {titleFooter}
+                </TableCell>
+              </TableRow>
+            </TableFooter>
+          )}
         </Table>
       )}
       {showPagination && <DataTablePagination table={table} />}

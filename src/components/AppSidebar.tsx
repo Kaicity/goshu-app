@@ -8,8 +8,9 @@ import { ChevronRight, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { io, type Socket } from 'socket.io-client';
 import { Button } from './ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 import {
@@ -27,20 +28,32 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from './ui/sidebar';
-import { io, type Socket } from 'socket.io-client';
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
 
 const AppSidebar = () => {
   const { userAccount } = useApp();
   const path = usePathname();
+  const params = useSearchParams();
+  const { open } = useSidebar();
 
   const [mounted, setMounted] = useState(false);
 
   const { theme, setTheme } = useTheme();
 
   const [numberNotification, setNumberNotification] = useState<number>(0);
+
+  useEffect(() => {
+    if (!path) return;
+
+    const isNotificationPage = humanManageitems.some((item) => item.tag && item.url === path);
+
+    if (isNotificationPage) {
+      setNumberNotification(0);
+    }
+  }, [path]);
 
   useEffect(() => {
     const socket: Socket = io(SOCKET_URL);
@@ -50,9 +63,6 @@ const AppSidebar = () => {
     });
 
     socket.on('leave-request:added', (payload) => {
-      console.log('vo chua');
-      console.log(payload);
-
       if (payload) {
         setNumberNotification((prev) => prev + 1);
       }
@@ -101,7 +111,7 @@ const AppSidebar = () => {
                 .map((item) => {
                   const children = item.children?.filter((child) => child.roles.includes(userAccount?.role as UserRole));
                   return (
-                    <Collapsible key={item.title} asChild defaultOpen={true} className="group/collapsible">
+                    <Collapsible key={item.title} asChild className="group/collapsible">
                       <SidebarMenuItem>
                         <CollapsibleTrigger asChild>
                           {!children || children.length === 0 ? (
@@ -194,7 +204,7 @@ const AppSidebar = () => {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <div className="flex gap-1 justify-between px-3">
+            <div className={cn('flex gap-1 px-3 justify-between items-center', open ? 'flex-row' : 'flex-col')}>
               <Button onClick={() => setTheme('light')} className="w-1/2" variant={theme === 'light' ? 'default' : 'ghost'}>
                 <Sun className="h-5 w-5" />
                 <span className="sr-only">Light mode</span>

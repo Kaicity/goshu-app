@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -96,7 +97,11 @@ export const columns = (
     header: 'TRẠNG THÁI',
     cell: ({ row }) => {
       const status = row.original.leaveRequest.status as LeaveRequest;
-      return <div className={`${LEAVEREQUEST_STYLES[status]} px-2 py-1 w-max`}>{LEAVEREQUEST_LABELS[status]}</div>;
+      return (
+        <div className={`${LEAVEREQUEST_STYLES[status]} px-2 py-1 w-max`}>
+          {LEAVEREQUEST_LABELS[status] ?? <div className="text-sm animate-pulse text-blue-500 font-medium italic">Đang chờ</div>}
+        </div>
+      );
     },
   },
   {

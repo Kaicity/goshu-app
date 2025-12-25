@@ -15,7 +15,12 @@ import type { EmployeeDto } from '@/models/dto/employeeDto';
 import { FaGithub, FaMicrosoft, FaSlack } from 'react-icons/fa';
 
 import {
+  BadgeCheck,
+  Briefcase,
+  Building2,
   Calendar,
+  CalendarCheck,
+  CalendarDays,
   Globe,
   Heart,
   IdCard,
@@ -24,12 +29,7 @@ import {
   Paperclip,
   Phone,
   User,
-  BadgeCheck,
   UserCircle,
-  Briefcase,
-  Building2,
-  CalendarCheck,
-  CalendarDays,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 

@@ -17,6 +17,7 @@ import { EMPLOYEE_STATUS_LABELS } from '@/enums/employeeEnum';
 import { GENDER_LABELS } from '@/enums/genderEnum';
 import { MARITAL_LABELS } from '@/enums/maritalEnum';
 import { TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
+import { UserRole } from '@/enums/userRolesEnum';
 import { useActionWithLoading } from '@/hooks/useExecute';
 import { UploadButton, UploadDropzone } from '@/lib/uploadthing';
 import { cn } from '@/lib/utils';
@@ -76,6 +77,7 @@ export default function UpdateEmployeePage() {
 
   const [documents, setDocuments] = useState<string[]>(Array(documentsList.length).fill(''));
   const { userAccount } = useApp();
+
   const {
     register,
     handleSubmit,
@@ -84,11 +86,15 @@ export default function UpdateEmployeePage() {
     formState: { errors },
   } = useForm<CreateEmployeeFormData>({
     resolver: zodResolver(createEmployeeSchema),
+    defaultValues: {
+      basicSalary: 0,
+      allowance: 0,
+    },
   });
 
   useEffect(() => {
     fetchEmployeeDetail();
-    if (userAccount?.role === 'HR' || userAccount?.role === 'ADMIN') {
+    if (userAccount?.role === UserRole.HR || userAccount?.role === UserRole.ADMIN) {
       fetchDepartments();
     }
   }, [userAccount?.role]);
@@ -570,6 +576,7 @@ export default function UpdateEmployeePage() {
                 <div className="flex flex-col gap-2">
                   <Label>Trạng thái</Label>
                   <Select
+                    disabled={userAccount?.role !== UserRole.HR}
                     value={statusSelected}
                     onValueChange={(value) => {
                       setStatusSelected(value);
@@ -592,6 +599,42 @@ export default function UpdateEmployeePage() {
                 <div className="flex flex-col gap-2">
                   <Label>Ngày bắt đầu làm việc</Label>
                   <DatePicker dateValue={workDateSelected} onDateChange={handleWorkingDateSelected} />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <Label>Lương cơ bản (VND)</Label>
+                  <div className="relative">
+                    <Input
+                      readOnly={userAccount?.role !== UserRole.HR}
+                      type="number"
+                      placeholder="0"
+                      min={0}
+                      step={1000}
+                      className="pl-12"
+                      {...register('basicSalary', {
+                        setValueAs: (value) => Number(value),
+                      })}
+                    />
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-muted-foreground">VND</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <Label>Phụ cấp (VND)</Label>
+                  <div className="relative">
+                    <Input
+                      readOnly={userAccount?.role !== UserRole.HR}
+                      type="number"
+                      placeholder="0"
+                      min={0}
+                      step={1000}
+                      className="pl-12"
+                      {...register('allowance', {
+                        setValueAs: (value) => Number(value),
+                      })}
+                    />
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-muted-foreground">VND</span>
+                  </div>
                 </div>
               </div>
 

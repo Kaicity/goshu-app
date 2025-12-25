@@ -29,6 +29,8 @@ interface EmployeeDto {
   marital?: string;
   country?: string;
   identityCard?: string;
+  basicSalary?: number;
+  allowance?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }

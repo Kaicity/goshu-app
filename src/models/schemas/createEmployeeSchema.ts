@@ -23,6 +23,8 @@ export const createEmployeeSchema = z.object({
   internalEmail: z.string().optional(),
   identityCard: z.string().optional(),
   status: z.string().optional(),
+  basicSalary: z.number().optional(),
+  allowance: z.number().optional(),
 });
 
 export type CreateEmployeeFormData = z.infer<typeof createEmployeeSchema>;

@@ -125,6 +125,7 @@ const LeaveRequestPage = () => {
         <StatusCard value={approvedCount} icon={<TimerIcon className="w-8 h-8" />} description="Yêu cầu đã duyệt" color="green" />
         <StatusCard value={rejectedCount} icon={<XIcon className="w-8 h-8" />} description="Yêu cầu đã từ chối" color="red" />
       </div>
+
       <div className="flex flex-wrap items-center gap-2 mb-6 mt-2">
         <div className="hidden md:block relative max-w-sm sm:w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />

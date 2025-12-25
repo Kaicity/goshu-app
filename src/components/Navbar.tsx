@@ -21,7 +21,7 @@ import {
 } from './ui/dropdown-menu';
 import { Input } from './ui/input';
 import { SidebarMenuButton, SidebarTrigger, useSidebar } from './ui/sidebar';
-import { UserRole } from '@/enums/userRolesEnum';
+import { ROLE_LABELS, UserRole } from '@/enums/userRolesEnum';
 
 const Navbar = () => {
   const { logout } = useApp();
@@ -65,12 +65,6 @@ const Navbar = () => {
 
       {/* RIGHT */}
       <div className="flex items-center gap-3">
-        <div className="hidden md:block relative max-w-sm sm:w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
-          {/* Input có padding-left để tránh icon chồng lên chữ */}
-          <Input placeholder="Tìm kiếm" className="pl-10" />
-        </div>
-
         <div className="relative">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -151,9 +145,9 @@ const Navbar = () => {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
+              <Avatar className="h-8 w-8 rounded-full">
                 <AvatarImage src={employee?.avatarUrl} alt={employee?.email} />
-                <AvatarFallback className="rounded-lg">
+                <AvatarFallback className="rounded-full">
                   {fullname
                     ? fullname
                         .split(' ') // Tách thành mảng ["Nguyễn", "Minh", "Thông"]
@@ -164,7 +158,7 @@ const Navbar = () => {
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{fullname ? fullname : 'Chưa cập nhật'}</span>
-                <span className="truncate text-xs">{employee?.email}</span>
+                <span className="truncate text-xs">{ROLE_LABELS[userAccount?.role as UserRole]}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -177,9 +171,9 @@ const Navbar = () => {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
+                <Avatar className="h-8 w-8 rounded-full">
                   <AvatarImage src={employee?.avatarUrl} alt={employee?.email} />
-                  <AvatarFallback className="rounded-lg">
+                  <AvatarFallback className="rounded-full">
                     {fullname
                       ? fullname
                           .split(' ') // Tách thành mảng ["Nguyễn", "Minh", "Thông"]

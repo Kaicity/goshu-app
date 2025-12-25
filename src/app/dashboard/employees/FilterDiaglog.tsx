@@ -100,13 +100,18 @@ export function FilterDialog({ open, setOpen, onFilter, resetTrigger }: FilterDe
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {departments.map((dep) => (
-                  <label key={dep.id} className="flex items-center gap-2 cursor-pointer text-sm">
-                    <Checkbox checked={departmentSelected.includes(dep.id!)} onCheckedChange={() => toggleDepartment(dep.id!)} />
-                    <span>{dep.name}</span>
-                  </label>
-                ))}
+              <div className="max-h-64 overflow-y-auto pr-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {departments.map((dep) => (
+                    <label key={dep.id} className="flex items-center gap-2 cursor-pointer text-sm">
+                      <Checkbox
+                        checked={departmentSelected.includes(dep.id!)}
+                        onCheckedChange={() => toggleDepartment(dep.id!)}
+                      />
+                      <span>{dep.name}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
             )}
             <Label>CHỌN NƠI LÀM VIỆC</Label>
