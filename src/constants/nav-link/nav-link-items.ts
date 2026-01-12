@@ -119,13 +119,6 @@ const humanManageitems = [
     roles: [UserRole.HR],
   },
   {
-    title: 'Lập Bảng Lương Nhân Viên',
-    url: '/dashboard/create-payrolls',
-    icon: CircleDollarSign,
-    children: [],
-    roles: [UserRole.HR],
-  },
-  {
     title: 'Chính Sách - Điểu Khoản Công Ty',
     url: '/dashboard/rules',
     icon: Notebook,

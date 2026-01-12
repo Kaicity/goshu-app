@@ -67,7 +67,7 @@ export const columns: ColumnDef<EmployeeDto>[] = [
   },
   {
     accessorKey: 'designation',
-    header: 'CHỨC VỤ',
+    header: 'VỊ TRÍ',
     cell: ({ row }) => {
       const designation = row.original.designation;
       return <>{designation || '--/--'}</>;

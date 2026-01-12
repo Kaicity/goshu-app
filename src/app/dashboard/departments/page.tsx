@@ -7,12 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { UserRole } from '@/enums/userRolesEnum';
 import { DepartmentDto } from '@/models/dto/departmentDto';
-import { RotateCcwIcon, UsersRound } from 'lucide-react';
+import { PlusCircle, RotateCcwIcon } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { columns } from './column';
 import { AddDepartmentDialog } from './AddDepartmentDialog';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { columns } from './column';
 
 const DepartmentsPage = () => {
   const searchParams = useSearchParams();
@@ -113,7 +113,7 @@ const DepartmentsPage = () => {
             setDepartment(null);
           }}
         >
-          <UsersRound className="w-4 h-4 mr-2" />
+          <PlusCircle className="w-4 h-4 mr-2" />
           Tạo
         </Button>
         <AddDepartmentDialog

@@ -610,7 +610,7 @@ export default function UpdateEmployeePage() {
                       placeholder="0"
                       min={0}
                       step={1000}
-                      className="pl-12"
+                      className="pl-12 h-12"
                       {...register('basicSalary', {
                         setValueAs: (value) => Number(value),
                       })}
@@ -628,7 +628,7 @@ export default function UpdateEmployeePage() {
                       placeholder="0"
                       min={0}
                       step={1000}
-                      className="pl-12"
+                      className="pl-12 h-12"
                       {...register('allowance', {
                         setValueAs: (value) => Number(value),
                       })}

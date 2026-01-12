@@ -1,4 +1,5 @@
 'use client';
+
 import { approvedByLeaveRequest, deleteLeaveRequest, getLeaveRequests } from '@/api/leaverequest/leaverequest';
 import ProtectPage from '@/components/auth/ProtectPage';
 import { DataTable } from '@/components/DataTable';

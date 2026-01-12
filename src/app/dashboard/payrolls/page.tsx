@@ -1,6 +1,6 @@
 'use client';
 
-import { getEmployees } from '@/api/employee/employee';
+import { generatePayrollAllEmployees, getPayrolls } from '@/api/payrolls/payroll';
 import AppBarChart from '@/components/AppBarChart';
 import AppPieChart from '@/components/AppPieChart';
 import CardReport from '@/components/CardReport';
@@ -11,52 +11,46 @@ import StackCardMessage from '@/components/StackCardMessage';
 import { Button } from '@/components/ui/button';
 import type { ChartConfig } from '@/components/ui/chart';
 import { Input } from '@/components/ui/input';
-import { LeaveRequest, LEAVEREQUEST_LABELS } from '@/enums/leaveRequestEnum';
-import type { EmployeeDto } from '@/models/dto/employeeDto';
-import { Download, Loader, RotateCcwIcon, Search, UserPlus, Users, UserX } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { Payroll, PAYROLL_LABELS } from '@/enums/payrollEnum';
+import { useActionWithLoading } from '@/hooks/useExecute';
+import { PayrollDto } from '@/models/dto/payrollDto';
+import { Download, HandCoins, Loader, RotateCcwIcon, Search, UserPlus, Users, UserX } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { columns } from './columns';
+import EditPayrollSheet from './EditPayrollSheet';
 
 const PayrollsPage = () => {
+  const { isLoadingAction, execute } = useActionWithLoading();
+
   //search
-  const searchParams = useSearchParams();
-  const [employees, setEmployees] = useState<EmployeeDto[]>([]);
-  const [search, setSearch] = useState<string>(searchParams.get('search') || '');
+  const [payrolls, setpayrolls] = useState<PayrollDto[]>([]);
+  const [payroll, setPayroll] = useState<PayrollDto>();
+  const [search, setSearch] = useState<string>('');
 
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(false);
-  const [departmentSelected, setDepartmentSelected] = useState<string[]>([]);
 
-  const [typeWorkSelected, setTypeWorkSelected] = useState<string[]>([]);
-
-  const router = useRouter();
-
-  const [page, setPage] = useState<number>(searchParams.get('page') ? Number(searchParams.get('page')) : 1);
+  const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(searchParams.get('limit') ? Number(searchParams.get('limit')) : 10);
+  const [limit, setLimit] = useState<number>(10);
 
-  const [statusSelected, setStatusSelected] = useState<string[]>((searchParams.get('status') ?? '').split(',').filter(Boolean));
+  const [statusSelected, setStatusSelected] = useState<string[]>([]);
+  const [monthSelected, setMonthSelected] = useState<number>(1);
+  const [yearSelected, setYearSelected] = useState<number>(2002);
 
   const [stacked, setStacked] = useState<boolean>(false);
 
-  const formatVND = (value: number) =>
-    new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-    }).format(value);
+  const [openEditSheet, setOpenEditSheet] = useState<boolean>(false);
 
   useEffect(() => {
-    updateSearchParams();
-    fetchEmployees();
-  }, [page, limit, search, departmentSelected, typeWorkSelected]);
+    fetchPayrolls();
+  }, [page, limit, search, statusSelected]);
 
-  const fetchEmployees = async () => {
+  const fetchPayrolls = async () => {
     setLoading(true);
     try {
-      const res = await getEmployees(page, limit, { search, departments: departmentSelected, typeWorks: typeWorkSelected });
-      setEmployees(res.employees);
+      const res = await getPayrolls(page, limit, { search, status: statusSelected });
+      setpayrolls(res.payrolls);
       setTotal(res.pagination.total);
       setLimit(res.pagination.limit);
     } catch (error: any) {
@@ -71,15 +65,35 @@ const PayrollsPage = () => {
     setLimit(newLimit);
   };
 
-  const updateSearchParams = () => {
-    const params = new URLSearchParams();
-    if (page) params.set('page', String(page));
-    if (limit) params.set('limit', String(limit));
-    if (search) params.set('search', String(search));
-    if (departmentSelected) params.set('department', departmentSelected.join(','));
-    if (typeWorkSelected) params.set('type', typeWorkSelected.join(','));
+  const handleGeneratePayrolls = async () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
 
-    router.push(`/dashboard/payrolls?${params.toString()}`);
+    execute(
+      async () => {
+        if (year && month) {
+          await generatePayrollAllEmployees(year, month);
+          fetchPayrolls();
+        }
+      },
+      {
+        successMessage: 'Bảng lương đã tạo thành công',
+      },
+    );
+  };
+
+  const resetFilter = () => {
+    setSearch('');
+    setStatusSelected([]);
+    fetchPayrolls();
+  };
+
+  const handleUpdate = (resource: PayrollDto) => {
+    if (resource) {
+      setOpenEditSheet(true);
+      setPayroll(resource);
+    }
   };
 
   return (
@@ -91,7 +105,10 @@ const PayrollsPage = () => {
           <Download className="w-5 h-5 mr-2" />
           Xuất bản ghi
         </Button>
-        <Button>Tạo bảng lương</Button>
+        <Button onClick={handleGeneratePayrolls}>
+          <HandCoins className="w-4 h-4 mr-2" />
+          Tạo bảng lương
+        </Button>
       </div>
       {/* CARD REVIEWS */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -184,9 +201,10 @@ const PayrollsPage = () => {
               }}
             />
           </div>
+
           <MultiSelect
-            options={Object.entries(LeaveRequest).map(([__, value]) => ({
-              label: LEAVEREQUEST_LABELS[value],
+            options={Object.entries(Payroll).map(([__, value]) => ({
+              label: PAYROLL_LABELS[value],
               value,
             }))}
             value={statusSelected}
@@ -197,15 +215,15 @@ const PayrollsPage = () => {
             placeholder="Chọn trạng thái"
             className="relative justify-start px-4 w-full md:w-auto"
           />
-          <Button onClick={() => {}}>
+          <Button onClick={resetFilter}>
             <RotateCcwIcon className="w-6 h-6" />
             Làm mới
           </Button>
         </div>
 
         <DataTable
-          columns={columns}
-          data={employees}
+          columns={columns(handleUpdate)}
+          data={payrolls}
           page={page}
           limit={limit}
           total={total}
@@ -213,6 +231,7 @@ const PayrollsPage = () => {
           loading={loading}
         />
       </div>
+      <EditPayrollSheet open={openEditSheet} setOpen={setOpenEditSheet} payrollData={payroll} reloadData={fetchPayrolls} />
     </div>
   );
 };

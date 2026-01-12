@@ -25,7 +25,7 @@ const CardReport = ({
 
   return (
     <Card className={cn('rounded-2xl shadow-sm', className)}>
-      <CardContent className="p-5 flex items-center justify-between h-28">
+      <CardContent className="p-5 flex items-center justify-between h-24">
         {/* Left content */}
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground">{title}</p>

@@ -11,6 +11,7 @@ export const getLeaveRequests = async (
       params: {
         page,
         limit,
+        search: filters.search,
         employeeId: filters?.employeeId,
         status: filters?.status,
         startDate: filters?.startDate,
