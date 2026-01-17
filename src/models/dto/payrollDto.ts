@@ -14,6 +14,7 @@ interface CreatePayrollDto {
 interface PayrollDto {
   payroll: {
     id: string;
+    payrollCode: string;
     month: number;
     year: number;
     basicSalary: number;
@@ -29,6 +30,7 @@ interface PayrollDto {
     firstname?: string;
     lastname?: string;
     avatarUrl?: string;
+    designation?: string;
   };
   createdAt?: string;
 }

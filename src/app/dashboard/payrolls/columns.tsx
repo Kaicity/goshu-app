@@ -44,10 +44,13 @@ export const columns = (handleUpdate: (payroll: PayrollDto) => void): ColumnDef<
       );
     },
   },
-  // {
-  //   accessorKey: 'payrollCode',
-  //   header: 'MÃ LƯƠNG',
-  // },
+  {
+    accessorKey: 'payrollCode',
+    header: 'MÃ LƯƠNG',
+    cell: ({ row }) => {
+      return <div>{row.original.payroll.payrollCode}</div>;
+    },
+  },
   {
     accessorKey: 'createdAt',
     header: () => <div className="text-center">NGÀY TẠO</div>,
@@ -58,16 +61,12 @@ export const columns = (handleUpdate: (payroll: PayrollDto) => void): ColumnDef<
       );
     },
   },
-
   {
-    accessorKey: 'basicSalary',
-    header: 'LƯƠNG CƠ BẢN',
+    accessorKey: 'designation',
+    header: 'VỊ TRÍ',
     cell: ({ row }) => {
-      const basicSalary = row.original.payroll.basicSalary;
-
-      if (!basicSalary) return <>--/--</>;
-
-      return <>{formatVND(basicSalary)}</>;
+      const designation = row.original.employee.designation;
+      return <>{designation || '--/--'}</>;
     },
   },
   {
@@ -76,18 +75,6 @@ export const columns = (handleUpdate: (payroll: PayrollDto) => void): ColumnDef<
     cell: ({ row }) => {
       const allowance = row.original.payroll.allowance;
       return <div>{formatVND(allowance) || '--/--'}</div>;
-    },
-  },
-  {
-    accessorKey: 'destuction',
-    header: 'KHẤU TRỪ',
-    cell: ({ row }) => {
-      const deductions = row.original.payroll.deductions;
-      return (
-        <div className={cn(deductions && deductions > 0 ? 'text-destructive' : 'text-primary')}>
-          {formatVND(deductions ?? 0) || '--/--'}
-        </div>
-      );
     },
   },
   {

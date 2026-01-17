@@ -24,10 +24,22 @@ const EditPayrollSheet = ({ open, setOpen, payrollData, reloadData: loadData }: 
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<UpdatePayrollFormData>({
     resolver: zodResolver(updatePayrollSchema),
   });
+
+  const basicSalary = watch('basicSalary') || 0;
+  const allowance = watch('allowance') || 0;
+  const overtime = watch('overtime') || 0;
+  const extraDeductions = watch('deductions') || 0;
+
+  const currentDeductions = payrollData?.payroll.deductions || 0;
+
+  const totalIncome = basicSalary + allowance + overtime;
+  const totalDeductions = currentDeductions + extraDeductions;
+  const netSalary = totalIncome - totalDeductions;
 
   useEffect(() => {
     initialFormData();
@@ -37,7 +49,7 @@ const EditPayrollSheet = ({ open, setOpen, payrollData, reloadData: loadData }: 
     reset({
       allowance: payrollData?.payroll?.allowance,
       basicSalary: payrollData?.payroll.basicSalary,
-      deductions: payrollData?.payroll?.deductions,
+      deductions: 0,
       overtime: payrollData?.payroll?.overtime,
     });
   };
@@ -115,7 +127,12 @@ const EditPayrollSheet = ({ open, setOpen, payrollData, reloadData: loadData }: 
             </div>
 
             <div className="grid gap-2">
-              <Label className="text-destructive">Khấu trừ</Label>
+              <Label className="text-destructive">* Khấu trừ hiện tại</Label>
+              <Input defaultValue={payrollData?.payroll.deductions} readOnly type="number" className="border-destructive/50" />
+            </div>
+
+            <div className="grid gap-2">
+              <Label className="text-destructive">* Khấu trừ bổ sung</Label>
               <Input
                 {...register('deductions', {
                   setValueAs: (value) => Number(value),
@@ -126,8 +143,26 @@ const EditPayrollSheet = ({ open, setOpen, payrollData, reloadData: loadData }: 
             </div>
           </div>
 
+          <div className="mx-4 mb-4 rounded-xl border bg-muted/40 p-4 space-y-3">
+            <div className="flex justify-between text-sm">
+              <span>Tổng thu nhập</span>
+              <span className="font-medium">{totalIncome.toLocaleString()} ₫</span>
+            </div>
+
+            <div className="flex justify-between text-sm text-destructive">
+              <span>Tổng khấu trừ</span>
+              <span className="font-medium">- {totalDeductions.toLocaleString()} ₫</span>
+            </div>
+
+            <div className="border-t pt-3 flex justify-between">
+              <span className="font-semibold">Thực lãnh</span>
+              <span className="font-bold text-lg text-primary">{netSalary.toLocaleString()} ₫</span>
+            </div>
+          </div>
+
           <SheetFooter>
             <Button type="submit">Lưu thay đổi</Button>
+
             <SheetClose asChild>
               <Button type="button" variant="outline">
                 Đóng
