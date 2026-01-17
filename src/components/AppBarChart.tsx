@@ -48,7 +48,7 @@ const AppBarChart = ({
   const [year, setYear] = useState(2025);
 
   return (
-    <div>
+    <>
       <div className="flex items-start justify-between">
         <h1 className="mb-6">
           <span className="text-lg font-medium">{title}</span>
@@ -76,7 +76,7 @@ const AppBarChart = ({
           ))}
         </BarChart>
       </ChartContainer>
-    </div>
+    </>
   );
 };
 

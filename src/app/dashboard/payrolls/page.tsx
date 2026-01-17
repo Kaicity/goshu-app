@@ -1,9 +1,6 @@
 'use client';
 
 import { completePayroll, generatePayrollAllEmployees, getPayrolls } from '@/api/payrolls/payroll';
-import { getAvailablePayrollYear, getSalaryRatio, getSalaryStructureByMonth } from '@/api/payrolls/payroll-report';
-import AppBarChart from '@/components/AppBarChart';
-import AppPieChart from '@/components/AppPieChart';
 import CardReport from '@/components/CardReport';
 import { DataTable } from '@/components/DataTable';
 import { HeaderTitle } from '@/components/HeaderTitle';
@@ -11,25 +8,11 @@ import LoadingActionPage from '@/components/LoadingActionPage';
 import { MultiSelect } from '@/components/MultiSelect';
 import StackCardMessage from '@/components/StackCardMessage';
 import { Button } from '@/components/ui/button';
-import type { ChartConfig } from '@/components/ui/chart';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Payroll, PAYROLL_LABELS } from '@/enums/payrollEnum';
-import { buildPayrollChartData } from '@/helpers/chart-data-map';
 import { useActionWithLoading } from '@/hooks/useExecute';
 import { PayrollDto } from '@/models/dto/payrollDto';
-import {
-  ChevronDown,
-  CircleArrowOutUpLeft,
-  Download,
-  HandCoins,
-  Loader,
-  RotateCcwIcon,
-  Search,
-  UserPlus,
-  Users,
-  UserX,
-} from 'lucide-react';
+import { CircleArrowOutUpLeft, Download, HandCoins, Loader, RotateCcwIcon, Search, UserPlus, Users, UserX } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { columns } from './columns';
@@ -51,48 +34,10 @@ const PayrollsPage = () => {
 
   const [statusSelected, setStatusSelected] = useState<string[]>([]);
 
-  // REPORT CHART
-  const [chartData, setChartData] = useState<any[]>([]);
-  const [stacked, setStacked] = useState<boolean>(false);
-
-  const [years, setYears] = useState<number[]>([]);
-  const [year, setYear] = useState<number>();
-
   const [openEditSheet, setOpenEditSheet] = useState<boolean>(false);
 
   type PayrollStatusUI = 'generated' | 'completed';
   const [statusPayroll, setStatusPayroll] = useState<PayrollStatusUI>('generated');
-
-  useEffect(() => {
-    const fetchYears = async () => {
-      const res = await getAvailablePayrollYear();
-      setYears(res);
-      setYear(years[0]);
-    };
-
-    fetchYears();
-  }, []);
-
-  useEffect(() => {
-    const fetchReportSalaryStructureByYear = async () => {
-      const res = await getSalaryStructureByMonth(year ?? new Date().getFullYear());
-
-      const data = buildPayrollChartData(res);
-      setChartData(data);
-    };
-
-    fetchReportSalaryStructureByYear();
-  }, [year]);
-
-  useEffect(() => {
-    const fetchReportSalaryRatio = async () => {
-      const res = await getSalaryRatio(1, 2026);
-
-      console.log(res);
-    };
-
-    fetchReportSalaryRatio();
-  }, [year]);
 
   useEffect(() => {
     fetchPayrolls();
@@ -220,55 +165,6 @@ const PayrollsPage = () => {
           icon={<UserX className="h-5 w-5 text-red-500" />}
           cardItemClassName="bg-red-50"
         />
-      </div>
-
-      {/* CHART REPORT */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4">
-        <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-3">
-          <AppBarChart
-            title="Biểu đồ thống kê lương nhân viên"
-            desTitle={`Tháng 1 - Tháng 12 ${new Date().getFullYear()}`}
-            chartData={chartData}
-            bars={[
-              { key: 'netSalary', label: 'Tổng lương', color: 'var(--chart-3)' },
-              { key: 'deductions', label: 'Khấu trừ', color: 'var(--chart-4)' },
-            ]}
-            chartConfig={
-              {
-                netSalary: { label: 'Tổng lương' },
-                deductions: { label: 'Khấu trừ' },
-              } satisfies ChartConfig
-            }
-            yearSelected={
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline">
-                    {year}
-                    <ChevronDown className="w-4 h-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent align="end">
-                  {years.map((y) => (
-                    <DropdownMenuItem
-                      key={y}
-                      onClick={() => setYear(y)}
-                      className={y === year ? 'font-semibold text-primary' : ''}
-                    >
-                      {y}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            }
-            stacked={stacked}
-            onchangeStacked={() => setStacked((prev) => !prev)}
-          />
-        </div>
-
-        <div className="bg-primary-foreground p-4 rounded-lg">
-          <AppPieChart data={salaryStructure} title="Cơ cấu lương tháng 12" />
-        </div>
       </div>
 
       {/* PAYROLLS LIST */}
