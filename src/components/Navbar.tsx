@@ -2,10 +2,11 @@
 
 import { getEmployee } from '@/api/employee/employee';
 import { useApp } from '@/contexts/AppContext';
+import { ROLE_LABELS, UserRole } from '@/enums/userRolesEnum';
 import useNotification from '@/hooks/useNotification';
 import type { EmployeeDto } from '@/models/dto/employeeDto';
 import { formatTimeAgo } from '@/utils/formatTimeAgo';
-import { BadgeCheck, Bell, ChevronsUpDown, CircleOff, CreditCard, Eye, LogOut, Search } from 'lucide-react';
+import { BadgeCheck, Bell, ChevronsUpDown, CircleOff, CreditCard, Eye, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
@@ -19,9 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import { Input } from './ui/input';
 import { SidebarMenuButton, SidebarTrigger, useSidebar } from './ui/sidebar';
-import { ROLE_LABELS, UserRole } from '@/enums/userRolesEnum';
 
 const Navbar = () => {
   const { logout } = useApp();
@@ -36,7 +35,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchEmployeeDetail = async () => {
-      if (userAccount) {
+      if (userAccount && userAccount.role !== UserRole.ADMIN) {
         if (userAccount.employeeId) {
           const res = await getEmployee(userAccount.employeeId as string);
           setEmployee(res);
