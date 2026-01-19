@@ -67,13 +67,13 @@ const LoginPage = () => {
         // Điều hướng trang home
         switch (user.role) {
           case UserRole.ADMIN:
-            router.push('/users');
+            router.push('/dashboard/users');
             break;
           case UserRole.HR:
             router.push('/dashboard');
             break;
           case UserRole.EMPLOYEE:
-            router.push('/home');
+            router.push('/dashboard/home');
             break;
 
           default:

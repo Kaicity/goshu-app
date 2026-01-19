@@ -20,8 +20,6 @@ import type { UserAccountDto } from '@/models/dto/userAccountDto';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 const UsersPage = () => {
-  const searchParams = useSearchParams();
-
   const router = useRouter();
 
   const [users, setUsers] = useState<UserAccountDto[]>([]);
@@ -29,23 +27,21 @@ const UsersPage = () => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<UserAccountDto | null>(null);
 
-  const [page, setPage] = useState<number>(searchParams.get('page') ? Number(searchParams.get('page')) : 1);
+  const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(searchParams.get('limit') ? Number(searchParams.get('limit')) : 10);
+  const [limit, setLimit] = useState<number>(10);
 
   // Parameters for the table
-  const [search, setSearch] = useState<string>(searchParams.get('search') || '');
-  const [roleSelected, setRoleSelected] = useState<string[]>((searchParams.get('role') ?? '').split(',').filter(Boolean));
-  const [statusSelected, setStatusSelected] = useState<string[]>((searchParams.get('status') ?? '').split(',').filter(Boolean));
+  const [search, setSearch] = useState<string>('');
+  const [roleSelected, setRoleSelected] = useState<string[]>([]);
+  const [statusSelected, setStatusSelected] = useState<string[]>([]);
 
   useEffect(() => {
-    updateSearchParams();
     fetchUsers();
   }, [page, limit, search, roleSelected, statusSelected]);
 
   const fetchUsers = async () => {
     setLoading(true);
-    console.log(roleSelected.join(','));
     try {
       const res = await getUsers(page, limit, {
         search,
@@ -92,16 +88,6 @@ const UsersPage = () => {
     setLimit(10);
 
     router.push('/dashboard/users');
-  };
-
-  const updateSearchParams = () => {
-    const params = new URLSearchParams();
-    if (page) params.set('page', String(page));
-    if (limit) params.set('limit', String(limit));
-    if (search) params.set('search', search);
-    if (roleSelected) params.set('role', roleSelected.join(','));
-    if (statusSelected) params.set('status', statusSelected.join(','));
-    router.push(`/dashboard/users?${params.toString()}`);
   };
 
   return (
