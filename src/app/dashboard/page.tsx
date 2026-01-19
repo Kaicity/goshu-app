@@ -1,24 +1,55 @@
 'use client';
 
-import { getAvailablePayrollYear, getSalaryRatio, getSalaryStructureByMonth } from '@/api/payrolls/payroll-report';
+import { getDepartments } from '@/api/departments/department';
+import { getEmployees } from '@/api/employee/employee';
+import { getAvailablePayrollYear, getSalaryStructureByMonth } from '@/api/payrolls/payroll-report';
 import AppAreaChart from '@/components/AppAreaChart';
 import AppBarChart from '@/components/AppBarChart';
 import { AppPieChart } from '@/components/AppPieChart';
 import ProtectPage from '@/components/auth/ProtectPage';
 import CardReport from '@/components/CardReport';
+import { DataTable } from '@/components/DataTable';
 import { ImageWithFallback } from '@/components/ImageWithFallback';
+import { MultiSelect } from '@/components/MultiSelect';
 import TodoList from '@/components/TodoList';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { ChartConfig } from '@/components/ui/chart';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import { useApp } from '@/contexts/AppContext';
+import { EMPLOYEE_STATUS_LABELS, EmployeeStatus } from '@/enums/employeeEnum';
+import { TypeWork, TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
+import { UserRole } from '@/enums/userRolesEnum';
 import { buildPayrollChartData } from '@/helpers/chart-data-map';
-import { ChevronDown, UserCheck, Users } from 'lucide-react';
+import type { DepartmentDto } from '@/models/dto/departmentDto';
+import type { EmployeeDto } from '@/models/dto/employeeDto';
+import { ChevronDown, Search, UserCheck, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { columns } from './columns';
 
 const Homepage = () => {
+  type DepartmentOption = {
+    label: string;
+    value: string;
+  };
+
   const { setUserAccount } = useApp();
+
+  const [employees, setEmployees] = useState<EmployeeDto[]>([]);
+
+  const [page, setPage] = useState<number>(1);
+  const [total, setTotal] = useState<number>(0);
+  const [limit, setLimit] = useState<number>(10);
+  const [search, setSearch] = useState<string>('');
+  const [loading, setLoading] = useState(true);
+  const [departments, setDepartments] = useState<DepartmentDto[]>([]);
+  const [departmentsFilter, setDepartmentsFilter] = useState<DepartmentOption[]>([]);
+  const [statusSelected, setStatusSelected] = useState<string[]>([]);
+  const [departmentSelected, setDepartmentSelected] = useState<string[]>([]);
+  const [typeWorkSelected, setTypeWorkSelected] = useState<string[]>([]);
 
   // REPORT CHART
   const [lineChartData, setLineChartData] = useState<any[]>([]);
@@ -58,15 +89,52 @@ const Homepage = () => {
   }, [year]);
 
   useEffect(() => {
-    const fetchReportSalaryRatio = async () => {
-      const res = await getSalaryRatio(1, 2026);
-      console.log(res);
+    fetchEmployees();
+  }, [page, limit, search, departmentSelected, typeWorkSelected, statusSelected]);
 
-      setRatioChartData(res);
-    };
+  useEffect(() => {
+    fetchDepartments();
 
-    fetchReportSalaryRatio();
-  }, [year]);
+    setDepartmentsFilter(
+      Object.values(departments).map((dept) => ({
+        label: dept.name,
+        value: dept.id!,
+      })),
+    );
+  }, [departments]);
+
+  const fetchEmployees = async () => {
+    setLoading(true);
+    try {
+      const res = await getEmployees(page, limit, {
+        search,
+        departments: departmentSelected,
+        typeWorks: typeWorkSelected,
+        status: statusSelected,
+      });
+      setEmployees(res.employees);
+      setTotal(res.pagination.total);
+      setLimit(res.pagination.limit);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchDepartments = async () => {
+    try {
+      const res = await getDepartments(1, 100, { search: '' });
+      setDepartments(res.departments);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const handlePaginationChange = (newPage: number, newLimit: number) => {
+    setPage(newPage);
+    setLimit(newLimit);
+  };
 
   return (
     <div className="space-y-6 py-4">
@@ -93,6 +161,7 @@ const Homepage = () => {
           />
         </div>
       </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4">
         <div className="lg:col-span-2 xl:col-span-1 2xl:col-span-2">
           <div className="lg:col-span-2 2xl:col-span-2">
@@ -116,7 +185,83 @@ const Homepage = () => {
           <AppAreaChart />
         </div>
 
-        <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 xl:col-span-1 2xl:col-span-2">
+        <div className="lg:col-span-2 2xl:col-span-3">
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle className="text-lg">Nhân Viên</CardTitle>
+              <CardAction>
+                <div className="relative max-w-sm sm:w-full">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
+                  <Input
+                    placeholder="Tìm nhân viên"
+                    className="pl-10"
+                    value={search}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      setPage(1);
+                    }}
+                  />
+                </div>
+              </CardAction>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-4 pb-4">
+                <MultiSelect
+                  options={Object.entries(EmployeeStatus).map(([__, value]) => ({
+                    label: EMPLOYEE_STATUS_LABELS[value],
+                    value: value,
+                  }))}
+                  value={statusSelected}
+                  onValueChange={(values) => {
+                    setStatusSelected(values);
+                    setPage(1);
+                  }}
+                  placeholder="Tất cả trạng thái"
+                  className="relative justify-start px-4"
+                />
+                <MultiSelect
+                  options={Object.entries(TypeWork).map(([__, value]) => ({
+                    label: TYPEWORK_LABELS[value],
+                    value,
+                  }))}
+                  value={typeWorkSelected}
+                  onValueChange={(values) => {
+                    setTypeWorkSelected(values);
+                    setPage(1);
+                  }}
+                  placeholder="Tất cả loại hình"
+                  className="relative justify-start px-4"
+                />
+                <MultiSelect
+                  options={departmentsFilter}
+                  value={departmentSelected}
+                  onValueChange={(values) => {
+                    setDepartmentSelected(values);
+                    setPage(1);
+                  }}
+                  placeholder="Tất cả phòng ban"
+                  className="relative justify-start px-4"
+                />
+              </div>
+
+              <DataTable
+                columns={columns}
+                data={employees}
+                page={page}
+                limit={limit}
+                total={total}
+                onPaginationChange={handlePaginationChange}
+                loading={loading}
+              />
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="bg-primary-foreground p-4 rounded-lg">
+          <TodoList />
+        </div>
+
+        <div className="bg-primary-foreground p-4 rounded-lg lg:col-span-2 2xl:col-span-3">
           <AppBarChart
             title="Biểu đồ thống kê lương nhân viên"
             desTitle={`Tháng 1 - Tháng 12 ${new Date().getFullYear()}`}
@@ -157,9 +302,7 @@ const Homepage = () => {
             onchangeStacked={() => setStacked((prev) => !prev)}
           />
         </div>
-        <div className="bg-primary-foreground p-4 rounded-lg">
-          <TodoList />
-        </div>
+
         <div className="bg-primary-foreground p-4 rounded-lg">
           <AppPieChart />
         </div>
@@ -168,4 +311,4 @@ const Homepage = () => {
   );
 };
 
-export default ProtectPage(Homepage);
+export default ProtectPage(Homepage, { allowedRoles: [UserRole.HR] });

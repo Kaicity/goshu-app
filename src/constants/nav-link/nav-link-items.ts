@@ -2,7 +2,6 @@ import { UserRole } from '@/enums/userRolesEnum';
 import {
   Calendar,
   CalendarCheck,
-  CircleDollarSign,
   CoinsIcon,
   FolderCheck,
   Home,
@@ -12,7 +11,6 @@ import {
   PersonStanding,
   Presentation,
   Settings2,
-  ShieldCheck,
   User,
   UserRoundPlus,
   Users2,
@@ -25,7 +23,7 @@ const humanManageitems = [
     url: '/dashboard',
     icon: Home,
     children: [],
-    roles: [UserRole.ADMIN, UserRole.HR, UserRole.EMPLOYEE],
+    roles: [UserRole.HR],
   },
   {
     title: 'Chat',

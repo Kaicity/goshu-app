@@ -6,7 +6,7 @@ import { ROLE_LABELS, UserRole } from '@/enums/userRolesEnum';
 import useNotification from '@/hooks/useNotification';
 import type { EmployeeDto } from '@/models/dto/employeeDto';
 import { formatTimeAgo } from '@/utils/formatTimeAgo';
-import { BadgeCheck, Bell, ChevronsUpDown, CircleOff, CreditCard, Eye, LogOut } from 'lucide-react';
+import { BadgeCheck, Bell, ChevronsUpDown, CircleOff, CreditCard, Eye, LogOut, Search } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
@@ -59,18 +59,51 @@ const Navbar = () => {
   return (
     <nav className="p-4 flex items-center justify-between sticky top-0 bg-background z-10">
       {/* LEFT */}
-      <SidebarTrigger />
+      <div className="w-96">
+        <div className="flex items-center gap-2">
+          <SidebarTrigger />
+          <div className="hidden md:flex-1 max-w-md">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Search anything..."
+                className="w-full pl-10 pr-4 py-2 bg-background border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+              <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-0.5 text-xs text-muted-foreground bg-muted rounded">
+                ⌘ F
+              </kbd>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* CENTER */}
+
+      <nav className="hidden md:flex items-center gap-6">
+        <Link href="/documents" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          Documents
+        </Link>
+        <Link href="/news" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          News
+        </Link>
+        <Link href="/payslip" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          Payslip
+        </Link>
+        <Link href="/report" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          Report
+        </Link>
+      </nav>
 
       {/* RIGHT */}
       <div className="flex items-center gap-3">
         <div className="relative">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="relative bg-secondary text-black dark:text-white">
+              <Button variant="ghost" className="relative text-black dark:text-white rounded-full">
                 <Bell />
                 {readCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                  <span className="absolute top-0 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-destructive text-xs text-white">
                     {notifications.filter((n) => !n.read).length}
                   </span>
                 )}
@@ -156,7 +189,11 @@ const Navbar = () => {
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{fullname ? fullname : 'Chưa cập nhật'}</span>
+                {userAccount?.role !== UserRole.ADMIN ? (
+                  <span className="truncate font-semibold">{fullname ? fullname : 'Chưa cập nhật'}</span>
+                ) : (
+                  <span className="truncate font-semibold">{'ADMIN-SYSTEM'}</span>
+                )}
                 <span className="truncate text-xs">{ROLE_LABELS[userAccount?.role as UserRole]}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />

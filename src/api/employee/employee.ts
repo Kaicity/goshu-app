@@ -1,15 +1,16 @@
 import { EmployeeFilterDto, EmployeePaginationDto, EmployeeFormDto } from '@/models/dto/employeeDto';
 import { instance } from '../axiosClient';
 
-export const getEmployees = async (page: number, limit: number, filters: EmployeeFilterDto): Promise<EmployeePaginationDto> => {
+export const getEmployees = async (page: number, limit: number, filters?: EmployeeFilterDto): Promise<EmployeePaginationDto> => {
   try {
     const response: any = await instance.get('/employees/getAll', {
       params: {
         page,
         limit,
-        search: filters.search,
-        department: filters.departments,
-        type: filters.typeWorks,
+        search: filters?.search,
+        department: filters?.departments,
+        type: filters?.typeWorks,
+        status: filters?.status,
       },
     });
     return {

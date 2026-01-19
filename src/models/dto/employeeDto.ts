@@ -50,6 +50,7 @@ interface EmployeeFilterDto {
   search?: string;
   typeWorks?: string[];
   departments?: string[];
+  status?: string[];
 }
 
 export type { EmployeeDto, EmployeeFilterDto, EmployeeFormDto, EmployeePaginationDto };

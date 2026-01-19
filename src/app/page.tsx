@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { UserRole } from '@/enums/userRolesEnum';
 import useLogged from '@/hooks/useLogged';
 import { loginFormSchema, type loginFormData } from '@/models/schemas/loginSchema';
 import { getValidateInput } from '@/utils/inputUtils';
@@ -59,13 +60,25 @@ const LoginPage = () => {
         // Lấy đầy đủ thông tin user sau khi đăng nhập thành công
         const user = await getUser(res.email);
 
-        console.log(user);
-
         if (user) {
           localStorage.setItem('user', JSON.stringify(user));
         }
 
-        router.push('/dashboard');
+        // Điều hướng trang home
+        switch (user.role) {
+          case UserRole.ADMIN:
+            router.push('/users');
+            break;
+          case UserRole.HR:
+            router.push('/dashboard');
+            break;
+          case UserRole.EMPLOYEE:
+            router.push('/home');
+            break;
+
+          default:
+            break;
+        }
       }
     } catch (error: any) {
       toast.error('Đăng nhập thất bại', {

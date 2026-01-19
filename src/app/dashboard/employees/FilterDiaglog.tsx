@@ -7,11 +7,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { TypeWork, TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
-import { cn } from '@/lib/utils';
 import { DepartmentDto } from '@/models/dto/departmentDto';
 import { DialogDescription } from '@radix-ui/react-dialog';
 import { PackageOpen, RotateCcwIcon } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -24,9 +22,8 @@ interface FilterDepartmentProps {
 }
 
 export function FilterDialog({ open, setOpen, onFilter, resetTrigger }: FilterDepartmentProps) {
-  const searchParams = useSearchParams();
   const [departmentSelected, setDepartmentSelected] = useState<string[]>([]);
-  const [typeWorkSelected, setTypeWorkSelected] = useState<string[]>((searchParams.get('type') ?? '').split(',').filter(Boolean));
+  const [typeWorkSelected, setTypeWorkSelected] = useState<string[]>([]);
   const [departments, setDepartments] = useState<DepartmentDto[]>([]);
 
   const {
@@ -65,7 +62,6 @@ export function FilterDialog({ open, setOpen, onFilter, resetTrigger }: FilterDe
       departments: departmentSelected,
       typeWorks: typeWorkSelected,
     };
-    console.log('f data', filterData);
     onFilter(filterData);
     setOpen(false);
   };

@@ -24,7 +24,6 @@ const EmployeesPage = () => {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [departmentSelected, setDepartmentSelected] = useState<string[]>([]);
-
   const [typeWorkSelected, setTypeWorkSelected] = useState<string[]>([]);
 
   const router = useRouter();
@@ -104,12 +103,9 @@ const EmployeesPage = () => {
           Làm mới
         </Button>
 
-        <Button
-          onClick={() => {}}
-          className="w-full md:w-[130px] ml-auto bg-green-600 hover:bg-green-700 text-white font-medium shadow-sm transition-all duration-200"
-        >
+        <Button variant="outline" onClick={() => {}} className="w-full">
           <FileSpreadsheet className="w-5 h-5 mr-2" />
-          Xuất Excel
+          Xuất CSV
         </Button>
 
         <Button
