@@ -8,7 +8,7 @@ import { ChevronRight, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { io, type Socket } from 'socket.io-client';
 import { Button } from './ui/button';
@@ -37,8 +37,9 @@ const AppSidebar = () => {
   const router = useRouter();
 
   const { userAccount } = useApp();
+
   const path = usePathname();
-  const params = useSearchParams();
+
   const { open } = useSidebar();
 
   const [mounted, setMounted] = useState(false);
@@ -95,20 +96,7 @@ const AppSidebar = () => {
                 className="flex justify-start items-center"
                 variant={'secondary'}
                 onClick={() => {
-                  switch (userAccount?.role) {
-                    case UserRole.ADMIN:
-                      router.push('/dashboard/users');
-                      break;
-                    case UserRole.HR:
-                      router.push('/dashboard');
-                      break;
-                    case UserRole.EMPLOYEE:
-                      router.push('/dashboard/home');
-                      break;
-
-                    default:
-                      break;
-                  }
+                  router.push('/dashboard');
                 }}
               >
                 <Image src="/logo.svg" alt="logo" width={30} height={30} />

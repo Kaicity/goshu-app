@@ -38,7 +38,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setAuthToken(null);
     localStorage.removeItem('user');
     setUserAccount(null);
-    router.push('/');
+    router.push('/hr-admin');
   };
 
   return (

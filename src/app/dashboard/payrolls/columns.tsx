@@ -3,13 +3,13 @@
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { PAYROLL_LABELS, PAYROLL_STYLES, type Payroll } from '@/enums/payrollEnum';
-import { cn } from '@/lib/utils';
 import { PayrollDto } from '@/models/dto/payrollDto';
 import { formatVND } from '@/utils/formatMoneyVnd';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
-import { ArrowUpDown, Edit, MoreHorizontal } from 'lucide-react';
+import { ArrowUpDown, Edit, Eye, MoreHorizontal } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export const columns = (handleUpdate: (payroll: PayrollDto) => void): ColumnDef<PayrollDto>[] => [
   {
@@ -31,7 +31,7 @@ export const columns = (handleUpdate: (payroll: PayrollDto) => void): ColumnDef<
     },
     cell: ({ row }) => {
       const employee = row.original;
-      const fullName = `${employee.employee.lastname ?? ''} ${employee.employee.lastname ?? ''}`.trim() || '--/--';
+      const fullName = `${employee.employee.lastname ?? ''} ${employee.employee.firstname ?? ''}`.trim() || '--/--';
       return (
         <div className="flex items-center gap-3 min-w-[200px] flex-grow">
           <img
@@ -98,8 +98,8 @@ export const columns = (handleUpdate: (payroll: PayrollDto) => void): ColumnDef<
     header: () => <div className="text-center ">HÀNH ĐỘNG</div>,
     enableColumnFilter: true,
     cell: ({ row }) => {
+      const router = useRouter();
       const resource = row.original;
-
       return (
         <div className="flex justify-center">
           <DropdownMenu>
@@ -112,6 +112,14 @@ export const columns = (handleUpdate: (payroll: PayrollDto) => void): ColumnDef<
               <DropdownMenuItem onClick={() => handleUpdate(resource)}>
                 <Edit className="w-4 h-4 mr-2" />
                 Chỉnh sửa
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push(`/dashboard/payrolls/detail-payroll/${resource.payroll?.id}`);
+                }}
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                Xem chi tiết
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

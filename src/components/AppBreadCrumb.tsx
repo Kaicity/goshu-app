@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Breadcrumb,
@@ -7,14 +7,11 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator,
   BreadcrumbPage,
-} from "@/components/ui/breadcrumb";
-import {
-  humanManageitems,
-  systemsManageItems,
-} from "@/constants/nav-link/nav-link-items";
-import { findBreadcrumbPath } from "@/helpers/breadcrumb";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+} from '@/components/ui/breadcrumb';
+import { humanManageitems, systemsManageItems } from '@/constants/nav-link/nav-link-items';
+import { findBreadcrumbPath } from '@/helpers/breadcrumb';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export function AppBreadcrumb() {
   const pathname = usePathname();

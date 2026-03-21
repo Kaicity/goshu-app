@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 
 interface CardReportProps {
   title: string;
-  value: string;
+  value: number;
   percentage?: number;
   comparisonText?: string;
   icon?: React.ReactNode;

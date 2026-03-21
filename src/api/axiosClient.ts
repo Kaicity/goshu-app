@@ -41,7 +41,7 @@ instance.interceptors.response.use(
       alert('Phiên đăng nhập đã hết hạn');
       Cookies.remove('authToken');
       localStorage.removeItem('user');
-      window.location.href = '/';
+      window.location.href = '/hr-admin';
     }
     return Promise.reject(error);
   },

@@ -21,7 +21,7 @@ const ProtectPage = <P extends object>(WrappedComponent: React.ComponentType<P>,
     useEffect(() => {
       if (!isLoading) {
         if (!isAuthenticated) {
-          router.push('/');
+          router.push('/hr-admin');
         } else if (allowedRoles && userAccount && !allowedRoles.includes(userAccount.role)) {
           router.replace('/dashboard/403'); // permission về trang 403 không đủ quyền truy cập
         }

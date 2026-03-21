@@ -3,8 +3,7 @@ export enum Type {
   OFFICE = 'OFFICE',
 }
 
-export const TYPE_LABELS: Record<Type, string> =
-{
-    [Type.REMOTE]: 'Remote',
-    [Type.OFFICE]: 'Office',
-}
+export const TYPE_LABELS: Record<Type, string> = {
+  [Type.REMOTE]: 'Remote',
+  [Type.OFFICE]: 'Office',
+};

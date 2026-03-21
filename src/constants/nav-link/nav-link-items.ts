@@ -23,7 +23,7 @@ const humanManageitems = [
     url: '/dashboard',
     icon: Home,
     children: [],
-    roles: [UserRole.HR],
+    roles: [UserRole.HR, UserRole.ADMIN, UserRole.EMPLOYEE],
   },
   {
     title: 'Chat',
@@ -80,7 +80,7 @@ const humanManageitems = [
         icon: Inbox,
         children: [
           {
-            title: 'Thêm nhân viên',
+            title: 'Cập nhật thông tin',
             url: '/dashboard/employees/info-update',
             icon: Inbox,
             roles: [UserRole.HR],
@@ -102,7 +102,7 @@ const humanManageitems = [
       },
       {
         title: 'Lương',
-        url: '/dashboard/payrolls',
+        url: '/dashboard/payrolls/payroll-detail',
         icon: CoinsIcon,
         chilren: [],
         roles: [UserRole.EMPLOYEE, UserRole.HR],
@@ -118,7 +118,7 @@ const humanManageitems = [
   },
   {
     title: 'Chính Sách - Điểu Khoản Công Ty',
-    url: '/dashboard/rules',
+    url: '/dashboard/company-policy',
     icon: Notebook,
     children: [],
     roles: [UserRole.HR],

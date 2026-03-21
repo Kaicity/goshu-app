@@ -103,18 +103,20 @@ const EmployeesPage = () => {
           Làm mới
         </Button>
 
-        <Button variant="outline" onClick={() => {}} className="w-full">
-          <FileSpreadsheet className="w-5 h-5 mr-2" />
-          Xuất CSV
-        </Button>
+        <div className="flex items-center gap-2 ml-auto">
+          <Button variant="outline" onClick={() => {}}>
+            <FileSpreadsheet className="w-5 h-5 mr-2" />
+            Xuất CSV
+          </Button>
 
-        <Button
-          onClick={() => {
-            setOpen(true);
-          }}
-        >
-          Sắp Xếp
-        </Button>
+          <Button
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            Sắp Xếp
+          </Button>
+        </div>
 
         <FilterDialog
           open={open}

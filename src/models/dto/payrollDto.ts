@@ -1,3 +1,4 @@
+import type { TypeWork } from '@/enums/typeWorkEnum';
 import type PaginationDto from './pagination';
 
 interface CreatePayrollDto {
@@ -31,6 +32,9 @@ interface PayrollDto {
     lastname?: string;
     avatarUrl?: string;
     designation?: string;
+    type?: TypeWork;
+    joinDate?: Date;
+    status?: string;
   };
   createdAt?: string;
 }

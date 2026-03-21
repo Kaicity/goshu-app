@@ -1,12 +1,12 @@
 'use client';
 
+import { getDashBoardReportSummary } from '@/api/dashboard/dashboard-report';
 import { getDepartments } from '@/api/departments/department';
 import { getEmployees } from '@/api/employee/employee';
 import { getAvailablePayrollYear, getSalaryStructureByMonth } from '@/api/payrolls/payroll-report';
 import AppAreaChart from '@/components/AppAreaChart';
 import AppBarChart from '@/components/AppBarChart';
 import { AppPieChart } from '@/components/AppPieChart';
-import ProtectPage from '@/components/auth/ProtectPage';
 import CardReport from '@/components/CardReport';
 import { DataTable } from '@/components/DataTable';
 import { ImageWithFallback } from '@/components/ImageWithFallback';
@@ -21,11 +21,11 @@ import { Input } from '@/components/ui/input';
 import { useApp } from '@/contexts/AppContext';
 import { EMPLOYEE_STATUS_LABELS, EmployeeStatus } from '@/enums/employeeEnum';
 import { TypeWork, TYPEWORK_LABELS } from '@/enums/typeWorkEnum';
-import { UserRole } from '@/enums/userRolesEnum';
 import { buildPayrollChartData } from '@/helpers/chart-data-map';
+import type { DashboardSummary } from '@/models/dto/dashboard-summary';
 import type { DepartmentDto } from '@/models/dto/departmentDto';
 import type { EmployeeDto } from '@/models/dto/employeeDto';
-import { ChevronDown, Search, UserCheck, Users } from 'lucide-react';
+import { Briefcase, ChevronDown, Search, UserCheck, UserMinus, UserPlus, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { columns } from './columns';
@@ -59,6 +59,21 @@ const Homepage = () => {
 
   const [years, setYears] = useState<number[]>([]);
   const [year, setYear] = useState<number>();
+
+  const [dashboardSummary, setDashboardSummary] = useState<DashboardSummary | null>(null);
+
+  useEffect(() => {
+    const fetchDashboardSummary = async () => {
+      const now = new Date();
+      const month = now.getMonth() + 1;
+      const year = now.getFullYear();
+
+      const res = await getDashBoardReportSummary(month, year);
+      setDashboardSummary(res);
+    };
+
+    fetchDashboardSummary();
+  }, []);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -166,17 +181,41 @@ const Homepage = () => {
         <div className="lg:col-span-2 xl:col-span-1 2xl:col-span-2">
           <div className="lg:col-span-2 2xl:col-span-2">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-full">
-              {[1, 2, 3, 4].map((_, i) => (
-                <CardReport
-                  key={i}
-                  title="Bảng lương gần đây nhất"
-                  value="578,000,000 VND"
-                  percentage={2.4}
-                  icon={<Users className="h-6 w-6 text-blue-600" />}
-                  cardItemClassName="bg-blue-50"
-                  cardHeight="h-34"
-                />
-              ))}
+              <CardReport
+                title="Tổng nhân viên"
+                value={dashboardSummary?.totalEmployees.value ?? 0}
+                percentage={dashboardSummary?.totalEmployees.percent ?? 0}
+                icon={<Users className="h-6 w-6 text-blue-600" />}
+                cardItemClassName="bg-blue-50"
+                cardHeight="h-34"
+              />
+
+              <CardReport
+                title="Nhân viên mới"
+                value={dashboardSummary?.newEmployees.value ?? 0}
+                percentage={dashboardSummary?.newEmployees.percent ?? 0}
+                icon={<UserPlus className="h-6 w-6 text-green-600" />}
+                cardItemClassName="bg-green-50"
+                cardHeight="h-34"
+              />
+
+              <CardReport
+                title="Nhân viên nghỉ việc"
+                value={dashboardSummary?.resignedEmployees.value ?? 0}
+                percentage={dashboardSummary?.resignedEmployees.percent ?? 0}
+                icon={<UserMinus className="h-6 w-6 text-red-600" />}
+                cardItemClassName="bg-red-50"
+                cardHeight="h-34"
+              />
+
+              <CardReport
+                title="Ứng viên"
+                value={0}
+                percentage={0}
+                icon={<Briefcase className="h-6 w-6 text-purple-600" />}
+                cardItemClassName="bg-purple-50"
+                cardHeight="h-34"
+              />
             </div>
           </div>
         </div>
@@ -311,4 +350,4 @@ const Homepage = () => {
   );
 };
 
-export default ProtectPage(Homepage, { allowedRoles: [UserRole.HR] });
+export default Homepage;
