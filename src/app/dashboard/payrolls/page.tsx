@@ -140,27 +140,27 @@ const PayrollsPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         <CardReport
           title="Bảng lương gần đây nhất"
-          value="578,000,000 VND"
+          value={58833822}
           percentage={2.4}
           icon={<Users className="h-5 w-5 text-blue-600" />}
           cardItemClassName="bg-blue-50"
         />
         <CardReport
           title="Nhân viên có trong bảng lương"
-          value="280"
+          value={40}
           percentage={-10}
           icon={<UserPlus className="h-5 w-5 text-yellow-500" />}
           cardItemClassName="bg-yellow-50"
         />
         <CardReport
           title="Đang chờ phê duyệt lương"
-          value="10"
+          value={2}
           icon={<Loader className="h-5 w-5 text-orange-500" />}
           cardItemClassName="bg-orange-50"
         />
         <CardReport
           title="Ngày trả lương kế tiếp"
-          value="05 Tháng 01 2025"
+          value={20}
           percentage={2.4}
           icon={<UserX className="h-5 w-5 text-red-500" />}
           cardItemClassName="bg-red-50"

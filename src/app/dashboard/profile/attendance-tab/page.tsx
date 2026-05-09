@@ -1,3 +1,5 @@
+'use client';
+
 import { getAttendances } from '@/api/attendance/attendance';
 import ProtectPage from '@/components/auth/ProtectPage';
 import { DataTable } from '@/components/DataTable';

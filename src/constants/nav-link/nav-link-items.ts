@@ -25,13 +25,13 @@ const humanManageitems = [
     children: [],
     roles: [UserRole.HR, UserRole.ADMIN, UserRole.EMPLOYEE],
   },
-  {
-    title: 'Chat',
-    url: '/dashboard/chats',
-    icon: MessageCircleIcon,
-    children: [],
-    roles: [UserRole.HR, UserRole.EMPLOYEE],
-  },
+  // {
+  //   title: 'Chat',
+  //   url: '/dashboard/chats',
+  //   icon: MessageCircleIcon,
+  //   children: [],
+  //   roles: [UserRole.HR, UserRole.EMPLOYEE],
+  // },
   {
     title: 'Phòng Ban',
     url: '/dashboard/departments',
@@ -61,13 +61,13 @@ const humanManageitems = [
     children: [],
     roles: [UserRole.HR, UserRole.EMPLOYEE],
   },
-  {
-    title: 'Dự Án',
-    url: '/dashboard/projects',
-    icon: FolderCheck,
-    children: [],
-    roles: [UserRole.HR, UserRole.EMPLOYEE],
-  },
+  // {
+  //   title: 'Dự Án',
+  //   url: '/dashboard/projects',
+  //   icon: FolderCheck,
+  //   children: [],
+  //   roles: [UserRole.HR, UserRole.EMPLOYEE],
+  // },
   {
     title: 'Nhân Viên',
     url: '',
@@ -123,13 +123,13 @@ const humanManageitems = [
     children: [],
     roles: [UserRole.HR],
   },
-  {
-    title: 'Tuyển Dụng',
-    url: '/dashboard/careers',
-    icon: UserRoundPlus,
-    children: [],
-    roles: [UserRole.HR],
-  },
+  // {
+  //   title: 'Tuyển Dụng',
+  //   url: '/dashboard/careers',
+  //   icon: UserRoundPlus,
+  //   children: [],
+  //   roles: [UserRole.HR],
+  // },
 ];
 
 const systemsManageItems = [
