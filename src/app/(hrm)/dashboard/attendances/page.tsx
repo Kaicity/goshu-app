@@ -27,25 +27,21 @@ const SOCKET_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
 const AttendancesPage = () => {
   const { isLoadingAction, execute } = useActionWithLoading();
 
-  const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [search, setSearch] = useState<string>(searchParams.get('search') || '');
+  const [search, setSearch] = useState<string>('');
 
   const [attendances, setAttendances] = useState<AttendanceDto[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [page, setPage] = useState<number>(searchParams.get('page') ? Number(searchParams.get('page')) : 1);
+  const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(searchParams.get('limit') ? Number(searchParams.get('limit')) : 10);
+  const [limit, setLimit] = useState<number>(10);
 
-  const [dateSelected, setDateSelected] = useState<Date>(
-    searchParams.get('date') ? new Date(searchParams.get('date') as string) : new Date(),
-  );
-  const [statusSelected, setStatusSelected] = useState<string[]>((searchParams.get('status') ?? '').split(',').filter(Boolean));
+  const [dateSelected, setDateSelected] = useState<Date>(new Date());
+  const [statusSelected, setStatusSelected] = useState<string[]>([]);
 
   useEffect(() => {
-    updateSearchParams();
     fetchAttendances();
   }, [page, limit, search, statusSelected, dateSelected]);
 
@@ -102,16 +98,6 @@ const AttendancesPage = () => {
   const handleBirthdayChange = (date: Date | undefined) => {
     if (!date) return;
     setDateSelected(date);
-  };
-
-  const updateSearchParams = () => {
-    const params = new URLSearchParams();
-    if (page) params.set('page', String(page));
-    if (limit) params.set('limit', String(limit));
-    if (search) params.set('search', String(search));
-    if (dateSelected) params.set('date', format(dateSelected, 'yyyy-MM-dd'));
-    if (statusSelected) params.set('status', statusSelected.join(','));
-    router.push(`/dashboard/attendances?${params.toString()}`);
   };
 
   const handleGenerateAttendance = async () => {

@@ -1,39 +1,19 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { useFormStatus } from "react-dom";
-import { Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Loader2 } from 'lucide-react';
 
 interface isAppProps {
   text: string;
-  variant?:
-    | "link"
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | null
-    | undefined;
+  variant?: 'link' | 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | null | undefined;
   className?: string;
   isPending?: boolean;
 }
 
-export function SubmitButton({
-  text,
-  variant,
-  className,
-  isPending,
-}: isAppProps) {
-  const { pending } = useFormStatus();
-
+export function SubmitButton({ text, variant, className, isPending }: isAppProps) {
   return (
-    <Button
-      disabled={isPending}
-      variant={variant}
-      className={cn("w-fit", className)}
-    >
+    <Button disabled={isPending} variant={variant} className={cn('w-fit', className)}>
       {isPending ? (
         <>
           <Loader2 className="size-4 mr-2 animate-spin" />
@@ -46,21 +26,16 @@ export function SubmitButton({
   );
 }
 
-export function DeleteButton({
-  text,
-  variant,
-  className,
-  isPending,
-}: isAppProps) {
+export function DeleteButton({ text, variant, className, isPending }: isAppProps) {
   return (
     <>
       {isPending ? (
-        <Button disabled variant={variant} className={cn("w-fit", className)}>
+        <Button disabled variant={variant} className={cn('w-fit', className)}>
           <Loader2 className="size-4 mr-2 animate-spin"></Loader2>
           Đang xử lý
         </Button>
       ) : (
-        <Button className={cn("w-fit", className)} variant={variant}>
+        <Button className={cn('w-fit', className)} variant={variant}>
           {text}
         </Button>
       )}

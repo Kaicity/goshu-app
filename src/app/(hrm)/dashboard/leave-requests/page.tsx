@@ -6,33 +6,30 @@ import { DataTable } from '@/components/DataTable';
 import { HeaderTitle } from '@/components/HeaderTitle';
 import { MultiSelect } from '@/components/MultiSelect';
 import StatusCard from '@/components/StatusCard';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useApp } from '@/contexts/AppContext';
 import { LeaveRequest, LEAVEREQUEST_LABELS } from '@/enums/leaveRequestEnum';
 import { UserRole } from '@/enums/userRolesEnum';
 import { LeaveRequestDto } from '@/models/dto/leaverequestDto';
 import { CalendarIcon, RotateCcwIcon, Search, TimerIcon, XIcon } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { columns } from './columns';
-import { useApp } from '@/contexts/AppContext';
-import { Button } from '@/components/ui/button';
 
 const LeaveRequestPage = () => {
   const { userAccount } = useApp();
 
-  const searchParams = useSearchParams();
-  const [search, setSearch] = useState<string>(searchParams.get('search') || '');
+  const [search, setSearch] = useState<string>('');
 
   const [leaveRequests, setLeaveRequests] = useState<LeaveRequestDto[]>([]);
 
-  const [page, setPage] = useState<number>(searchParams.get('page') ? Number(searchParams.get('page')) : 1);
+  const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(searchParams.get('limit') ? Number(searchParams.get('limit')) : 10);
+  const [limit, setLimit] = useState<number>(10);
   const [loading, setLoading] = useState(true);
 
-  const [statusSelected, setStatusSelected] = useState<string[]>((searchParams.get('status') ?? '').split(',').filter(Boolean));
-  const router = useRouter();
+  const [statusSelected, setStatusSelected] = useState<string[]>([]);
 
   const approvedCount = leaveRequests.filter((request) => request.leaveRequest.status === 'APPROVED').length;
   const rejectedCount = leaveRequests.filter((request) => request.leaveRequest.status === 'REJECTED').length;
@@ -40,7 +37,6 @@ const LeaveRequestPage = () => {
 
   useEffect(() => {
     fetchLeaveRequests();
-    updateSearchParams();
   }, [page, limit, search, statusSelected]);
 
   const fetchLeaveRequests = async () => {
@@ -107,15 +103,6 @@ const LeaveRequestPage = () => {
         description: error.message,
       });
     }
-  };
-
-  const updateSearchParams = () => {
-    const params = new URLSearchParams();
-    if (page) params.set('page', String(page));
-    if (limit) params.set('limit', String(limit));
-    if (search) params.set('search', String(search));
-    if (statusSelected) params.set('status', statusSelected.join(','));
-    router.push(`/dashboard/leave-requests?${params.toString()}`);
   };
 
   return (

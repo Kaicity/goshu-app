@@ -7,13 +7,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { forgotPasswordFormSchema, type forgotPasswordFormData } from '@/models/schemas/forgotPasswordSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import CryptoJS from 'crypto-js';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { startTransition, useActionState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import CryptoJS from 'crypto-js';
 
 const ForgotPasswordPage = () => {
   const {

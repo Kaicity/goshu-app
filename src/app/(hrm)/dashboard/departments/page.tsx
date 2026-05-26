@@ -15,7 +15,6 @@ import { AddDepartmentDialog } from './AddDepartmentDialog';
 import { columns } from './column';
 
 const DepartmentsPage = () => {
-  const searchParams = useSearchParams();
   const router = useRouter();
   const [departments, setDepartments] = useState<DepartmentDto[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,10 +23,9 @@ const DepartmentsPage = () => {
   const [total, setTotal] = useState<number>(0);
   const [open, setOpen] = useState(false);
   const [department, setDepartment] = useState<DepartmentDto | null>(null);
-  const [search, setSearch] = useState<string>(searchParams.get('search') || '');
+  const [search, setSearch] = useState<string>('');
 
   useEffect(() => {
-    updateSearchParams();
     fetchDepartments();
   }, [page, limit, search]);
 
@@ -78,15 +76,6 @@ const DepartmentsPage = () => {
       setDepartment(resource);
       setOpen(true);
     }
-  };
-
-  const updateSearchParams = () => {
-    const params = new URLSearchParams();
-    if (page) params.set('page', String(page));
-    if (limit) params.set('limit', String(limit));
-    if (search) params.set('search', String(search));
-
-    router.push(`/dashboard/departments?${params.toString()}`);
   };
 
   return (

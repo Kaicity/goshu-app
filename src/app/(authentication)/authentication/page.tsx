@@ -8,7 +8,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { UserRole } from '@/enums/userRolesEnum';
 import useLogged from '@/hooks/useLogged';
 import { loginFormSchema, type loginFormData } from '@/models/schemas/loginSchema';
 import { getValidateInput } from '@/utils/inputUtils';

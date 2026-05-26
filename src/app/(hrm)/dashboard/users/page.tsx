@@ -17,7 +17,7 @@ import { columns } from './columns';
 import { HeaderTitle } from '@/components/HeaderTitle';
 import { MultiSelect } from '@/components/MultiSelect';
 import type { UserAccountDto } from '@/models/dto/userAccountDto';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const UsersPage = () => {
   const router = useRouter();
