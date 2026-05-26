@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { Briefcase, CalendarCheck, FolderKanban, Mail, PlaneTakeoff, User } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
-import ProfileTabs from '@/app/dashboard/profile/profile-tab/page';
-import AttendanceTabs from '@/app/dashboard/profile/attendance-tab/page';
+import ProfileTabs from '@/app/(hrm)/dashboard/profile/profile-tab/page';
+import AttendanceTabs from '@/app/(hrm)/dashboard/profile/attendance-tab/page';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
 import Image from 'next/image';
 import type { EmployeeDto } from '@/models/dto/employeeDto';

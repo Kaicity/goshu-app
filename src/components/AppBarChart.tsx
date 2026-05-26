@@ -48,7 +48,7 @@ const AppBarChart = ({
   const [year, setYear] = useState(2025);
 
   return (
-    <>
+    <div className="w-full">
       <div className="flex items-start justify-between">
         <h1 className="mb-6">
           <span className="text-lg font-medium">{title}</span>
@@ -67,7 +67,7 @@ const AppBarChart = ({
         <BarChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={false} />
           <XAxis dataKey="label" tickLine={false} tickMargin={10} axisLine={false} />
-          <YAxis tickLine={false} tickMargin={2} axisLine={false} />
+          <YAxis tickLine={false} tickMargin={10} axisLine={false} tickFormatter={(value) => `${value / 1000000}M`} />
           <ChartTooltip content={<ChartTooltipContent />} />
           <ChartLegend content={<ChartLegendContent />} />
 
@@ -76,7 +76,7 @@ const AppBarChart = ({
           ))}
         </BarChart>
       </ChartContainer>
-    </>
+    </div>
   );
 };
 

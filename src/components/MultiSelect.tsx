@@ -206,7 +206,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                         : 'opacity-50 [&_svg]:invisible',
                     )}
                   >
-                    <CheckIcon className="h-4 w-4" />
+                    <CheckIcon className="h-4 w-4 text-secondary" />
                   </div>
                   <span>(Chọn Tất Cả)</span>
                 </CommandItem>
@@ -220,7 +220,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                           isSelected ? 'bg-primary text-primary-foreground' : 'opacity-50 [&_svg]:invisible',
                         )}
                       >
-                        <CheckIcon className="h-4 w-4" />
+                        <CheckIcon className="h-4 w-4 text-secondary" />
                       </div>
                       {option.icon && <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
                       <span>{option.label}</span>

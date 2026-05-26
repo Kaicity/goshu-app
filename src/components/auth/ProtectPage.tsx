@@ -21,7 +21,7 @@ const ProtectPage = <P extends object>(WrappedComponent: React.ComponentType<P>,
     useEffect(() => {
       if (!isLoading) {
         if (!isAuthenticated) {
-          router.push('/hr-admin');
+          router.push('/authentication');
         } else if (allowedRoles && userAccount && !allowedRoles.includes(userAccount.role)) {
           router.replace('/dashboard/403'); // permission về trang 403 không đủ quyền truy cập
         }
@@ -32,7 +32,7 @@ const ProtectPage = <P extends object>(WrappedComponent: React.ComponentType<P>,
       return (
         <div className="fixed inset-0 flex flex-col items-center justify-center z-50">
           <div className="w-max bg-primary flex flex-col items-center p-6 rounded-md">
-            <Loader2 className="w-8 h-8 animate-spin mb-3 text-white dark:text-black" />
+            <Loader2 className="w-12 h-8 animate-spin mb-3 text-white dark:text-black" />
           </div>
         </div>
       );

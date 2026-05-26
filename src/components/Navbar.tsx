@@ -57,7 +57,7 @@ const Navbar = () => {
   }, [notifications]);
 
   return (
-    <nav className="p-4 flex items-center justify-between sticky top-0 bg-background z-10">
+    <nav className="p-4 flex items-center justify-between sticky top-0 bg-background z-10 shadow-md">
       {/* LEFT */}
       <div className="w-96">
         <div className="flex items-center gap-2">
@@ -82,7 +82,7 @@ const Navbar = () => {
 
       {/* CENTER */}
 
-      <nav className="hidden md:flex items-center gap-6">
+      {/* <nav className="hidden md:flex items-center gap-6">
         <Link href="/documents" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
           Documents
         </Link>
@@ -95,7 +95,7 @@ const Navbar = () => {
         <Link href="/report" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
           Report
         </Link>
-      </nav>
+      </nav> */}
 
       {/* RIGHT */}
       <div className="flex items-center gap-3">

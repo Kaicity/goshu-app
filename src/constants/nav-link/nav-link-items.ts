@@ -54,17 +54,10 @@ const humanManageitems = [
     children: [],
     roles: [UserRole.HR],
   },
-  {
-    title: 'Cuộc Họp',
-    url: '/dashboard/meetings',
-    icon: Workflow,
-    children: [],
-    roles: [UserRole.HR, UserRole.EMPLOYEE],
-  },
   // {
-  //   title: 'Dự Án',
-  //   url: '/dashboard/projects',
-  //   icon: FolderCheck,
+  //   title: 'Cuộc Họp',
+  //   url: '/dashboard/meetings',
+  //   icon: Workflow,
   //   children: [],
   //   roles: [UserRole.HR, UserRole.EMPLOYEE],
   // },
@@ -123,13 +116,13 @@ const humanManageitems = [
     children: [],
     roles: [UserRole.HR],
   },
-  // {
-  //   title: 'Tuyển Dụng',
-  //   url: '/dashboard/careers',
-  //   icon: UserRoundPlus,
-  //   children: [],
-  //   roles: [UserRole.HR],
-  // },
+  {
+    title: 'Tuyển Dụng',
+    url: '/jobs',
+    icon: UserRoundPlus,
+    children: [],
+    roles: [UserRole.HR, UserRole.ADMIN, UserRole.EMPLOYEE],
+  },
 ];
 
 const systemsManageItems = [

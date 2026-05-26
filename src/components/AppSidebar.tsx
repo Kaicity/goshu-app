@@ -129,7 +129,7 @@ const AppSidebar = () => {
                               asChild
                               className={cn(
                                 'bg-transparent h-10',
-                                item.url === path && 'bg-custom-cyan/30 font-medium hover:bg-custom-cyan/30',
+                                item.url === path && 'bg-primary font-medium hover:bg-primary hover:text-white text-white',
                               )}
                             >
                               <Link href={item.url}>
@@ -155,7 +155,8 @@ const AppSidebar = () => {
                                     asChild
                                     className={cn(
                                       'bg-transparent h-10',
-                                      subItem.url === path && 'bg-custom-cyan/30 font-medium hover:bg-custom-cyan/30',
+                                      subItem.url === path &&
+                                        'bg-primary font-medium hover:bg-primary hover:text-white text-white',
                                     )}
                                   >
                                     <Link href={subItem.url}>
@@ -196,7 +197,7 @@ const AppSidebar = () => {
                       asChild
                       className={cn(
                         'bg-transparent h-10',
-                        item.url === path && 'bg-custom-cyan/30 font-medium hover:bg-custom-cyan/30',
+                        item.url === path && 'bg-primary font-medium hover:bg-primary hover:text-white text-white',
                       )}
                     >
                       <Link href={item.url}>

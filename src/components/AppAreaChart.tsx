@@ -10,60 +10,60 @@ import {
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 const chartConfig = {
-  desktop: {
-    label: 'Desktop',
+  revenue: {
+    label: 'Doanh thu',
     color: 'var(--chart-2)',
   },
-  mobile: {
-    label: 'Mobile',
+  expense: {
+    label: 'Chi phí',
     color: 'var(--chart-1)',
   },
 } satisfies ChartConfig;
 
 const chartData = [
-  { month: 'January', desktop: 186, mobile: 80 },
-  { month: 'February', desktop: 305, mobile: 200 },
-  { month: 'March', desktop: 237, mobile: 120 },
-  { month: 'April', desktop: 73, mobile: 190 },
-  { month: 'May', desktop: 209, mobile: 130 },
-  { month: 'June', desktop: 214, mobile: 140 },
+  { month: 'January', revenue: 125000000, expense: 45000000 },
+  { month: 'February', revenue: 148000000, expense: 52000000 },
+  { month: 'March', revenue: 132000000, expense: 48000000 },
+  { month: 'April', revenue: 165000000, expense: 61000000 },
+  { month: 'May', revenue: 178000000, expense: 70000000 },
+  { month: 'June', revenue: 178000000, expense: 70000000 },
 ];
 
 const AppAreaChart = () => {
   return (
     <div className="">
-      <h1 className="text-lg font-medium mb-6">Total Visitors</h1>
+      <h1 className="text-lg font-medium mb-6">Thống kê doanh thu & chi phí</h1>
       <ChartContainer config={chartConfig} className="h-[300px] w-full">
         <AreaChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={false} />
           <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} tickFormatter={(value) => value.slice(0, 3)} />
-          <YAxis tickLine={false} tickMargin={10} axisLine={false} />
+          <YAxis tickLine={false} tickMargin={10} axisLine={false} tickFormatter={(value) => `${value / 1000000}M`} />
           <ChartTooltip content={<ChartTooltipContent />} />
           <ChartLegend content={<ChartLegendContent />} />
           <defs>
-            <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="var(--color-desktop)" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="var(--color-desktop)" stopOpacity={0.1} />
+            <linearGradient id="fillRevenue" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="var(--color-revenue)" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="var(--color-revenue)" stopOpacity={0.1} />
             </linearGradient>
-            <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="var(--color-mobile)" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="var(--color-mobile)" stopOpacity={0.1} />
+            <linearGradient id="fillExpense" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="var(--color-expense)" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="var(--color-expense)" stopOpacity={0.1} />
             </linearGradient>
           </defs>
           <Area
-            dataKey="mobile"
+            dataKey="expense"
             type="natural"
-            fill="url(#fillMobile)"
+            fill="url(#fillExpense)"
             fillOpacity={0.4}
-            stroke="var(--color-mobile)"
+            stroke="var(--color-expense)"
             stackId="a"
           />
           <Area
-            dataKey="desktop"
+            dataKey="revenue"
             type="natural"
-            fill="url(#fillDesktop)"
+            fill="url(#fillRevenue)"
             fillOpacity={0.4}
-            stroke="var(--color-desktop)"
+            stroke="var(--color-revenue)"
             stackId="a"
           />
         </AreaChart>

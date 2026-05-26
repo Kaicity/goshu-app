@@ -5,7 +5,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import React from 'react';
 import { Toaster } from 'sonner';
 import '../styles/nprogress.css';
-import './globals.css';
+import '../app/globals.css';
 import { AppProvider } from '@/contexts/AppContext';
 import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
 import { extractRouterConfig } from 'uploadthing/server';
